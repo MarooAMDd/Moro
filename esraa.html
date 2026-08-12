@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>💕 Esraa & Omar — Our Little World</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --primary:#FF1744; --secondary:#E91E63; --accent:#FF4081;
+  --bg:#0a0a0f; --glass:rgba(255,255,255,.05); --glass-border:rgba(255,255,255,.1);
+  --glow:rgba(255,23,68,.6); --ok:#4caf50; --bad:#f44336;
+}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);min-height:100vh;overflow-x:hidden;color:#fff;-webkit-font-smoothing:antialiased;}
+.hidden{display:none !important;}
+
+.password-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10000;padding:20px;}
+.password-box{background:var(--glass);backdrop-filter:blur(20px);border:2px solid var(--glass-border);border-radius:25px;padding:45px 35px;text-align:center;max-width:400px;width:100%;}
+.password-title{font-size:24px;font-weight:700;color:var(--accent);margin-bottom:25px;line-height:1.7;}
+.password-input{padding:15px 25px;font-size:20px;border-radius:15px;background:rgba(255,255,255,.1);border:2px solid var(--glass-border);color:#fff;text-align:center;font-family:'Tajawal',sans-serif;width:100%;margin-bottom:20px;direction:rtl;}
+.password-input:focus{outline:none;border-color:var(--primary);}
+.password-btn{padding:15px 40px;font-size:18px;font-weight:700;border:none;border-radius:50px;cursor:pointer;background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;font-family:'Tajawal',sans-serif;transition:transform .2s;width:100%;}
+.password-btn:active{transform:scale(.97);}
+.password-error{color:#ff6b6b;font-size:14px;margin-top:15px;min-height:18px;}
+.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10000;}
+.loading-heart{font-size:60px;animation:pulse 1s ease infinite;}
+@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.2);}}
+.loading-text{margin-top:20px;font-size:20px;color:var(--accent);}
+
+.page{display:none;min-height:100vh;padding:40px 16px 90px;position:relative;animation:fadeIn .6s ease;}
+.page.active{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+.particles-bg,.hearts-bg{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;border-radius:50%;animation:float 20s linear infinite;opacity:.4;will-change:transform;}
+@keyframes float{0%{transform:translateY(100vh);}100%{transform:translateY(-100vh);}}
+.floating-heart{position:absolute;font-size:18px;animation:floatHeart 10s ease-in-out infinite;opacity:.5;will-change:transform;}
+@keyframes floatHeart{0%,100%{transform:translateY(0) rotate(0deg);}50%{transform:translateY(-40px) rotate(15deg);}}
+
+.content{position:relative;z-index:1;max-width:900px;width:100%;text-align:center;margin:0 auto;}
+.main-title{font-size:clamp(26px,7vw,52px);font-weight:900;background:linear-gradient(135deg,var(--primary),var(--accent),var(--primary));background-size:200% 200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:gradientMove 3s ease infinite;margin-bottom:12px;}
+@keyframes gradientMove{0%,100%{background-position:0 50%;}50%{background-position:100% 50%;}}
+.subtitle{font-size:clamp(16px,4vw,24px);color:rgba(255,255,255,.8);margin-bottom:30px;}
+
+.btn{padding:15px 36px;font-size:18px;font-weight:700;border:none;border-radius:50px;cursor:pointer;transition:all .25s ease;font-family:'Tajawal',sans-serif;}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;box-shadow:0 5px 30px var(--glow);}
+.btn-primary:active{transform:scale(.97);}
+.btn-secondary{background:var(--glass);border:1px solid var(--glass-border);color:#fff;backdrop-filter:blur(10px);}
+.btn-small{padding:9px 18px;font-size:14px;border-radius:30px;}
+.btn-danger{background:rgba(244,67,54,.2);border:1px solid var(--bad);color:#fff;}
+
+.glass-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:22px;padding:26px;width:100%;}
+
+.topbar{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:linear-gradient(180deg,rgba(10,10,15,.9),transparent);}
+.topbar-btn{background:var(--glass);border:1px solid var(--glass-border);color:#fff;border-radius:50%;width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
+.topbar-btn.pill{border-radius:30px;width:auto;padding:0 16px;font-size:14px;}
+
+.photo-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin:30px 0;width:100%;}
+.photo-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;overflow:hidden;animation:slideUp .6s ease both;}
+@keyframes slideUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.photo-card img{width:100%;height:260px;object-fit:cover;display:block;}
+.photo-caption{padding:18px;font-size:15px;color:rgba(255,255,255,.9);line-height:2;text-align:right;}
+
+.countdown-frame{background:rgba(255,23,68,.08);border:2px solid var(--primary);border-radius:20px;padding:30px 20px;margin:25px auto;max-width:500px;width:100%;}
+.countdown-title{font-size:16px;color:var(--accent);margin-bottom:18px;font-weight:700;line-height:1.7;}
+.countdown-container{display:flex;justify-content:center;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.countdown-item{background:rgba(255,23,68,.15);border:1px solid rgba(255,23,68,.25);border-radius:10px;padding:10px 14px;text-align:center;min-width:62px;}
+.countdown-number{font-size:24px;font-weight:900;color:#fff;}
+.countdown-label{font-size:11px;color:rgba(255,255,255,.7);margin-top:5px;}
+
+.quiz-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:25px;padding:30px;max-width:500px;width:100%;margin:25px auto;text-align:center;}
+.quiz-counter{font-size:13px;color:rgba(255,255,255,.5);margin-bottom:12px;}
+.quiz-question{font-size:20px;margin-bottom:22px;color:#fff;font-weight:700;}
+.quiz-options{display:flex;flex-direction:column;gap:12px;}
+.quiz-option{padding:14px 22px;background:rgba(255,255,255,.05);border:1px solid var(--glass-border);border-radius:15px;cursor:pointer;transition:all .2s;font-size:17px;color:#fff;font-family:'Tajawal',sans-serif;}
+.quiz-option.selected{background:rgba(255,23,68,.3);border-color:var(--primary);}
+.quiz-option.correct{border-color:var(--ok);background:rgba(76,175,80,.2);}
+.quiz-option.wrong{border-color:var(--bad);background:rgba(244,67,54,.2);}
+.quiz-option:disabled{cursor:not-allowed;opacity:.75;}
+
+.success-message{background:linear-gradient(135deg,rgba(255,23,68,.12),rgba(233,30,99,.06));border:2px solid var(--primary);border-radius:25px;padding:45px 32px;text-align:center;max-width:550px;width:100%;margin:20px auto;}
+.success-emoji{font-size:64px;margin-bottom:16px;animation:heartBeat 1s ease infinite;}
+@keyframes heartBeat{0%,100%{transform:scale(1);}50%{transform:scale(1.15);}}
+.success-text{font-size:24px;font-weight:700;color:#fff;line-height:1.8;}
+.success-sub{font-size:17px;color:rgba(255,255,255,.8);margin-top:18px;line-height:2;white-space:pre-line;}
+
+.chat-container{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:25px;padding:26px;max-width:500px;width:100%;margin:20px auto;}
+.chat-header{text-align:center;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--glass-border);}
+.chat-title{font-size:20px;color:var(--accent);}
+.chat-messages{display:flex;flex-direction:column;gap:14px;max-height:400px;overflow-y:auto;min-height:120px;}
+.chat-bubble{padding:14px 18px;border-radius:20px;max-width:85%;line-height:1.8;font-size:15px;animation:fadeInMsg .5s ease;}
+@keyframes fadeInMsg{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.chat-esraa{background:linear-gradient(135deg,var(--secondary),var(--accent));align-self:flex-start;border-bottom-right-radius:5px;}
+.chat-omar{background:rgba(255,255,255,.1);border:1px solid var(--glass-border);align-self:flex-end;border-bottom-left-radius:5px;}
+.chat-name{font-size:11px;opacity:.7;margin-bottom:4px;}
+
+.chat-more-btn{width:100%;padding:12px;margin-top:14px;background:rgba(255,255,255,.08);border:1px solid var(--glass-border);border-radius:12px;color:#fff;cursor:pointer;font-family:'Tajawal',sans-serif;}
+.chat-more-btn:active{transform:scale(.97);}
+
+.frame-section{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:25px;padding:32px;max-width:550px;width:100%;margin:20px auto;position:relative;overflow:hidden;}
+.frame-section .glow-heart{position:absolute;font-size:120px;opacity:.05;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.frame-text{font-size:17px;line-height:2.1;color:rgba(255,255,255,.9);text-align:right;position:relative;z-index:1;white-space:pre-line;}
+.final-message{text-align:center;padding:20px 10px 40px;}
+.final-message .big-heart{font-size:70px;display:block;margin-bottom:16px;animation:heartBeat 1.5s ease infinite;}
+
+.welcome-card{max-width:560px;width:100%;margin:0 auto 20px;text-align:center;padding-top:70px;}
+.role-chip{display:inline-block;font-size:12px;background:rgba(255,23,68,.18);border:1px solid var(--primary);border-radius:20px;padding:4px 14px;margin-bottom:14px;color:#fff;}
+
+.longing-card{max-width:520px;width:100%;margin:20px auto;text-align:center;}
+.longing-title{font-size:20px;color:var(--accent);font-weight:800;margin-bottom:18px;}
+.longing-counts{display:flex;justify-content:center;gap:30px;margin-bottom:20px;}
+.longing-person{text-align:center;}
+.longing-person .name{font-size:14px;color:rgba(255,255,255,.7);margin-bottom:6px;}
+.longing-person .num{font-size:34px;font-weight:900;color:#fff;}
+.longing-btn{width:100%;margin-top:6px;}
+.longing-cooldown{margin-top:14px;font-size:14px;color:rgba(255,255,255,.7);}
+.longing-history{margin-top:20px;max-height:180px;overflow-y:auto;text-align:right;}
+.longing-history-item{font-size:14px;padding:8px 4px;border-bottom:1px solid var(--glass-border);color:rgba(255,255,255,.85);}
+.longing-history-item .t{display:block;font-size:11px;color:rgba(255,255,255,.5);margin-top:2px;}
+.local-note{font-size:11px;color:rgba(255,255,255,.4);margin-top:12px;line-height:1.6;}
+
+.admin-wrap{display:flex;width:100%;max-width:1200px;margin:0 auto;gap:18px;align-items:flex-start;padding-top:70px;}
+.admin-sidebar{width:210px;flex-shrink:0;background:var(--glass);border:1px solid var(--glass-border);border-radius:20px;padding:14px;position:sticky;top:70px;}
+.admin-nav-item{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;cursor:pointer;font-size:15px;color:rgba(255,255,255,.8);margin-bottom:4px;}
+.admin-nav-item:hover{background:rgba(255,255,255,.06);}
+.admin-nav-item.active{background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;}
+.admin-main{flex:1;min-width:0;text-align:right;}
+.admin-section-title{font-size:22px;font-weight:800;color:var(--accent);margin-bottom:18px;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px;margin-bottom:24px;}
+.stat-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:16px;padding:18px;text-align:center;}
+.stat-card .num{font-size:28px;font-weight:900;color:var(--accent);}
+.stat-card .lbl{font-size:12px;color:rgba(255,255,255,.6);margin-top:6px;}
+.admin-form{display:flex;flex-direction:column;gap:10px;margin-bottom:22px;}
+.admin-input,.admin-textarea,.admin-select{background:rgba(255,255,255,.06);border:1px solid var(--glass-border);border-radius:10px;padding:11px 14px;color:#fff;font-family:'Tajawal',sans-serif;font-size:15px;width:100%;direction:rtl;}
+.admin-textarea{min-height:70px;resize:vertical;}
+.admin-list-item{background:rgba(255,255,255,.04);border:1px solid var(--glass-border);border-radius:14px;padding:14px;margin-bottom:12px;}
+.admin-list-item .row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.admin-row-fields{display:flex;flex-direction:column;gap:8px;flex:1;}
+.admin-inline-actions{display:flex;gap:6px;flex-shrink:0;}
+.content-field{margin-bottom:16px;}
+.content-field label{display:block;font-size:13px;color:rgba(255,255,255,.6);margin-bottom:6px;}
+.small-note{font-size:12px;color:rgba(255,255,255,.45);margin-top:4px;}
+.save-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ok);color:#fff;padding:10px 22px;border-radius:30px;font-size:14px;z-index:900;opacity:0;transition:opacity .3s;pointer-events:none;}
+.save-toast.show{opacity:1;}
+.opt-row{display:flex;gap:8px;align-items:center;}
+
+.confetti-container{position:fixed;inset:0;pointer-events:none;z-index:9999;overflow:hidden;}
+.confetti-piece{position:absolute;top:-10px;animation:confettiFall linear forwards;}
+@keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
+
+.typing-indicator{display:flex;gap:5px;padding:12px 16px;border-radius:20px;align-self:flex-start;border-bottom-right-radius:5px;width:fit-content;background:rgba(255,255,255,.06);margin-bottom:6px;}
+.typing-dot{width:8px;height:8px;border-radius:50%;animation:typingBounce 1.4s infinite;}
+.typing-dot:nth-child(2){animation-delay:.2s;}
+.typing-dot:nth-child(3){animation-delay:.4s;}
+@keyframes typingBounce{0%,60%,100%{opacity:.5;transform:translateY(0);}30%{opacity:1;transform:translateY(-8px);}}
+.esraa-dot{background:linear-gradient(135deg,var(--secondary),var(--accent));}
+.omar-dot{background:rgba(255,255,255,.5);}
+
+.chat-bubble .chat-name{font-size:11px;opacity:.7;margin-bottom:3px;}
+
+@media (max-width:768px){
+  .photo-gallery{grid-template-columns:1fr;gap:18px;}
+  .quiz-card,.chat-container,.frame-section,.countdown-frame{padding:20px;}
+  .password-box{padding:28px 20px;}
+  .admin-wrap{flex-direction:column;}
+  .admin-sidebar{width:100%;position:static;display:flex;overflow-x:auto;gap:6px;padding:10px;}
+  .admin-nav-item{white-space:nowrap;margin-bottom:0;}
+}
+@media (max-width:480px){
+  .countdown-item{min-width:48px;padding:8px 10px;}
+  .countdown-number{font-size:19px;}
+  .longing-counts{gap:18px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
+  .particle,.floating-heart{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="particles-bg" id="particlesBg"></div>
+<div class="hearts-bg" id="heartsBg"></div>
+<div class="save-toast" id="saveToast"></div>
+
+<!-- ===== شاشة كلمة السر ===== -->
+<div class="password-screen" id="passwordScreen">
+  <div class="password-box">
+    <div class="password-title">اكتبي كلمة السر يا روحي 🥹♥️</div>
+    <input type="password" class="password-input" id="passwordInput" placeholder="كلمة السر..." autocomplete="off">
+    <button class="password-btn" onclick="checkPassword()">ادخلي ❤️</button>
+    <div class="password-error" id="passwordError"></div>
+  </div>
+</div>
+
+<div class="loading-screen hidden" id="loadingScreen">
+  <div class="loading-heart">💕</div>
+  <div class="loading-text">بيحضرلك حاجة حلوة...</div>
+</div>
+
+<!-- ===== التطبيق ===== -->
+<div id="app" class="hidden">
+
+  <div class="topbar">
+    <div>
+      <button class="topbar-btn" onclick="goHome()" title="الرئيسية">🏠</button>
+      <button class="topbar-btn" id="backBtn" onclick="goBack()" title="رجوع">↩️</button>
+    </div>
+    <div>
+      <button class="topbar-btn pill" id="adminBtn" onclick="showPage('admin')" style="display:none">👑 Admin</button>
+      <button class="topbar-btn pill" onclick="logout()">🚪</button>
+    </div>
+  </div>
+
+  <!-- ===== الرئيسية ===== -->
+  <div class="page" id="page-home">
+    <div class="welcome-card">
+      <div class="role-chip" id="roleChip"></div>
+      <h1 class="main-title" id="welcomeTitle"></h1>
+      <p class="subtitle" id="welcomeSub"></p>
+    </div>
+
+    <div class="glass-card countdown-frame" style="max-width:520px;">
+      <div class="countdown-title" id="togetherTitle">❤️ أنا وإنتِ ❤️</div>
+      <p class="small-note" id="togetherLabel" style="margin-bottom:8px;"></p>
+      <div class="countdown-container">
+        <div class="countdown-item"><div class="countdown-number" id="t-days">00</div><div class="countdown-label">يوم</div></div>
+        <div class="countdown-item"><div class="countdown-number" id="t-hours">00</div><div class="countdown-label">ساعة</div></div>
+        <div class="countdown-item"><div class="countdown-number" id="t-minutes">00</div><div class="countdown-label">دقيقة</div></div>
+        <div class="countdown-item"><div class="countdown-number" id="t-seconds">00</div><div class="countdown-label">ثانية</div></div>
+      </div>
+    </div>
+
+    <div class="glass-card longing-card" id="longingCard">
+      <div class="longing-title" id="longingTitle">❤️ ساعة الاشتياق ❤️</div>
+      <div class="longing-counts">
+        <div class="longing-person"><div class="name">إسراء</div><div class="num" id="cnt-Esraa">0</div></div>
+        <div class="longing-person"><div class="name">عمر</div><div class="num" id="cnt-Omar">0</div></div>
+      </div>
+      <button class="btn btn-primary longing-btn" id="longingBtn" onclick="pressLonging()"></button>
+      <div class="longing-cooldown hidden" id="longingCooldown"></div>
+      <div class="longing-history" id="longingHistory"></div>
+      <p class="local-note">* العداد ده محفوظ على المتصفح ده بس (مفيش سيرفر مشترك)</p>
+    </div>
+
+    <button class="btn btn-primary" style="margin-top:10px" onclick="showPage(1)">ادخلي الهدية ❤️</button>
+  </div>
+
+  <!-- ===== صفحة 1 ===== -->
+  <div class="page" id="page1">
+    <div class="content">
+      <h1 class="main-title" id="mainTitleText"></h1>
+      <p class="subtitle" id="mainSubtitleText"></p>
+      <button class="btn btn-primary" onclick="showPage(2)">ادخلي ❤️</button>
+    </div>
+  </div>
+
+  <!-- ===== صفحة 2 ===== -->
+  <div class="page" id="page2">
+    <div class="content">
+      <h1 class="main-title" id="page2TitleText"></h1>
+      <div class="photo-gallery" id="photoGallery"></div>
+      <div class="countdown-frame">
+        <div class="countdown-title" id="countdownTitleText"></div>
+        <div class="countdown-container">
+          <div class="countdown-item"><div class="countdown-number" id="days">00</div><div class="countdown-label">يوم</div></div>
+          <div class="countdown-item"><div class="countdown-number" id="hours">00</div><div class="countdown-label">ساعة</div></div>
+          <div class="countdown-item"><div class="countdown-number" id="minutes">00</div><div class="countdown-label">دقيقة</div></div>
+          <div class="countdown-item"><div class="countdown-number" id="seconds">00</div><div class="countdown-label">ثانية</div></div>
+        </div>
+      </div>
+      <button class="btn btn-primary" onclick="showPage(3)" style="margin-top:24px">تالي 💕</button>
+    </div>
+  </div>
+
+  <!-- ===== صفحة 3 (Quiz) ===== -->
+  <div class="page" id="page3">
+    <div class="content">
+      <h1 class="main-title" id="quizIntroTitle"></h1>
+      <div class="quiz-card">
+        <div class="quiz-counter" id="quizCounter"></div>
+        <p class="quiz-question" id="quizQuestion"></p>
+        <div class="quiz-options" id="quizOptions"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== صفحة 4 (Success) ===== -->
+  <div class="page" id="page4">
+    <div class="content">
+      <div class="success-message">
+        <div class="success-emoji">💕</div>
+        <p class="success-text" id="successTextEl"></p>
+        <p class="success-sub" id="successSub"></p>
+      </div>
+      <button class="btn btn-primary" onclick="showPage(5)" style="margin-top:30px">ذكرياتنا ❤️</button>
+    </div>
+  </div>
+
+  <!-- ===== صفحة 5 (Memories) ===== -->
+  <div class="page" id="page5">
+    <div class="content">
+      <h1 class="main-title" id="memoriesTitleText"></h1>
+      <div class="chat-container">
+        <div class="chat-header"><p class="chat-title">محادثة بيننا 💬</p></div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <button class="chat-more-btn" onclick="showNextChat()">⬅️ استرجع ذكريات تانية 💭</button>
+      </div>
+      <button class="btn btn-primary" onclick="showPage(6)" style="margin-top:24px">تالي 💕</button>
+    </div>
+  </div>
+
+  <!-- ===== صفحة 6 (Final) ===== -->
+  <div class="page" id="page6">
+    <div class="content">
+      <div class="final-message">
+        <div class="frame-section">
+          <div class="glow-heart">❤️</div>
+          <span class="big-heart">❤️</span>
+          <p class="frame-text" id="finalMessageText"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Admin ===== -->
+  <div class="page" id="page-admin">
+    <div class="admin-wrap">
+      <div class="admin-sidebar" id="adminSidebar"></div>
+      <div class="admin-main glass-card" id="adminMain"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   CONFIG — كل اللي محتاج تعديل موجود هنا
+   ============================================================ */
+const CONFIG = {
+  PASSWORDS: {
+    Esraa: "Esraa",   // كلمة سر إسراء
+    Omar: "Omar"   // كلمة سر عمر
+  },
+  relationshipStart: "2024-06-01T00:00:00",
+  longingCooldownSeconds: 30,
+  siteName: "Esraa & Omar",
+};
+
+/* البيانات الافتراضية (تتعدل لاحقًا من لوحة تحكم عمر وتتحفظ في localStorage) */
+const DEFAULT_DATA = {
+  content: {
+    welcome_esraa: "أهلًا يا إسراء ❤️",
+    welcome_esraa_sub: "عمر عامل لك حاجة صغيرة...",
+    welcome_omar: "أهلًا يا عمر ❤️",
+    welcome_omar_sub: "جاهز تكمل حكايتكم؟",
+    main_title: "عندي سؤال مهم ليكي 💕",
+    main_subtitle: "ادخلي وأجاوبيني 🥺",
+    page2_title: "أنا عايز أقولك حاجة 💕",
+    countdown_title: "أحلي أيام وساعات ودقايق وثواني عشتها معاكي يا قلبي 🥺♥️",
+    quiz_intro_title: "جايبلك كم سؤال 🫠",
+    success_text: "كنت واثق إنك هتجاوبي صح<br>بحبك ❤️",
+    success_sub: "إنتي أجمل حاجة حصلتلي في حياتي ✨\nكل لحظة معاكي هي أجمل لحظة 🌟\nإنتي كل حاجة ليا وأكثر 💖",
+    memories_title: "ذكرياتنا الجميلة 💕",
+    final_message: `هممم عارف إني ممكن ماكنش الشخص اللي تتمنيه في حياتك 😔♥️
+تعبتك كتير خليتك دايماً عايشة في قلق بس إنهاردة قررت أطمنك وأقولك دي أول خطوة هنعديها سوا علشان نكمل مع بعض 🥺♥️
+و عايز أوريكي إني بقيت قد كلامي واتغيرت علشانك 🥺♥️
+أنا بحبك أوي نفسي تشوفي قلبي من جوا 🥺♥️ هتلاقي فيه حبك وبس 😔
+أتمني ماكنش خليت فيكي ذرة كره من ناحيتي لأني بحبك أوي وعمري ما قدر أبعد عنك يا حياتي 🥺💋
+عايز أقولك إنك هتوحشني أوي أوي 😔♥️
+كل مرة هفتح ذكرياتنا واتذكر أحلى وقت عدي علينا سوا 🥺♥️`,
+    longing_section_title: "❤️ ساعة الاشتياق ❤️",
+    longing_button_label: "اشتقتلك ❤️",
+    together_section_title: "❤️ أنا وإنتِ ❤️",
+    together_section_label: "بقالنا مع بعض",
+  },
+  photos: [
+    { url: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&q=80",
+      caption: "تعرفي يا Esraa إنك كنتِ أقرب شخص ليا في حياتي 🥺♥️ حرفيا كنت بحكيلك كل تفصيلة في حياتي لأنك كنتِ بتسمعيلي وبتحسي بيا وكنت بحب أقعد أكلم معاكي أوي 🥹♥️ بس دلوقتي بدأنا أول خطوة بجد في حياتنا يا قلبي متنسينيش هيوحشني كلامك أوي و هيوحشني نظرة عيونك 🥺♥️ وكل حاجة فيكي هتوحشني يارب الأيام تعدي وتهون علينا 😔♥️ بحبك يا Esraa 🥺♥️" },
+    { url: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500&q=80",
+      caption: "تعرفي يا Esraa عايز أقولك إنك أول واحدة في حياتي تشوفي شخصيتي الحقيقية 🫠 أنا اتعلقت فيكي أوي ومن كترة حبي ليك مش قادر أبعد عنك 😔♥️ فالهدية دي هدية من قلبي، كل ما يتعبني بقوم أدعيلك إنك تكوني ليا وأنا أكون ليكي بجد يا Esraa مش متخيل قد إيه هنكون مبسوطين مع بعض يا قلبي 🥺♥️ استنيتي يا روحي مش هتأخر عليكي 😔♥️ بحبك 💋🥺" }
+  ],
+  quiz: [
+    { question: "أنا بحب فيكي إيه؟ 💕", options: ["عيونك الجميلة 👀","شفايفك الحلوة 💋","كل حاجة فيكي يا قلبي 🥺"], correct: 2 },
+    { question: "أنا بحب أكل إيه؟ 😋", options: ["معكرونة بالبشاميل 🍝","فراخ مشوية 🍗","أي حاجة من إيد مراتي المستقبلية 🫠"], correct: 0 },
+    { question: "بتحبيني قد إيه؟ 🥺", options: ["قد حياتي كلها 💕","قد البحر وسمكاته 🌊","قد الكون كله 🌍"], correct: 0 }
+  ],
+  memories: [
+    [
+      { sender: "Esraa", text: "فاكر اليوم ده؟ 🥺" },
+      { sender: "Omar", text: "أنساه إزاي؟ ❤️ ده كان أول يوم شوفتك فيه" },
+      { sender: "Esraa", text: "بجد؟ أنا كنت خايفة أوي 🫣" },
+      { sender: "Omar", text: "وأنا كمان يا قلبي بس لما شوفتك حسيت إن الدنيا اختلفت 🥺❤️" }
+    ],
+    [
+      { sender: "Esraa", text: "أنا بحب ضحكتك أوي 🥰" },
+      { sender: "Omar", text: "وأنا بحب عيونك لما تضحكي ✨" },
+      { sender: "Esraa", text: "وحشتني أوي كلامك ده 🥹" },
+      { sender: "Omar", text: "وحشاني أكتر يا حبيبتي 💋" }
+    ]
+  ],
+  longing: { Esraa: 0, Omar: 0 },
+  longingHistory: [], // [{sender, time}]
+};
+
+/* ============================================================
+   تخزين محلي (localStorage) — كل تعديلات عمر بتتحفظ هنا
+   ============================================================ */
+const STORAGE_KEY = "esraa_omar_gift_data_v1";
+
+function loadData(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return structuredClone(DEFAULT_DATA);
+    const parsed = JSON.parse(raw);
+    // دمج بسيط عشان لو حقول جديدة اتضافت في DEFAULT_DATA
+    return { ...structuredClone(DEFAULT_DATA), ...parsed,
+      content: { ...DEFAULT_DATA.content, ...(parsed.content||{}) } };
+  } catch(e){ return structuredClone(DEFAULT_DATA); }
+}
+function saveData(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+
+let data = loadData();
+
+/* ============================================================
+   الحالة العامة
+   ============================================================ */
+const state = {
+  role: null, // 'Esraa' | 'Omar'
+  currentPage: 'home',
+  pageHistory: [],
+  currentChatIndex: 0,
+  quizIndex: 0,
+  quizScore: 0,
+  quizAnswered: false,
+  cooldownTimer: null,
+  chatTimer: null,
+};
+
+function otherPerson(u){ return u === 'Esraa' ? 'Omar' : 'Esraa'; }
+
+/* ============================================================
+   تسجيل الدخول
+   ============================================================ */
+function checkPassword(){
+  const input = document.getElementById('passwordInput');
+  const error = document.getElementById('passwordError');
+  const val = input.value.trim();
+
+  let matched = null;
+  if (val === CONFIG.PASSWORDS.Omar) matched = 'Omar';
+  else if (val === CONFIG.PASSWORDS.Esraa) matched = 'Esraa';
+
+  if (!matched){
+    error.textContent = 'كلمة السر غلط، حاولي تاني 💔';
+    input.value = '';
+    return;
+  }
+
+  state.role = matched;
+  document.getElementById('passwordScreen').classList.add('hidden');
+  const loading = document.getElementById('loadingScreen');
+  loading.classList.remove('hidden');
+  setTimeout(() => {
+    loading.classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    if (matched === 'Omar') document.getElementById('adminBtn').style.display = 'inline-flex';
+    applyStaticText();
+    renderHome();
+    startTogetherCounter();
+    goHome();
+  }, 1200);
+}
+function logout(){ location.reload(); }
+
+/* ============================================================
+   نصوص ثابتة
+   ============================================================ */
+function c(key, fallback=''){ return data.content[key] !== undefined ? data.content[key] : fallback; }
+
+function applyStaticText(){
+  document.getElementById('mainTitleText').textContent = c('main_title');
+  document.getElementById('mainSubtitleText').textContent = c('main_subtitle');
+  document.getElementById('page2TitleText').textContent = c('page2_title');
+  document.getElementById('countdownTitleText').textContent = c('countdown_title');
+  document.getElementById('quizIntroTitle').textContent = c('quiz_intro_title');
+  document.getElementById('successTextEl').innerHTML = c('success_text');
+  document.getElementById('memoriesTitleText').textContent = c('memories_title');
+  document.getElementById('finalMessageText').textContent = c('final_message');
+  document.getElementById('longingTitle').textContent = c('longing_section_title');
+  document.getElementById('togetherTitle').textContent = c('together_section_title');
+  document.getElementById('togetherLabel').textContent = c('together_section_label');
+  document.getElementById('longingBtn').textContent = c('longing_button_label');
+
+  const isEsraa = state.role === 'Esraa';
+  document.getElementById('roleChip').textContent = isEsraa ? '👑 حساب إسراء' : '👑 حساب عمر (Admin)';
+  document.getElementById('welcomeTitle').textContent = isEsraa ? c('welcome_esraa') : c('welcome_omar');
+  document.getElementById('welcomeSub').textContent = isEsraa ? c('welcome_esraa_sub') : c('welcome_omar_sub');
+}
+
+/* ============================================================
+   التنقل
+   ============================================================ */
+function showPage(id){
+  const map = { home:'page-home', admin:'page-admin', 1:'page1',2:'page2',3:'page3',4:'page4',5:'page5',6:'page6' };
+  const currentEl = document.querySelector('.page.active');
+  const nextEl = document.getElementById(map[id]);
+  if (!nextEl) return;
+  if (currentEl) currentEl.classList.remove('active');
+  nextEl.classList.add('active');
+
+  if (state.currentPage !== id){
+    state.pageHistory.push(state.currentPage);
+    state.currentPage = id;
+  }
+  document.getElementById('backBtn').style.visibility = (id === 'home') ? 'hidden' : 'visible';
+
+  if (id === 2){ renderPhotos(); startCountdown(); }
+  if (id === 3) initQuiz();
+  if (id === 5) loadChatSet(0);
+  if (id === 6){ document.getElementById('finalMessageText').textContent = c('final_message'); launchConfetti(); }
+  if (id === 'admin') renderAdmin();
+  window.scrollTo(0,0);
+}
+function goHome(){ showPage('home'); }
+function goBack(){
+  if (!state.pageHistory.length){ goHome(); return; }
+  const prev = state.pageHistory.pop();
+  const map = { home:'page-home', admin:'page-admin', 1:'page1',2:'page2',3:'page3',4:'page4',5:'page5',6:'page6' };
+  document.querySelector('.page.active').classList.remove('active');
+  document.getElementById(map[prev]).classList.add('active');
+  state.currentPage = prev;
+  document.getElementById('backBtn').style.visibility = (prev === 'home') ? 'hidden' : 'visible';
+}
+
+/* ============================================================
+   الرئيسية
+   ============================================================ */
+function renderHome(){ renderLonging(); renderLongingHistory(); }
+
+let togetherInterval;
+function startTogetherCounter(){
+  if (togetherInterval) clearInterval(togetherInterval);
+  const start = new Date(CONFIG.relationshipStart).getTime();
+  function tick(){
+    const diff = Math.max(0, Date.now() - start);
+    document.getElementById('t-days').textContent = String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('t-hours').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('t-minutes').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('t-seconds').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  }
+  tick(); togetherInterval = setInterval(tick, 1000);
+}
+
+let countdownInterval;
+function startCountdown(){
+  if (countdownInterval) clearInterval(countdownInterval);
+  const start = new Date(CONFIG.relationshipStart).getTime();
+  function tick(){
+    const diff = Math.max(0, Date.now() - start);
+    document.getElementById('days').textContent = String(Math.floor(diff/86400000)).padStart(2,'0');
+    document.getElementById('hours').textContent = String(Math.floor((diff%86400000)/3600000)).padStart(2,'0');
+    document.getElementById('minutes').textContent = String(Math.floor((diff%3600000)/60000)).padStart(2,'0');
+    document.getElementById('seconds').textContent = String(Math.floor((diff%60000)/1000)).padStart(2,'0');
+  }
+  tick(); countdownInterval = setInterval(tick, 1000);
+}
+
+/* ============================================================
+   ساعة الاشتياق (محلي فقط)
+   ============================================================ */
+function renderLonging(){
+  document.getElementById('cnt-Esraa').textContent = data.longing.Esraa || 0;
+  document.getElementById('cnt-Omar').textContent = data.longing.Omar || 0;
+  checkCooldownOnLoad();
+}
+function cooldownKey(){ return `longing_last_press_${state.role}`; }
+
+function pressLonging(){
+  const me = state.role;
+  const lastStr = localStorage.getItem(cooldownKey());
+  const last = lastStr ? parseInt(lastStr,10) : 0;
+  const remain = CONFIG.longingCooldownSeconds - Math.floor((Date.now()-last)/1000);
+  if (remain > 0){ startCooldownDisplay(remain); return; }
+
+  data.longing[me] = (data.longing[me] || 0) + 1;
+  data.longingHistory.unshift({ sender: me, time: new Date().toISOString() });
+  data.longingHistory = data.longingHistory.slice(0, 15);
+  saveData();
+  localStorage.setItem(cooldownKey(), String(Date.now()));
+
+  renderLonging();
+  renderLongingHistory();
+  startCooldownDisplay(CONFIG.longingCooldownSeconds);
+}
+
+function startCooldownDisplay(seconds){
+  const btn = document.getElementById('longingBtn');
+  const cd = document.getElementById('longingCooldown');
+  btn.disabled = true;
+  cd.classList.remove('hidden');
+  if (state.cooldownTimer) clearInterval(state.cooldownTimer);
+  let remain = seconds;
+  function tick(){
+    if (remain <= 0){
+      clearInterval(state.cooldownTimer);
+      btn.disabled = false;
+      cd.classList.add('hidden');
+      return;
+    }
+    cd.textContent = `استنى شوية... خلي الاشتياق ياخد حقه 😂❤️ (${remain})`;
+    remain--;
+  }
+  tick(); state.cooldownTimer = setInterval(tick, 1000);
+}
+function checkCooldownOnLoad(){
+  const lastStr = localStorage.getItem(cooldownKey());
+  if (!lastStr) return;
+  const remain = CONFIG.longingCooldownSeconds - Math.floor((Date.now()-parseInt(lastStr,10))/1000);
+  if (remain > 0) startCooldownDisplay(remain);
+}
+function renderLongingHistory(){
+  const el = document.getElementById('longingHistory');
+  if (!data.longingHistory.length){ el.innerHTML = '<div class="small-note">لسه مفيش اشتياق مسجل 🥲</div>'; return; }
+  el.innerHTML = data.longingHistory.map(h => {
+    const name = h.sender === 'Esraa' ? 'إسراء' : 'عمر';
+    const time = new Date(h.time).toLocaleString('ar-EG', { hour:'2-digit', minute:'2-digit', day:'2-digit', month:'2-digit' });
+    return `<div class="longing-history-item">❤️ ${name} اشتاق${h.sender==='Esraa'?'ت':''}<span class="t">${time}</span></div>`;
+  }).join('');
+}
+
+/* ============================================================
+   الصور
+   ============================================================ */
+function renderPhotos(){
+  document.getElementById('photoGallery').innerHTML = data.photos.map(p => `
+    <div class="photo-card">
+      <img src="${escapeAttr(p.url)}" alt="صورة رومانسية" loading="lazy">
+      <div class="photo-caption">${escapeHtml(p.caption)}</div>
+    </div>`).join('');
+}
+
+/* ============================================================
+   Quiz
+   ============================================================ */
+function initQuiz(){ state.quizIndex=0; state.quizScore=0; state.quizAnswered=false; loadQuizQuestion(); }
+function loadQuizQuestion(){
+  const q = data.quiz[state.quizIndex];
+  if (!q){ finishQuiz(); return; }
+  document.getElementById('quizCounter').textContent = `السؤال ${state.quizIndex+1} من ${data.quiz.length}`;
+  document.getElementById('quizQuestion').textContent = q.question;
+  const optionsDiv = document.getElementById('quizOptions');
+  optionsDiv.innerHTML = '';
+  state.quizAnswered = false;
+  q.options.forEach((opt,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option'; btn.textContent = opt;
+    btn.onclick = () => selectQuizAnswer(i);
+    optionsDiv.appendChild(btn);
+  });
+}
+function selectQuizAnswer(index){
+  if (state.quizAnswered) return;
+  state.quizAnswered = true;
+  const q = data.quiz[state.quizIndex];
+  document.querySelectorAll('#quizOptions .quiz-option').forEach((btn,i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add('correct');
+    if (i === index && i !== q.correct) btn.classList.add('wrong');
+    if (i === index) btn.classList.add('selected');
+  });
+  if (index === q.correct) state.quizScore++;
+  setTimeout(() => {
+    state.quizIndex++;
+    if (state.quizIndex < data.quiz.length) loadQuizQuestion(); else finishQuiz();
+  }, 800);
+}
+function finishQuiz(){
+  const total = data.quiz.length || 1;
+  const percent = Math.round((state.quizScore/total)*100);
+  let msg = percent===100 ? '💯 كاملة يا قلبي! أنتِ ملكة ❤️'
+    : percent>=66 ? '🎉 ممتاز! أنتِ ذكية جداً ❤️'
+    : percent>=33 ? '💕 مش بطال! بس محتاج تذاكري كمان 😘'
+    : '😅 مش مشكلة! المهم إنك هنا ❤️';
+  document.getElementById('successSub').textContent = `جاوبتي صح ${state.quizScore} من ${total} ✨\n${msg}`;
+  showPage(4);
+}
+
+/* ============================================================
+   الذكريات (محادثة هادئة)
+   ============================================================ */
+let chatTimeout = null;
+let chatMessagesQueue = [];
+
+function loadChatSet(index){
+  if (state.chatTimer) { clearTimeout(state.chatTimer); state.chatTimer = null; }
+  if (chatTimeout) { clearTimeout(chatTimeout); chatTimeout = null; }
+  
+  if (!data.memories.length) return;
+  state.currentChatIndex = index % data.memories.length;
+  const messages = data.memories[state.currentChatIndex];
+  const container = document.getElementById('chatMessages');
+  container.innerHTML = '';
+  
+  // إضافة رسائل مع تأخير هادئ
+  let i = 0;
+  let msgDelay = 0;
+  
+  function addNextMessage(){
+    if (i >= messages.length) return;
+    const msg = messages[i];
+    i++;
+    
+    // مؤشر الكتابة
+    const typing = document.createElement('div');
+    typing.className = 'typing-indicator';
+    typing.innerHTML = `
+      <div class="typing-dot ${msg.sender === 'Esraa' ? 'esraa-dot' : 'omar-dot'}"></div>
+      <div class="typing-dot ${msg.sender === 'Esraa' ? 'esraa-dot' : 'omar-dot'}"></div>
+      <div class="typing-dot ${msg.sender === 'Esraa' ? 'esraa-dot' : 'omar-dot'}"></div>
+    `;
+    container.appendChild(typing);
+    container.scrollTop = container.scrollHeight;
+    
+    // مدة الكتابة (أطول شوية عشان تبقى هادئة)
+    const typingDuration = 800 + Math.random() * 600;
+    
+    state.chatTimer = setTimeout(() => {
+      typing.remove();
+      
+      const bubble = document.createElement('div');
+      bubble.className = `chat-bubble chat-${msg.sender.toLowerCase()}`;
+      bubble.innerHTML = `<div class="chat-name">${msg.sender}</div>${escapeHtml(msg.text)}`;
+      bubble.style.opacity = '0';
+      bubble.style.transform = 'translateY(12px)';
+      container.appendChild(bubble);
+      
+      requestAnimationFrame(() => {
+        bubble.style.transition = '0.5s ease';
+        bubble.style.opacity = '1';
+        bubble.style.transform = 'translateY(0)';
+        container.scrollTop = container.scrollHeight;
+      });
+      
+      // تأخير قبل الرسالة التالية (هادئ)
+      const nextDelay = 1000 + Math.random() * 800;
+      state.chatTimer = setTimeout(addNextMessage, nextDelay);
+    }, typingDuration);
+  }
+  
+  // بداية المحادثة بعد تأخير قصير
+  state.chatTimer = setTimeout(addNextMessage, 600);
+}
+
+function showNextChat(){
+  if (state.chatTimer) { clearTimeout(state.chatTimer); state.chatTimer = null; }
+  if (chatTimeout) { clearTimeout(chatTimeout); chatTimeout = null; }
+  const nextIndex = (state.currentChatIndex + 1) % data.memories.length;
+  loadChatSet(nextIndex);
+}
+
+/* ============================================================
+   Confetti + خلفية
+   ============================================================ */
+function launchConfetti(){
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+  const colors = ['#FF1744','#E91E63','#FF4081','#FF6B6B','#FFB3C6','#FFD700'];
+  const hearts = ['❤️','💕','💖','💝','✨'];
+  for (let i=0;i<40;i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+    piece.style.left = Math.random()*100 + '%';
+    piece.style.fontSize = (Math.random()*20+10) + 'px';
+    piece.style.animationDuration = (Math.random()*3+2) + 's';
+    piece.style.animationDelay = (Math.random()*2) + 's';
+    piece.style.color = colors[Math.floor(Math.random()*colors.length)];
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.remove(), 5000);
+}
+function createParticles(){
+  const container = document.getElementById('particlesBg');
+  const isMobile = window.innerWidth < 768;
+  const count = isMobile ? 18 : 36;
+  for (let i=0;i<count;i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100 + '%';
+    p.style.width = p.style.height = (Math.random()*3+1.5) + 'px';
+    p.style.background = ['#FF1744','#E91E63','#FF4081'][i%3];
+    p.style.animationDuration = (Math.random()*20+15) + 's';
+    p.style.animationDelay = (Math.random()*10) + 's';
+    container.appendChild(p);
+  }
+}
+function createFloatingHearts(){
+  const container = document.getElementById('heartsBg');
+  const isMobile = window.innerWidth < 768;
+  const count = isMobile ? 3 : 5;
+  const hearts = ['💕','❤️','💖','💝'];
+  for (let i=0;i<count;i++){
+    const h = document.createElement('div');
+    h.className = 'floating-heart';
+    h.textContent = hearts[i%hearts.length];
+    h.style.left = Math.random()*100 + '%';
+    h.style.animationDelay = (Math.random()*6) + 's';
+    h.style.fontSize = (Math.random()*12+12) + 'px';
+    container.appendChild(h);
+  }
+}
+
+/* ============================================================
+   أدوات
+   ============================================================ */
+function escapeHtml(str){ return (str||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+function escapeAttr(str){ return escapeHtml(str); }
+function showToast(msg){
+  const t = document.getElementById('saveToast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+/* ============================================================
+   ADMIN DASHBOARD (عمر بس)
+   ============================================================ */
+const ADMIN_SECTIONS = [
+  { id:'dashboard', icon:'🏠', label:'Dashboard' },
+  { id:'content', icon:'❤️', label:'المحتوى' },
+  { id:'photos', icon:'📸', label:'الصور' },
+  { id:'memories', icon:'💬', label:'الذكريات' },
+  { id:'quiz', icon:'❓', label:'Quiz' },
+  { id:'counters', icon:'⏱️', label:'العدادات' },
+  { id:'longing', icon:'❤️', label:'الاشتياق' },
+];
+let adminSection = 'dashboard';
+
+function renderAdmin(){
+  if (state.role !== 'Omar'){
+    document.getElementById('adminMain').innerHTML = '<p>مفيش صلاحية 🙅‍♂️</p>';
+    document.getElementById('adminSidebar').innerHTML = '';
+    return;
+  }
+  document.getElementById('adminSidebar').innerHTML = ADMIN_SECTIONS.map(s => `
+    <div class="admin-nav-item ${adminSection===s.id?'active':''}" onclick="setAdminSection('${s.id}')">
+      <span>${s.icon}</span><span>${s.label}</span>
+    </div>`).join('');
+  renderAdminSection();
+}
+function setAdminSection(id){ adminSection = id; renderAdmin(); }
+function renderAdminSection(){
+  const main = document.getElementById('adminMain');
+  if (adminSection==='dashboard') return renderAdminDashboard(main);
+  if (adminSection==='content') return renderAdminContent(main);
+  if (adminSection==='photos') return renderAdminPhotos(main);
+  if (adminSection==='memories') return renderAdminMemories(main);
+  if (adminSection==='quiz') return renderAdminQuiz(main);
+  if (adminSection==='counters') return renderAdminCounters(main);
+  if (adminSection==='longing') return renderAdminLonging(main);
+}
+function renderAdminDashboard(main){
+  const memCount = data.memories.reduce((a,b)=>a+b.length,0);
+  main.innerHTML = `
+    <div class="admin-section-title">📊 Dashboard</div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num">${data.longing.Omar||0}</div><div class="lbl">اشتياق عمر</div></div>
+      <div class="stat-card"><div class="num">${data.longing.Esraa||0}</div><div class="lbl">اشتياق إسراء</div></div>
+      <div class="stat-card"><div class="num">${data.photos.length}</div><div class="lbl">الصور</div></div>
+      <div class="stat-card"><div class="num">${data.quiz.length}</div><div class="lbl">أسئلة Quiz</div></div>
+      <div class="stat-card"><div class="num">${memCount}</div><div class="lbl">رسائل الذكريات</div></div>
+    </div>
+    <p class="small-note">آخر اشتياق: ${data.longingHistory[0] ? new Date(data.longingHistory[0].time).toLocaleString('ar-EG') : '—'}</p>
+    <p class="small-note" style="margin-top:14px">⚠️ التعديلات هنا بتتحفظ في المتصفح ده بس. لو حابب تظهر عند إسراء، افتح الموقع وعدّل من نفس الجهاز اللي هي هتستخدمه، أو ابعتلها نسخة محدّثة من الملف.</p>
+  `;
+}
+
+/* ---- المحتوى ---- */
+const CONTENT_FIELDS = [
+  ['welcome_esraa','رسالة ترحيب إسراء'], ['welcome_esraa_sub','العنوان الفرعي - إسراء'],
+  ['welcome_omar','رسالة ترحيب عمر'], ['welcome_omar_sub','العنوان الفرعي - عمر'],
+  ['main_title','العنوان الرئيسي (صفحة 1)'], ['main_subtitle','العنوان الفرعي (صفحة 1)'],
+  ['page2_title','عنوان صفحة الصور'], ['countdown_title','نص فوق العداد'],
+  ['quiz_intro_title','عنوان صفحة الأسئلة'], ['success_text','رسالة النجاح الرئيسية'],
+  ['success_sub','رسالة النجاح الفرعية'], ['memories_title','عنوان صفحة الذكريات'],
+  ['final_message','الرسالة النهائية'], ['longing_section_title','عنوان صندوق الاشتياق'],
+  ['longing_button_label','نص زر الاشتياق'], ['together_section_title','عنوان عداد العلاقة'],
+  ['together_section_label','نص أسفل عداد العلاقة'],
+];
+function renderAdminContent(main){
+  main.innerHTML = `<div class="admin-section-title">❤️ تعديل المحتوى</div><div id="contentForm"></div>
+    <button class="btn btn-primary" onclick="saveAllContent()">حفظ كل التعديلات</button>`;
+  document.getElementById('contentForm').innerHTML = CONTENT_FIELDS.map(([key,label]) => `
+    <div class="content-field">
+      <label>${label}</label>
+      <textarea class="admin-textarea" data-key="${key}">${escapeHtml(data.content[key]||'')}</textarea>
+    </div>`).join('');
+}
+function saveAllContent(){
+  document.querySelectorAll('#contentForm textarea').forEach(a => { data.content[a.dataset.key] = a.value; });
+  saveData(); applyStaticText(); showToast('اتحفظ ❤️');
+}
+
+/* ---- الصور ---- */
+function renderAdminPhotos(main){
+  main.innerHTML = `
+    <div class="admin-section-title">📸 الصور</div>
+    <div class="admin-form">
+      <input class="admin-input" id="newPhotoUrl" placeholder="رابط الصورة (URL)">
+      <textarea class="admin-textarea" id="newPhotoCaption" placeholder="النص أسفل الصورة"></textarea>
+      <button class="btn btn-primary btn-small" onclick="addPhoto()">➕ إضافة صورة</button>
+    </div>
+    <div id="photosList"></div>`;
+  document.getElementById('photosList').innerHTML = data.photos.map((p,i) => `
+    <div class="admin-list-item">
+      <div class="row">
+        <div class="admin-row-fields">
+          <input class="admin-input" value="${escapeAttr(p.url)}" onchange="updatePhoto(${i},'url',this.value)">
+          <textarea class="admin-textarea" onchange="updatePhoto(${i},'caption',this.value)">${escapeHtml(p.caption)}</textarea>
+        </div>
+        <div class="admin-inline-actions"><button class="btn btn-small btn-danger" onclick="deletePhoto(${i})">حذف</button></div>
+      </div>
+    </div>`).join('') || '<p class="small-note">مفيش صور لسه</p>';
+}
+function addPhoto(){
+  const url = document.getElementById('newPhotoUrl').value.trim();
+  const caption = document.getElementById('newPhotoCaption').value.trim();
+  if (!url) return showToast('حطي رابط الصورة');
+  data.photos.push({ url, caption });
+  saveData(); renderAdminPhotos(document.getElementById('adminMain')); showToast('اتضافت ❤️');
+}
+function updatePhoto(i, field, value){ data.photos[i][field] = value; saveData(); showToast('اتحفظ ❤️'); }
+function deletePhoto(i){ data.photos.splice(i,1); saveData(); renderAdminPhotos(document.getElementById('adminMain')); showToast('اتحذفت'); }
+
+/* ---- الذكريات ---- */
+function renderAdminMemories(main){
+  main.innerHTML = `
+    <div class="admin-section-title">💬 الذكريات</div>
+    <div class="admin-form">
+      <select class="admin-select" id="newMemSet"></select>
+      <select class="admin-select" id="newMemSender"><option value="Esraa">Esraa</option><option value="Omar">Omar</option></select>
+      <textarea class="admin-textarea" id="newMemText" placeholder="الرسالة"></textarea>
+      <button class="btn btn-primary btn-small" onclick="addMemory()">➕ إضافة رسالة</button>
+    </div>
+    <div id="memList"></div>`;
+  const setSelect = document.getElementById('newMemSet');
+  setSelect.innerHTML = data.memories.map((_,i)=>`<option value="${i}">مجموعة ${i+1}</option>`).join('') + `<option value="${data.memories.length}">مجموعة جديدة</option>`;
+  document.getElementById('memList').innerHTML = data.memories.map((set, sIdx) => `
+    <p class="small-note" style="margin:14px 0 6px">مجموعة ${sIdx+1}</p>
+    ${set.map((m,mIdx) => `
+      <div class="admin-list-item">
+        <div class="row">
+          <div class="admin-row-fields">
+            <select class="admin-select" onchange="updateMemory(${sIdx},${mIdx},'sender',this.value)">
+              <option value="Esraa" ${m.sender==='Esraa'?'selected':''}>Esraa</option>
+              <option value="Omar" ${m.sender==='Omar'?'selected':''}>Omar</option>
+            </select>
+            <textarea class="admin-textarea" onchange="updateMemory(${sIdx},${mIdx},'text',this.value)">${escapeHtml(m.text)}</textarea>
+          </div>
+          <div class="admin-inline-actions"><button class="btn btn-small btn-danger" onclick="deleteMemory(${sIdx},${mIdx})">حذف</button></div>
+        </div>
+      </div>`).join('')}
+  `).join('') || '<p class="small-note">مفيش ذكريات لسه</p>';
+}
+function addMemory(){
+  const setIdx = parseInt(document.getElementById('newMemSet').value,10);
+  const sender = document.getElementById('newMemSender').value;
+  const text = document.getElementById('newMemText').value.trim();
+  if (!text) return showToast('اكتبي الرسالة');
+  if (!data.memories[setIdx]) data.memories[setIdx] = [];
+  data.memories[setIdx].push({ sender, text });
+  saveData(); renderAdminMemories(document.getElementById('adminMain')); showToast('اتضافت ❤️');
+}
+function updateMemory(sIdx, mIdx, field, value){ data.memories[sIdx][mIdx][field] = value; saveData(); showToast('اتحفظ ❤️'); }
+function deleteMemory(sIdx, mIdx){ data.memories[sIdx].splice(mIdx,1); saveData(); renderAdminMemories(document.getElementById('adminMain')); showToast('اتحذفت'); }
+
+/* ---- Quiz ---- */
+function renderAdminQuiz(main){
+  main.innerHTML = `
+    <div class="admin-section-title">❓ الأسئلة</div>
+    <div class="admin-form">
+      <input class="admin-input" id="newQQuestion" placeholder="نص السؤال">
+      <input class="admin-input" id="newQOpt1" placeholder="اختيار 1">
+      <input class="admin-input" id="newQOpt2" placeholder="اختيار 2">
+      <input class="admin-input" id="newQOpt3" placeholder="اختيار 3">
+      <select class="admin-select" id="newQCorrect"><option value="0">الإجابة الصحيحة: اختيار 1</option><option value="1">اختيار 2</option><option value="2">اختيار 3</option></select>
+      <button class="btn btn-primary btn-small" onclick="addQuizQ()">➕ إضافة سؤال</button>
+    </div>
+    <div id="quizList"></div>`;
+  document.getElementById('quizList').innerHTML = data.quiz.map((q,qi) => `
+    <div class="admin-list-item">
+      <div class="row">
+        <div class="admin-row-fields">
+          <input class="admin-input" value="${escapeAttr(q.question)}" onchange="updateQuizQ(${qi},'question',this.value)">
+          ${q.options.map((opt,i)=>`<div class="opt-row"><input class="admin-input" value="${escapeAttr(opt)}" onchange="updateQuizOption(${qi},${i},this.value)"><span class="small-note">${q.correct===i?'✅':''}</span></div>`).join('')}
+          <select class="admin-select" onchange="updateQuizQ(${qi},'correct',parseInt(this.value,10))">
+            ${q.options.map((opt,i)=>`<option value="${i}" ${q.correct===i?'selected':''}>الصح: ${escapeHtml(opt)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="admin-inline-actions"><button class="btn btn-small btn-danger" onclick="deleteQuizQ(${qi})">حذف</button></div>
+      </div>
+    </div>`).join('') || '<p class="small-note">مفيش أسئلة لسه</p>';
+}
+function addQuizQ(){
+  const question = document.getElementById('newQQuestion').value.trim();
+  const opts = [document.getElementById('newQOpt1').value.trim(), document.getElementById('newQOpt2').value.trim(), document.getElementById('newQOpt3').value.trim()].filter(Boolean);
+  const correct = parseInt(document.getElementById('newQCorrect').value,10);
+  if (!question || opts.length < 2) return showToast('اكتبي السؤال واختيارين على الأقل');
+  data.quiz.push({ question, options:opts, correct });
+  saveData(); renderAdminQuiz(document.getElementById('adminMain')); showToast('اتضاف ❤️');
+}
+function updateQuizQ(i, field, value){ data.quiz[i][field] = value; saveData(); showToast('اتحفظ ❤️'); }
+function updateQuizOption(i, idx, value){ data.quiz[i].options[idx] = value; saveData(); showToast('اتحفظ ❤️'); }
+function deleteQuizQ(i){ data.quiz.splice(i,1); saveData(); renderAdminQuiz(document.getElementById('adminMain')); showToast('اتحذف'); }
+
+/* ---- العدادات ---- */
+function renderAdminCounters(main){
+  main.innerHTML = `
+    <div class="admin-section-title">⏱️ عداد العلاقة</div>
+    <div class="admin-form">
+      <label class="small-note">تاريخ بداية العلاقة</label>
+      <input class="admin-input" type="datetime-local" id="relStartInput" value="${CONFIG.relationshipStart.slice(0,16)}">
+      <button class="btn btn-primary btn-small" onclick="saveRelStart()">حفظ</button>
+      <p class="small-note">ملحوظة: القيمة دي متغيرة في الكود نفسه (CONFIG.relationshipStart) — هتتحفظ محليًا كمان لحد ما تحدّثي الملف.</p>
+    </div>`;
+}
+function saveRelStart(){
+  const val = document.getElementById('relStartInput').value;
+  if (!val) return;
+  CONFIG.relationshipStart = val;
+  localStorage.setItem('relationship_start_override', val);
+  startTogetherCounter();
+  showToast('اتحفظ ❤️');
+}
+
+/* ---- الاشتياق ---- */
+function renderAdminLonging(main){
+  main.innerHTML = `
+    <div class="admin-section-title">❤️ الاشتياق</div>
+    <div class="stat-grid">
+      <div class="stat-card"><div class="num">${data.longing.Esraa||0}</div><div class="lbl">إسراء</div></div>
+      <div class="stat-card"><div class="num">${data.longing.Omar||0}</div><div class="lbl">عمر</div></div>
+    </div>
+    <p class="small-note">مدة الانتظار بين كل ضغطة: ${CONFIG.longingCooldownSeconds} ثانية (قابلة للتعديل من CONFIG في الكود)</p>
+    <div id="longHistAdmin"></div>`;
+  document.getElementById('longHistAdmin').innerHTML = data.longingHistory.map(h => {
+    const name = h.sender==='Esraa'?'إسراء':'عمر';
+    const time = new Date(h.time).toLocaleString('ar-EG');
+    return `<div class="longing-history-item">❤️ ${name} اشتاق${h.sender==='Esraa'?'ت':''}<span class="t">${time}</span></div>`;
+  }).join('');
+}
+
+/* ============================================================
+   بدء التشغيل
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+  createParticles();
+  createFloatingHearts();
+  document.getElementById('passwordInput').addEventListener('keypress', e => { if (e.key==='Enter') checkPassword(); });
+  const override = localStorage.getItem('relationship_start_override');
+  if (override) CONFIG.relationshipStart = override;
+});
+</script>
+</body>
+</html>
