@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>💕 Esraa & Omar — Our Little World</title>
+<title>💕 Esraa & Omar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
@@ -103,6 +103,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);min-height:100vh;over
 .frame-section{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:25px;padding:32px;max-width:550px;width:100%;margin:20px auto;position:relative;overflow:hidden;}
 .frame-section .glow-heart{position:absolute;font-size:120px;opacity:.05;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
 .frame-text{font-size:17px;line-height:2.1;color:rgba(255,255,255,.9);text-align:right;position:relative;z-index:1;white-space:pre-line;}
+.rotating-quote-frame{margin-top:20px;text-align:center;min-height:90px;display:flex;align-items:center;justify-content:center;}
+.rotating-quote-text{transition:opacity .6s ease;font-size:19px;text-align:center;font-weight:600;}
 .final-message{text-align:center;padding:20px 10px 40px;}
 .final-message .big-heart{font-size:70px;display:block;margin-bottom:16px;animation:heartBeat 1.5s ease infinite;}
 
@@ -334,6 +336,9 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);min-height:100vh;over
           <span class="big-heart">❤️</span>
           <p class="frame-text" id="finalMessageText"></p>
         </div>
+        <div class="frame-section rotating-quote-frame" id="rotatingQuoteFrame" style="display:none">
+          <p class="frame-text rotating-quote-text" id="rotatingQuoteText"></p>
+        </div>
       </div>
     </div>
   </div>
@@ -458,6 +463,7 @@ const DEFAULT_DATA = {
   longingHistory: [],
   extraSections: [], // [{title, text, scheduled?, deliveredAt?}] - رسائل/صفحات إضافية (يدوية أو مُسلّمة من الجدول)
   scheduledMessages: [], // [{id, title, text, dayOfWeek(0=أحد..6=سبت), hour, minute}] - رسايل بتتسلّم أوتوماتيك بتوقيت القاهرة
+  rotatingQuotes: [], // ["جملة 1","جملة 2",...] - بتتقلب واحدة كل 3 ثواني في آخر الصفحة النهائية
 };
 
 /* ============================================================
@@ -488,7 +494,8 @@ function setSyncStatus(on, label){
   lbl.textContent = label;
 }
 
-function initData(onReady){
+let dataLoadedOnce = false;
+function initData(onFirstReady){
   if (firebaseAvailable){
     db.ref('giftData').on('value', (snap) => {
       const remote = snap.val();
@@ -501,18 +508,35 @@ function initData(onReady){
       }
       firebaseReady = true;
       setSyncStatus(true, 'متصل — أي تعديل بيوصل فورًا للطرفين ✅');
-      onReady(true);
+      if (!dataLoadedOnce){
+        dataLoadedOnce = true;
+        onFirstReady(true);
+      } else {
+        handleRemoteDataChange();
+      }
     }, (err) => {
       console.warn('Firebase read failed, using local data.', err);
       data = loadLocalFallback();
       setSyncStatus(false, 'مفيش اتصال بالسحابة — شغال محليًا بس');
-      onReady(false);
+      if (!dataLoadedOnce){ dataLoadedOnce = true; onFirstReady(false); }
     });
   } else {
     data = loadLocalFallback();
     setSyncStatus(false, 'المزامنة مش مفعّلة لسه — شغال محليًا بس');
-    onReady(false);
+    dataLoadedOnce = true;
+    onFirstReady(false);
   }
+}
+
+// بيتنفذ في كل مرة أي جهاز تاني يعدّل حاجة — بيحدّث الشاشة الحالية على طول من غير ما يرجّع المستخدم للرئيسية
+function handleRemoteDataChange(){
+  applyStaticText();
+  pruneExpiredExtraSections();
+  if (state.currentPage === 'home') renderHome();
+  if (state.currentPage === 2) renderPhotos();
+  if (state.currentPage === 'extra') renderExtraSections();
+  if (state.currentPage === 'admin' && state.role === 'Omar') renderAdminSection();
+  if (state.currentPage === 6) startRotatingQuotes();
 }
 
 // بيحفظ فورًا لو فاير بيز شغال (وبيوصل لحظيًا لكل الأجهزة اللي فاتحة الموقع)،
@@ -583,14 +607,6 @@ function checkPassword(){
     startTogetherCounter();
     startScheduleEngine();
     goHome();
-    // لو البيانات اتغيرت من جهاز تاني وإحنا واقفين على الصفحة الرئيسية أو الأدمن، حدّث الشاشة تلقائيًا
-    if (firebaseAvailable){
-      db.ref('giftData').on('value', () => {
-        if (state.currentPage === 'home') renderHome();
-        if (state.currentPage === 'admin') renderAdmin();
-        if (state.currentPage === 'extra') renderExtraSections();
-      });
-    }
   });
 }
 function logout(){ location.reload(); }
@@ -640,7 +656,8 @@ function showPage(id){
   if (id === 2){ renderPhotos(); startCountdown(); }
   if (id === 3) initQuiz();
   if (id === 5) loadChatSet(0);
-  if (id === 6){ document.getElementById('finalMessageText').textContent = c('final_message'); requestIdleCallback ? requestIdleCallback(launchConfetti) : setTimeout(launchConfetti, 50); }
+  if (id === 6){ document.getElementById('finalMessageText').textContent = c('final_message'); startRotatingQuotes(); requestIdleCallback ? requestIdleCallback(launchConfetti) : setTimeout(launchConfetti, 50); }
+  else { stopRotatingQuotes(); }
   if (id === 'admin') renderAdmin();
   if (id === 'extra') renderExtraSections();
   window.scrollTo(0,0);
@@ -776,11 +793,23 @@ function renderPhotos(){
    الرسائل الإضافية (صفحات/نصوص حرة من الأدمن)
    ============================================================ */
 function renderExtraSections(){
+  pruneExpiredExtraSections();
   const el = document.getElementById('extraSectionsList');
   const sections = data.extraSections || [];
   el.innerHTML = sections.length
     ? sections.map(s => `<div class="extra-card"><h4>${escapeHtml(s.title)}</h4><p>${escapeHtml(s.text)}</p>${s.deliveredAt ? `<p class="small-note" style="margin-top:8px">${s.scheduled?'📅 وصلت تلقائيًا يوم ':'🕓 '}${formatCairoMoment(s.deliveredAt)}</p>` : ''}</div>`).join('')
     : '<p class="small-note">لسه مفيش رسائل إضافية 🥲</p>';
+}
+// الرسائل المجدولة بس بتختفي بعد 24 ساعة من وصولها؛ الرسائل اليدوية بتفضل للأبد
+function pruneExpiredExtraSections(){
+  if (!data.extraSections || !data.extraSections.length) return;
+  const cutoff = Date.now() - 24*3600*1000;
+  const before = data.extraSections.length;
+  data.extraSections = data.extraSections.filter(s => {
+    if (s.scheduled && s.deliveredAt) return new Date(s.deliveredAt).getTime() >= cutoff;
+    return true;
+  });
+  if (data.extraSections.length !== before) saveData();
 }
 
 /* ============================================================
@@ -884,6 +913,34 @@ function showNextChat(){
 /* ============================================================
    Confetti + خلفية (مُقلّلة عشان الأداء)
    ============================================================ */
+/* ============================================================
+   الجمل المتحركة (آخر الصفحة النهائية) — كل جملة تظهر 3 ثواني وتختفي
+   ============================================================ */
+let rotatingQuoteTimer = null;
+let rotatingQuoteIndex = 0;
+function startRotatingQuotes(){
+  stopRotatingQuotes();
+  const quotes = (data.rotatingQuotes||[]).filter(q => q && q.trim());
+  const frame = document.getElementById('rotatingQuoteFrame');
+  const textEl = document.getElementById('rotatingQuoteText');
+  if (!frame || !textEl) return;
+  if (!quotes.length){ frame.style.display = 'none'; return; }
+  frame.style.display = 'flex';
+  rotatingQuoteIndex = 0;
+  textEl.textContent = quotes[0];
+  textEl.style.opacity = '1';
+  if (quotes.length === 1) return; // جملة واحدة بس، تفضل ثابتة
+  rotatingQuoteTimer = setInterval(() => {
+    textEl.style.opacity = '0';
+    setTimeout(() => {
+      rotatingQuoteIndex = (rotatingQuoteIndex + 1) % quotes.length;
+      textEl.textContent = quotes[rotatingQuoteIndex];
+      textEl.style.opacity = '1';
+    }, 600);
+  }, 3000);
+}
+function stopRotatingQuotes(){ if (rotatingQuoteTimer) clearInterval(rotatingQuoteTimer); rotatingQuoteTimer = null; }
+
 function launchConfetti(){
   const container = document.createElement('div');
   container.className = 'confetti-container';
@@ -987,6 +1044,7 @@ const ADMIN_SECTIONS = [
   { id:'quiz', icon:'❓', label:'Quiz' },
   { id:'extra', icon:'💌', label:'رسائل إضافية' },
   { id:'schedule', icon:'📅', label:'رسائل مجدولة' },
+  { id:'quotes', icon:'💭', label:'جمل متحركة' },
   { id:'counters', icon:'⏱️', label:'العدادات' },
   { id:'longing', icon:'❤️', label:'الاشتياق' },
 ];
@@ -1014,6 +1072,7 @@ function renderAdminSection(){
   if (adminSection==='quiz') return renderAdminQuiz(main);
   if (adminSection==='extra') return renderAdminExtra(main);
   if (adminSection==='schedule') return renderAdminSchedule(main);
+  if (adminSection==='quotes') return renderAdminQuotes(main);
   if (adminSection==='counters') return renderAdminCounters(main);
   if (adminSection==='longing') return renderAdminLonging(main);
 }
@@ -1261,6 +1320,48 @@ function updateScheduledTime(i, value){
 }
 function deleteScheduledMessage(i){ data.scheduledMessages.splice(i,1); saveData(); renderAdminSchedule(document.getElementById('adminMain')); showToast('اتحذفت'); }
 
+/* ---- الجمل المتحركة (آخر صفحة) ---- */
+function renderAdminQuotes(main){
+  main.innerHTML = `
+    <div class="admin-section-title">💭 جمل متحركة (آخر الصفحة النهائية)</div>
+    <p class="small-note" style="margin-bottom:14px">كل جملة تظهر في البرواز 3 ثواني وتختفي وتظهر اللي بعدها، بالترتيب.</p>
+    <div class="admin-form">
+      <textarea class="admin-textarea" id="newQuoteText" placeholder="اكتب الجملة هنا"></textarea>
+      <button class="btn btn-primary btn-small" onclick="addRotatingQuote()">➕ إضافة جملة</button>
+    </div>
+    <div id="quotesList"></div>`;
+  document.getElementById('quotesList').innerHTML = (data.rotatingQuotes||[]).map((q,i) => `
+    <div class="admin-list-item">
+      <div class="row">
+        <div class="admin-row-fields">
+          <span class="small-note">جملة ${i+1}</span>
+          <textarea class="admin-textarea" onchange="updateRotatingQuote(${i},this.value)">${escapeHtml(q)}</textarea>
+        </div>
+        <div class="admin-inline-actions">
+          ${i>0 ? `<button class="btn btn-small btn-secondary" onclick="moveRotatingQuote(${i},-1)">⬆️</button>` : ''}
+          ${i<(data.rotatingQuotes.length-1) ? `<button class="btn btn-small btn-secondary" onclick="moveRotatingQuote(${i},1)">⬇️</button>` : ''}
+          <button class="btn btn-small btn-danger" onclick="deleteRotatingQuote(${i})">حذف</button>
+        </div>
+      </div>
+    </div>`).join('') || '<p class="small-note">مفيش جمل لسه</p>';
+}
+function addRotatingQuote(){
+  const val = document.getElementById('newQuoteText').value.trim();
+  if (!val) return showToast('اكتب الجملة الأول');
+  if (!data.rotatingQuotes) data.rotatingQuotes = [];
+  data.rotatingQuotes.push(val);
+  saveData(); renderAdminQuotes(document.getElementById('adminMain')); showToast('اتضافت ❤️');
+}
+function updateRotatingQuote(i, value){ data.rotatingQuotes[i] = value; saveData(); showToast('اتحفظ ❤️'); }
+function deleteRotatingQuote(i){ data.rotatingQuotes.splice(i,1); saveData(); renderAdminQuotes(document.getElementById('adminMain')); showToast('اتحذفت'); }
+function moveRotatingQuote(i, dir){
+  const arr = data.rotatingQuotes;
+  const j = i + dir;
+  if (j<0 || j>=arr.length) return;
+  [arr[i],arr[j]] = [arr[j],arr[i]];
+  saveData(); renderAdminQuotes(document.getElementById('adminMain'));
+}
+
 /* ---- محرك التسليم: بيتأكد كل 30 ثانية لو موعد رسالة مجدولة جه ---- */
 let scheduleCheckInterval = null;
 function startScheduleEngine(){
@@ -1269,6 +1370,7 @@ function startScheduleEngine(){
   scheduleCheckInterval = setInterval(checkScheduleAndDeliver, 30000);
 }
 function checkScheduleAndDeliver(){
+  pruneExpiredExtraSections();
   if (!data.scheduledMessages || !data.scheduledMessages.length) return;
   const now = getCairoNow();
   data.scheduledMessages.forEach(sched => {
