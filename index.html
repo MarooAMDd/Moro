@@ -382,17 +382,20 @@ const CONFIG = {
    خطوات إنشاء المشروع موضحة في الرد المرفق مع الملف ده.
    ============================================================ */
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY",
-  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
-  databaseURL: "https://PASTE_YOUR_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "PASTE_YOUR_PROJECT",
+  apiKey: "AIzaSyDcZQLLUtWL8UGJib9Nwqcu-gs84hXTWyk",
+  authDomain: "omar-1-fcd61.firebaseapp.com",
+  databaseURL: "https://omar-1-fcd61-default-rtdb.firebaseio.com",
+  projectId: "omar-1-fcd61",
+  storageBucket: "omar-1-fcd61.firebasestorage.app",
+  messagingSenderId: "1098323069112",
+  appId: "1:1098323069112:web:5d113e9d57fba380ac4c4d",
 };
 
 let db = null;
 let firebaseReady = false;
 let firebaseAvailable = false;
 try {
-  if (firebaseConfig.apiKey !== "PASTE_YOUR_API_KEY") {
+  if (firebaseConfig.databaseURL && firebaseConfig.databaseURL.indexOf("PASTE_YOUR") === -1) {
     firebase.initializeApp(firebaseConfig);
     db = firebase.database();
     firebaseAvailable = true;
