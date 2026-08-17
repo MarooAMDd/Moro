@@ -373,7 +373,7 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);min-height:100vh;over
 const CONFIG = {
   PASSWORDS: {
     Esraa: "Esraa",   // كلمة سر إسراء
-    Omar: "Omar"   // كلمة سر عمر
+    Omar: "Omar1"   // كلمة سر عمر
   },
   relationshipStart: "2026-06-01T00:00:00",
   longingCooldownSeconds: 3,
@@ -413,7 +413,7 @@ const DEFAULT_DATA = {
   content: {
     welcome_esraa: "صباح الخير يا إسراء",
     welcome_esraa_sub: "عمر عاملك حاجة صغيرة 🥺♥️",
-    welcome_omar: "اهلا يا عمر ❤️",
+    welcome_omar: "أهلًا يا عمر ❤️",
     welcome_omar_sub: "جاهز تكمل حكايتكم؟",
     main_title: "عندي سؤال مهم ليكي 💕",
     main_subtitle: "ادخلي وأجاوبيني 🥺",
@@ -533,9 +533,16 @@ function initData(onFirstReady){
 }
 
 // بيتنفذ في كل مرة أي جهاز تاني يعدّل حاجة — بيحدّث الشاشة الحالية على طول من غير ما يرجّع المستخدم للرئيسية
+// بيتأكد لو المستخدم دلوقتي بيكتب في حقل (input/textarea/select) عشان منعملوش إعادة رسم تمسحله اللي بيكتبه
+function isEditingField(){
+  const el = document.activeElement;
+  return !!(el && ['INPUT','TEXTAREA','SELECT'].includes(el.tagName));
+}
 function handleRemoteDataChange(){
   applyStaticText();
   pruneExpiredExtraSections();
+  const editing = isEditingField();
+  if (editing) return; // مينفعش نعيد بناء الصفحة وإنت لسه بتكتب — هنستنى لحد ما تخلص وتضغط بره الحقل
   if (state.currentPage === 'home') renderHome();
   if (state.currentPage === 2) renderPhotos();
   if (state.currentPage === 'extra') renderExtraSections();
