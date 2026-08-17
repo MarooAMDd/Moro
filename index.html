@@ -169,9 +169,11 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);min-height:100vh;over
 
 .chat-bubble .chat-name{font-size:11px;opacity:.7;margin-bottom:3px;}
 
-.extra-card{background:var(--glass);border:1px solid var(--glass-border);border-radius:18px;padding:20px;margin-bottom:16px;text-align:right;}
-.extra-card h4{color:var(--accent);margin-bottom:8px;font-size:17px;}
+.extra-card{background:linear-gradient(135deg,rgba(255,23,68,.09),rgba(255,255,255,.02));border:1px solid rgba(255,23,68,.2);border-radius:20px;padding:22px 24px;margin-bottom:18px;text-align:right;position:relative;overflow:hidden;}
+.extra-card::before{content:'💌';position:absolute;top:16px;left:18px;font-size:22px;opacity:.3;}
+.extra-card h4{color:var(--accent);margin-bottom:10px;font-size:18px;padding-left:30px;}
 .extra-card p{white-space:pre-line;line-height:2;font-size:15px;color:rgba(255,255,255,.9);}
+.btn-read{background:var(--ok);color:#fff;border:none;margin-top:10px;}
 
 @media (max-width:768px){
   .photo-gallery{grid-template-columns:1fr;gap:18px;}
@@ -230,7 +232,6 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);min-height:100vh;over
   <!-- ===== الرئيسية ===== -->
   <div class="page" id="page-home">
     <div class="welcome-card">
-      <div class="role-chip" id="roleChip"></div>
       <h1 class="main-title" id="welcomeTitle"></h1>
       <p class="subtitle" id="welcomeSub"></p>
     </div>
@@ -374,8 +375,8 @@ const CONFIG = {
     Esraa: "Esraa",   // كلمة سر إسراء
     Omar: "Omar"   // كلمة سر عمر
   },
-  relationshipStart: "2026-05-29T00:00:00",
-  longingCooldownSeconds: 10,
+  relationshipStart: "2026-04-01T00:00:00",
+  longingCooldownSeconds: 3,
   siteName: "Esraa & Omar",
   TIMEZONE: "Africa/Cairo", // كل الأوقات المعروضة والمجدولة بتوقيت القاهرة
 };
@@ -410,9 +411,9 @@ try {
 /* البيانات الافتراضية (تُستخدم أول مرة فقط، أو لو الاتصال بالسحابة اتقطع) */
 const DEFAULT_DATA = {
   content: {
-    welcome_esraa: "أهلًا يا إسراء ❤️",
-    welcome_esraa_sub: "عمر عامل لك حاجة صغيرة...",
-    welcome_omar: "أهلًا يا عمر ❤️",
+    welcome_esraa: "صباح الخير يا إسراء",
+    welcome_esraa_sub: "عمر عاملك حاجة صغيرة 🥺♥️",
+    welcome_omar: "اهلا يا عمر ❤️",
     welcome_omar_sub: "جاهز تكمل حكايتكم؟",
     main_title: "عندي سؤال مهم ليكي 💕",
     main_subtitle: "ادخلي وأجاوبيني 🥺",
@@ -461,9 +462,12 @@ const DEFAULT_DATA = {
   ],
   longing: { Esraa: 0, Omar: 0 },
   longingHistory: [],
+  longingHistoryResetDate: null, // آخر يوم اتنضف فيه سجل الاشتياق (الأرقام مش بتتأثر، بس السجل)
   extraSections: [], // [{title, text, scheduled?, deliveredAt?}] - رسائل/صفحات إضافية (يدوية أو مُسلّمة من الجدول)
   scheduledMessages: [], // [{id, title, text, dayOfWeek(0=أحد..6=سبت), hour, minute}] - رسايل بتتسلّم أوتوماتيك بتوقيت القاهرة
   rotatingQuotes: [], // ["جملة 1","جملة 2",...] - بتتقلب واحدة كل 3 ثواني في آخر الصفحة النهائية
+  autoLonging: { date: null, hour: null, minute: null, fired: false }, // اشتقتلك تلقائية من عمر مرة يوميًا في وقت عشوائي
+  longingHistoryLastClear: null, // آخر يوم اتنضف فيه سجل الاشتياق (الأرقام نفسها متأثرش)
 };
 
 /* ============================================================
@@ -606,6 +610,7 @@ function checkPassword(){
     renderHome();
     startTogetherCounter();
     startScheduleEngine();
+    startPollRefresh();
     goHome();
   });
 }
@@ -631,7 +636,6 @@ function applyStaticText(){
   document.getElementById('longingBtn').textContent = c('longing_button_label');
 
   const isEsraa = state.role === 'Esraa';
-  document.getElementById('roleChip').textContent = isEsraa ? '👑 حساب إسراء' : '👑 حساب عمر (Admin)';
   document.getElementById('welcomeTitle').textContent = isEsraa ? c('welcome_esraa') : c('welcome_omar');
   document.getElementById('welcomeSub').textContent = isEsraa ? c('welcome_esraa_sub') : c('welcome_omar_sub');
 }
@@ -797,16 +801,33 @@ function renderExtraSections(){
   const el = document.getElementById('extraSectionsList');
   const sections = data.extraSections || [];
   el.innerHTML = sections.length
-    ? sections.map(s => `<div class="extra-card"><h4>${escapeHtml(s.title)}</h4><p>${escapeHtml(s.text)}</p>${s.deliveredAt ? `<p class="small-note" style="margin-top:8px">${s.scheduled?'📅 وصلت تلقائيًا يوم ':'🕓 '}${formatCairoMoment(s.deliveredAt)}</p>` : ''}</div>`).join('')
+    ? sections.map(s => `
+      <div class="extra-card">
+        <h4>${escapeHtml(s.title)}</h4>
+        <p>${escapeHtml(s.text)}</p>
+        ${s.deliveredAt ? `<p class="small-note" style="margin-top:8px">${s.scheduled ? '💌 رسالة مخصوصة من عمر — ' + formatCairoDateDay(s.deliveredAt) : '🕓 ' + formatCairoMoment(s.deliveredAt)}</p>` : ''}
+        ${s.scheduled ? (
+          s.readAt
+            ? `<p class="small-note" style="margin-top:8px;color:var(--ok)">✅ اتقرأت ${formatCairoMoment(s.readAt)} — هتختفي بعد 12 ساعة من وقت القراءة</p>`
+            : `<button class="btn btn-small btn-read" onclick="markExtraSectionRead('${s.id}')">✅ تم قرائتها</button>`
+        ) : ''}
+      </div>`).join('')
     : '<p class="small-note">لسه مفيش رسائل إضافية 🥲</p>';
 }
-// الرسائل المجدولة بس بتختفي بعد 24 ساعة من وصولها؛ الرسائل اليدوية بتفضل للأبد
+function markExtraSectionRead(id){
+  const idx = (data.extraSections||[]).findIndex(s => s.id === id);
+  if (idx === -1) return;
+  data.extraSections[idx].readAt = new Date().toISOString();
+  saveData();
+  renderExtraSections();
+}
+// الرسائل المجدولة بتفضل موجودة لحد ما حد يدوس "تم قرائتها"، وبعدها بـ 12 ساعة بتختفي تلقائيًا. لو محدش دوس، بتفضل موجودة على طول.
 function pruneExpiredExtraSections(){
   if (!data.extraSections || !data.extraSections.length) return;
-  const cutoff = Date.now() - 24*3600*1000;
+  const cutoff = Date.now() - 12*3600*1000;
   const before = data.extraSections.length;
   data.extraSections = data.extraSections.filter(s => {
-    if (s.scheduled && s.deliveredAt) return new Date(s.deliveredAt).getTime() >= cutoff;
+    if (s.scheduled && s.readAt) return new Date(s.readAt).getTime() >= cutoff;
     return true;
   });
   if (data.extraSections.length !== before) saveData();
@@ -1013,6 +1034,9 @@ function getCairoNow(){
   const map = {}; parts.forEach(p => map[p.type] = p.value);
   const dayMap = { Sun:0, Mon:1, Tue:2, Wed:3, Thu:4, Fri:5, Sat:6 };
   return {
+    year: parseInt(map.year,10),
+    month: parseInt(map.month,10),
+    day: parseInt(map.day,10),
     dayOfWeek: dayMap[map.weekday],
     hour: parseInt(map.hour,10) % 24,
     minute: parseInt(map.minute,10),
@@ -1024,9 +1048,16 @@ function formatCairoMoment(isoString){
   return d.toLocaleString('ar-EG', {
     timeZone: CONFIG.TIMEZONE, weekday:'long', day:'2-digit', month:'long',
     year:'numeric', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true
-  }) + ' (بتوقيت القاهرة)';
+  });
+}
+function formatCairoDateDay(isoString){
+  const d = new Date(isoString);
+  return d.toLocaleString('ar-EG', {
+    timeZone: CONFIG.TIMEZONE, weekday:'long', day:'2-digit', month:'long', year:'numeric'
+  });
 }
 const DAY_NAMES_AR = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const MONTH_NAMES_AR = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 function showToast(msg){
   const t = document.getElementById('saveToast');
   t.textContent = msg; t.classList.add('show');
@@ -1260,43 +1291,90 @@ function addExtraSection(){
   const text = document.getElementById('newExtraText').value.trim();
   if (!title || !text) return showToast('اكتب العنوان والنص');
   if (!data.extraSections) data.extraSections = [];
-  data.extraSections.push({ title, text });
+  data.extraSections.push({ id: 'extra_' + Date.now(), title, text });
   saveData(); renderAdminExtra(document.getElementById('adminMain')); showToast('اتضافت ❤️');
 }
 function updateExtraSection(i, field, value){ data.extraSections[i][field] = value; saveData(); showToast('اتحفظ ❤️'); }
 function deleteExtraSection(i){ data.extraSections.splice(i,1); saveData(); renderAdminExtra(document.getElementById('adminMain')); showToast('اتحذفت'); }
 
-/* ---- رسائل مجدولة (بتوقيت القاهرة) ---- */
+/* ---- رسائل مجدولة (بتوقيت القاهرة) — زي جدولة تليجرام: مرة واحدة بتاريخ محدد، أو متكررة يوميًا/أسبوعيًا/شهريًا/سنويًا ---- */
 function renderAdminSchedule(main){
   main.innerHTML = `
     <div class="admin-section-title">📅 رسائل مجدولة</div>
     <p class="small-note" style="margin-bottom:14px">
-      حدد يوم ووقت (بتوقيت القاهرة)، والرسالة هتتسلّم أوتوماتيك وتتضاف لصفحة "رسائل إضافية" كل أسبوع في نفس الموعد —
-      بشرط إن الموقع يكون مفتوح على جهاز واحد على الأقل وقت الموعد (زي أي موقع بدون سيرفر خلفي، مفيش تنفيذ لما الموقع مقفول تمامًا).
+      اختار نوع الجدولة والتاريخ/الوقت (بتوقيت القاهرة) — بشرط إن الموقع يكون مفتوح على جهاز واحد على الأقل وقت الموعد
+      (أو استخدم GitHub Action لو عايزها تشتغل حتى لو مفيش جهاز فاتح).
     </p>
     <div class="admin-form">
       <input class="admin-input" id="newSchedTitle" placeholder="عنوان الرسالة">
       <textarea class="admin-textarea" id="newSchedText" placeholder="نص الرسالة"></textarea>
-      <select class="admin-select" id="newSchedDay">
-        ${DAY_NAMES_AR.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}
+      <select class="admin-select" id="newSchedType" onchange="renderSchedTypeFields(this.value)">
+        <option value="once">📆 مرة واحدة (تاريخ محدد)</option>
+        <option value="daily">☀️ يوميًا</option>
+        <option value="weekly">🗓️ أسبوعيًا</option>
+        <option value="monthly">📅 شهريًا (يوم معين كل شهر)</option>
+        <option value="yearly">🎉 سنويًا (ذكرى سنوية)</option>
       </select>
-      <input class="admin-input" id="newSchedTime" type="time" value="09:00">
-      <button class="btn btn-primary btn-small" onclick="addScheduledMessage()">➕ جدولة رسالة</button>
+      <div id="newSchedTypeFields"></div>
+      <button class="btn btn-primary btn-small" onclick="addScheduledMessage()">➕ جدولة</button>
     </div>
     <div id="schedList"></div>`;
-  document.getElementById('schedList').innerHTML = (data.scheduledMessages||[]).map((s,i) => `
+  renderSchedTypeFields('once');
+  renderSchedList();
+}
+function renderSchedTypeFields(type){
+  const el = document.getElementById('newSchedTypeFields');
+  if (!el) return;
+  if (type === 'once'){
+    el.innerHTML = `
+      <label class="small-note">التاريخ</label>
+      <input class="admin-input" id="schedOnceDate" type="date">
+      <label class="small-note">الوقت</label>
+      <input class="admin-input" id="schedTime" type="time" value="09:00">`;
+  } else if (type === 'daily'){
+    el.innerHTML = `<label class="small-note">الوقت (كل يوم)</label><input class="admin-input" id="schedTime" type="time" value="09:00">`;
+  } else if (type === 'weekly'){
+    el.innerHTML = `
+      <label class="small-note">اليوم</label>
+      <select class="admin-select" id="schedDay">${DAY_NAMES_AR.map((d,i)=>`<option value="${i}">${d}</option>`).join('')}</select>
+      <label class="small-note">الوقت</label>
+      <input class="admin-input" id="schedTime" type="time" value="09:00">`;
+  } else if (type === 'monthly'){
+    el.innerHTML = `
+      <label class="small-note">يوم الشهر (1-31)</label>
+      <input class="admin-input" id="schedDayOfMonth" type="number" min="1" max="31" value="1">
+      <label class="small-note">الوقت</label>
+      <input class="admin-input" id="schedTime" type="time" value="09:00">`;
+  } else if (type === 'yearly'){
+    el.innerHTML = `
+      <label class="small-note">الشهر</label>
+      <select class="admin-select" id="schedMonth">${MONTH_NAMES_AR.map((m,i)=>`<option value="${i+1}">${m}</option>`).join('')}</select>
+      <label class="small-note">اليوم</label>
+      <input class="admin-input" id="schedDayOfMonth" type="number" min="1" max="31" value="1">
+      <label class="small-note">الوقت</label>
+      <input class="admin-input" id="schedTime" type="time" value="09:00">`;
+  }
+}
+function describeSchedule(s){
+  const t = `${String(s.hour).padStart(2,'0')}:${String(s.minute).padStart(2,'0')}`;
+  const type = s.type || 'weekly';
+  if (type === 'once') return `📆 مرة واحدة: ${s.day}/${s.month}/${s.year} — ${t}` + (s.deliveredOnce ? ' ✅ اتبعتت بالفعل' : ' ⏳ لسه ما جاش موعدها');
+  if (type === 'daily') return `☀️ كل يوم — ${t}`;
+  if (type === 'weekly') return `🗓️ كل ${DAY_NAMES_AR[s.dayOfWeek]} — ${t}`;
+  if (type === 'monthly') return `📅 يوم ${s.dayOfMonth} من كل شهر — ${t}`;
+  if (type === 'yearly') return `🎉 ${s.day} ${MONTH_NAMES_AR[s.month-1]} من كل سنة — ${t}`;
+  return '';
+}
+function renderSchedList(){
+  const listEl = document.getElementById('schedList');
+  if (!listEl) return;
+  listEl.innerHTML = (data.scheduledMessages||[]).map((s,i) => `
     <div class="admin-list-item">
       <div class="row">
         <div class="admin-row-fields">
-          <input class="admin-input" value="${escapeAttr(s.title)}" onchange="updateScheduledMessage(${i},'title',this.value)">
-          <textarea class="admin-textarea" onchange="updateScheduledMessage(${i},'text',this.value)">${escapeHtml(s.text)}</textarea>
-          <div class="opt-row">
-            <select class="admin-select" onchange="updateScheduledMessage(${i},'dayOfWeek',parseInt(this.value,10))">
-              ${DAY_NAMES_AR.map((d,di)=>`<option value="${di}" ${s.dayOfWeek===di?'selected':''}>${d}</option>`).join('')}
-            </select>
-            <input class="admin-input" type="time" value="${String(s.hour).padStart(2,'0')}:${String(s.minute).padStart(2,'0')}" onchange="updateScheduledTime(${i},this.value)">
-          </div>
-          <p class="small-note">كل ${DAY_NAMES_AR[s.dayOfWeek]} الساعة ${String(s.hour).padStart(2,'0')}:${String(s.minute).padStart(2,'0')} (توقيت القاهرة)</p>
+          <input class="admin-input" value="${escapeAttr(s.title)}" onchange="updateScheduledField(${i},'title',this.value)">
+          <textarea class="admin-textarea" onchange="updateScheduledField(${i},'text',this.value)">${escapeHtml(s.text)}</textarea>
+          <p class="small-note">${describeSchedule(s)}</p>
         </div>
         <div class="admin-inline-actions"><button class="btn btn-small btn-danger" onclick="deleteScheduledMessage(${i})">حذف</button></div>
       </div>
@@ -1305,19 +1383,34 @@ function renderAdminSchedule(main){
 function addScheduledMessage(){
   const title = document.getElementById('newSchedTitle').value.trim();
   const text = document.getElementById('newSchedText').value.trim();
-  const dayOfWeek = parseInt(document.getElementById('newSchedDay').value,10);
-  const [hh,mm] = document.getElementById('newSchedTime').value.split(':').map(n=>parseInt(n,10));
+  const type = document.getElementById('newSchedType').value;
   if (!title || !text) return showToast('اكتب العنوان والنص');
+
+  const timeInput = document.getElementById('schedTime');
+  let hh = 9, mm = 0;
+  if (timeInput && timeInput.value){ [hh, mm] = timeInput.value.split(':').map(n => parseInt(n,10)); }
+
+  const sched = { id: 'sched_' + Date.now(), title, text, type, hour: hh, minute: mm };
+
+  if (type === 'once'){
+    const dateVal = document.getElementById('schedOnceDate').value;
+    if (!dateVal) return showToast('اختار التاريخ الأول');
+    const [y, mo, d] = dateVal.split('-').map(n => parseInt(n,10));
+    sched.year = y; sched.month = mo; sched.day = d; sched.deliveredOnce = false;
+  } else if (type === 'weekly'){
+    sched.dayOfWeek = parseInt(document.getElementById('schedDay').value, 10);
+  } else if (type === 'monthly'){
+    sched.dayOfMonth = parseInt(document.getElementById('schedDayOfMonth').value, 10);
+  } else if (type === 'yearly'){
+    sched.month = parseInt(document.getElementById('schedMonth').value, 10);
+    sched.day = parseInt(document.getElementById('schedDayOfMonth').value, 10);
+  }
+
   if (!data.scheduledMessages) data.scheduledMessages = [];
-  data.scheduledMessages.push({ id:'sched_'+Date.now(), title, text, dayOfWeek, hour:hh, minute:mm });
+  data.scheduledMessages.push(sched);
   saveData(); renderAdminSchedule(document.getElementById('adminMain')); showToast('اتجدولت ❤️');
 }
-function updateScheduledMessage(i, field, value){ data.scheduledMessages[i][field] = value; saveData(); showToast('اتحفظ ❤️'); }
-function updateScheduledTime(i, value){
-  const [hh,mm] = value.split(':').map(n=>parseInt(n,10));
-  data.scheduledMessages[i].hour = hh; data.scheduledMessages[i].minute = mm;
-  saveData(); showToast('اتحفظ ❤️');
-}
+function updateScheduledField(i, field, value){ data.scheduledMessages[i][field] = value; saveData(); showToast('اتحفظ ❤️'); }
 function deleteScheduledMessage(i){ data.scheduledMessages.splice(i,1); saveData(); renderAdminSchedule(document.getElementById('adminMain')); showToast('اتحذفت'); }
 
 /* ---- الجمل المتحركة (آخر صفحة) ---- */
@@ -1362,24 +1455,128 @@ function moveRotatingQuote(i, dir){
   saveData(); renderAdminQuotes(document.getElementById('adminMain'));
 }
 
-/* ---- محرك التسليم: بيتأكد كل 30 ثانية لو موعد رسالة مجدولة جه ---- */
+/* ---- محرك التسليم: بيتأكد كل 30 ثانية لو موعد رسالة مجدولة جه، وبرضه بيدير الاشتياق التلقائي وتنظيف سجل الاشتياق اليومي ---- */
 let scheduleCheckInterval = null;
 function startScheduleEngine(){
   if (scheduleCheckInterval) clearInterval(scheduleCheckInterval);
   checkScheduleAndDeliver();
-  scheduleCheckInterval = setInterval(checkScheduleAndDeliver, 30000);
+  checkAutoLonging();
+  checkDailyHistoryCleanup();
+  scheduleCheckInterval = setInterval(() => {
+    checkScheduleAndDeliver(); checkAutoLonging(); checkDailyHistoryCleanup();
+  }, 30000);
+}
+// بينضف سجل "اشتقتلك" (القايمة اللي بتظهر تحت الزرار) مرة كل يوم بتوقيت القاهرة، من غير ما يأثر على أرقام العدادات نفسها
+function checkDailyHistoryCleanup(){
+  const now = getCairoNow();
+  if (data.longingHistoryLastClear === now.dateStr) return; // اتنضف النهاردة بالفعل
+  if (firebaseAvailable){
+    db.ref('giftData/longingHistoryLastClear').transaction(cur => (cur === now.dateStr ? undefined : now.dateStr))
+      .then(result => {
+        if (result.committed){
+          data.longingHistory = [];
+          data.longingHistoryLastClear = now.dateStr;
+          db.ref('giftData/longingHistory').set([]);
+          if (state.currentPage === 'home') { renderLongingHistory(); updateLastLongingMoment(); }
+        }
+      }).catch(() => {});
+  } else {
+    data.longingHistory = [];
+    data.longingHistoryLastClear = now.dateStr;
+    saveData();
+  }
 }
 function checkScheduleAndDeliver(){
   pruneExpiredExtraSections();
   if (!data.scheduledMessages || !data.scheduledMessages.length) return;
   const now = getCairoNow();
   data.scheduledMessages.forEach(sched => {
-    if (sched.dayOfWeek === now.dayOfWeek && sched.hour === now.hour && sched.minute === now.minute){
-      const dedupeKey = `${sched.id}_${now.dateStr}`;
+    if ((sched.type || 'weekly') === 'once' && sched.deliveredOnce) return;
+    if (matchesSchedule(sched, now)){
+      const dedupeKey = (sched.type || 'weekly') === 'once' ? `${sched.id}_once` : `${sched.id}_${now.dateStr}`;
       attemptDeliverSchedule(sched, dedupeKey);
     }
   });
 }
+function matchesSchedule(sched, now){
+  const type = sched.type || 'weekly'; // توافق مع الرسائل القديمة اللي اتضافت قبل التحديث
+  if (sched.hour !== now.hour || sched.minute !== now.minute) return false;
+  if (type === 'once') return sched.year === now.year && sched.month === now.month && sched.day === now.day;
+  if (type === 'daily') return true;
+  if (type === 'weekly') return sched.dayOfWeek === now.dayOfWeek;
+  if (type === 'monthly') return sched.dayOfMonth === now.day;
+  if (type === 'yearly') return sched.month === now.month && sched.day === now.day;
+  return false;
+}
+
+/* ---- اشتقتلك تلقائية من عمر — مرة واحدة يوميًا في وقت عشوائي بين 10 صباحًا و12 بالليل (توقيت القاهرة) ----
+   بتظهر لإسراء بالظبط زي أي ضغطة يدوية عادية، من غير أي علامة أو تنويه مختلف. */
+function randomInt(min, max){ return min + Math.floor(Math.random() * (max - min + 1)); }
+
+function checkAutoLonging(){
+  const now = getCairoNow();
+  if (!data.autoLonging || data.autoLonging.date !== now.dateStr){
+    ensureAutoLongingScheduledForToday(now.dateStr);
+    return; // هنستنى الـ tick الجاي بعد ما الميعاد يتحدد ويتزامن
+  }
+  const timePassed = (now.hour > data.autoLonging.hour) ||
+    (now.hour === data.autoLonging.hour && now.minute >= data.autoLonging.minute);
+  if (!data.autoLonging.fired && timePassed){
+    attemptFireAutoLonging(now.dateStr);
+  }
+}
+function ensureAutoLongingScheduledForToday(dateStr){
+  const fresh = { date: dateStr, hour: randomInt(10,23), minute: randomInt(0,59), fired:false };
+  if (firebaseAvailable){
+    // transaction عشان لو الجهازين فتحوا الموقع في نفس اللحظة، يتفقوا على ميعاد واحد بس
+    db.ref('giftData/autoLonging').transaction(cur => {
+      if (cur && cur.date === dateStr) return; // اتحدد بالفعل، سيبه زي ما هو
+      return fresh;
+    }).then(result => {
+      if (result.snapshot && result.snapshot.val()) data.autoLonging = result.snapshot.val();
+    }).catch(() => {});
+  } else {
+    data.autoLonging = fresh; saveData();
+  }
+}
+function attemptFireAutoLonging(dateStr){
+  if (firebaseAvailable){
+    db.ref('giftData/autoLonging/fired').transaction(cur => (cur === true ? undefined : true))
+      .then(result => {
+        if (result.committed){
+          data.longing.Omar = (data.longing.Omar || 0) + 1;
+          data.longingHistory.unshift({ sender: 'Omar', time: new Date().toISOString() });
+          data.longingHistory = data.longingHistory.slice(0, 15);
+          if (data.autoLonging) data.autoLonging.fired = true;
+          saveData();
+        }
+      }).catch(() => {});
+  } else {
+    if (data.autoLonging.fired) return;
+    data.longing.Omar = (data.longing.Omar || 0) + 1;
+    data.longingHistory.unshift({ sender: 'Omar', time: new Date().toISOString() });
+    data.longingHistory = data.longingHistory.slice(0, 15);
+    data.autoLonging.fired = true;
+    saveData();
+  }
+}
+
+/* ---- ريفرش دوري كل 5 ثواني: يقرا آخر نسخة من السحابة ويحدّث الشاشة، كضمان إضافي حتى لو الاتصال اللحظي (listener) اتقطع في الخلفية ---- */
+let pollRefreshInterval = null;
+function startPollRefresh(){
+  if (pollRefreshInterval) clearInterval(pollRefreshInterval);
+  if (!firebaseAvailable) return;
+  pollRefreshInterval = setInterval(() => {
+    db.ref('giftData').once('value').then(snap => {
+      const remote = snap.val();
+      if (remote){
+        data = mergeWithDefaults(remote);
+        handleRemoteDataChange();
+      }
+    }).catch(() => {});
+  }, 5000);
+}
+
 function attemptDeliverSchedule(sched, dedupeKey){
   if (firebaseAvailable){
     // transaction: أول جهاز يوصل الموعد بس هو اللي بيسلّم الرسالة (يمنع تكرارها لو الطرفين فاتحين الموقع في نفس اللحظة)
@@ -1398,9 +1595,17 @@ function attemptDeliverSchedule(sched, dedupeKey){
 }
 function deliverScheduledMessageLocally(sched){
   if (!data.extraSections) data.extraSections = [];
-  data.extraSections.unshift({ title: sched.title, text: sched.text, scheduled: true, deliveredAt: new Date().toISOString() });
+  data.extraSections.unshift({
+    id: 'extra_' + Date.now() + '_' + Math.floor(Math.random()*1000),
+    title: sched.title, text: sched.text, scheduled: true, deliveredAt: new Date().toISOString()
+  });
+  if ((sched.type || 'weekly') === 'once'){
+    const idx = (data.scheduledMessages||[]).findIndex(s => s.id === sched.id);
+    if (idx > -1) data.scheduledMessages[idx].deliveredOnce = true;
+  }
   saveData();
   if (state.currentPage === 'extra') renderExtraSections();
+  if (state.currentPage === 'admin' && adminSection === 'schedule') renderSchedList();
   showToast(`💌 وصلت رسالة مجدولة: ${sched.title}`);
 }
 
