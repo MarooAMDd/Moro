@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>💕 Esraa & Omar</title>
+<title>💕 Esraa & Omar — Our Little World</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
@@ -104,7 +104,8 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);min-height:100vh;over
 .frame-section .glow-heart{position:absolute;font-size:120px;opacity:.05;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
 .frame-text{font-size:17px;line-height:2.1;color:rgba(255,255,255,.9);text-align:right;position:relative;z-index:1;white-space:pre-line;}
 .rotating-quote-frame{margin-top:20px;text-align:center;min-height:90px;display:flex;align-items:center;justify-content:center;}
-.rotating-quote-text{transition:opacity .6s ease;font-size:19px;text-align:center;font-weight:600;}
+.rotating-quote-text{transition:opacity .45s ease;font-size:19px;text-align:center;font-weight:600;opacity:1;}
+.rotating-quote-text.quote-hidden{opacity:0;}
 .final-message{text-align:center;padding:20px 10px 40px;}
 .final-message .big-heart{font-size:70px;display:block;margin-bottom:16px;animation:heartBeat 1.5s ease infinite;}
 
@@ -373,10 +374,10 @@ body{font-family:'Tajawal',sans-serif;background:var(--bg);min-height:100vh;over
 const CONFIG = {
   PASSWORDS: {
     Esraa: "Esraa",   // كلمة سر إسراء
-    Omar: "Omar1"   // كلمة سر عمر
+    Omar: "Omar"   // كلمة سر عمر
   },
-  relationshipStart: "2026-06-01T00:00:00",
-  longingCooldownSeconds: 3,
+  relationshipStart: "2026-04-02T00:00:00", // بيدي 150 يوم بالظبط اعتبارًا من 30 أغسطس 2026 — لو محتاج تظبطه لتاريخكم الحقيقي، غيّر التاريخ ده وبس
+  longingCooldownSeconds: 30,
   siteName: "Esraa & Omar",
   TIMEZONE: "Africa/Cairo", // كل الأوقات المعروضة والمجدولة بتوقيت القاهرة
 };
@@ -946,6 +947,8 @@ function showNextChat(){
    ============================================================ */
 let rotatingQuoteTimer = null;
 let rotatingQuoteIndex = 0;
+const QUOTE_VISIBLE_MS = 3000; // مدة ظهور كل جملة كاملة الوضوح
+const QUOTE_FADE_MS = 450;     // مدة التلاشي بين جملة والتانية
 function startRotatingQuotes(){
   stopRotatingQuotes();
   const quotes = (data.rotatingQuotes||[]).filter(q => q && q.trim());
@@ -955,19 +958,23 @@ function startRotatingQuotes(){
   if (!quotes.length){ frame.style.display = 'none'; return; }
   frame.style.display = 'flex';
   rotatingQuoteIndex = 0;
+  textEl.classList.remove('quote-hidden');
   textEl.textContent = quotes[0];
-  textEl.style.opacity = '1';
-  if (quotes.length === 1) return; // جملة واحدة بس، تفضل ثابتة
-  rotatingQuoteTimer = setInterval(() => {
-    textEl.style.opacity = '0';
-    setTimeout(() => {
+  if (quotes.length === 1) return; // جملة واحدة بس، تفضل ثابتة من غير تايمر
+  scheduleNextQuote(textEl, quotes);
+}
+function scheduleNextQuote(textEl, quotes){
+  rotatingQuoteTimer = setTimeout(() => {
+    textEl.classList.add('quote-hidden'); // بداية التلاشي
+    rotatingQuoteTimer = setTimeout(() => {
       rotatingQuoteIndex = (rotatingQuoteIndex + 1) % quotes.length;
       textEl.textContent = quotes[rotatingQuoteIndex];
-      textEl.style.opacity = '1';
-    }, 600);
-  }, 3000);
+      textEl.classList.remove('quote-hidden'); // ظهور الجملة الجديدة
+      scheduleNextQuote(textEl, quotes);
+    }, QUOTE_FADE_MS);
+  }, QUOTE_VISIBLE_MS);
 }
-function stopRotatingQuotes(){ if (rotatingQuoteTimer) clearInterval(rotatingQuoteTimer); rotatingQuoteTimer = null; }
+function stopRotatingQuotes(){ if (rotatingQuoteTimer) clearTimeout(rotatingQuoteTimer); rotatingQuoteTimer = null; }
 
 function launchConfetti(){
   const container = document.createElement('div');
@@ -1424,10 +1431,10 @@ function deleteScheduledMessage(i){ data.scheduledMessages.splice(i,1); saveData
 function renderAdminQuotes(main){
   main.innerHTML = `
     <div class="admin-section-title">💭 جمل متحركة (آخر الصفحة النهائية)</div>
-    <p class="small-note" style="margin-bottom:14px">كل جملة تظهر في البرواز 3 ثواني وتختفي وتظهر اللي بعدها، بالترتيب.</p>
+    <p class="small-note" style="margin-bottom:14px">كل جملة بتاخد 3 ثواني بالظبط بالتساوي وبعدين تتلاشى بسلاسة وتظهر اللي بعدها. لو كتبت كذا جملة في المربع تحت (كل جملة في سطر لوحدها)، هيتضافوا كلهم منفصلين تلقائيًا وياخدوا دورهم بالتوازي بينهم.</p>
     <div class="admin-form">
-      <textarea class="admin-textarea" id="newQuoteText" placeholder="اكتب الجملة هنا"></textarea>
-      <button class="btn btn-primary btn-small" onclick="addRotatingQuote()">➕ إضافة جملة</button>
+      <textarea class="admin-textarea" id="newQuoteText" placeholder="اكتب جملة واحدة، أو كذا جملة كل واحدة في سطر لوحدها"></textarea>
+      <button class="btn btn-primary btn-small" onclick="addRotatingQuote()">➕ إضافة</button>
     </div>
     <div id="quotesList"></div>`;
   document.getElementById('quotesList').innerHTML = (data.rotatingQuotes||[]).map((q,i) => `
@@ -1446,11 +1453,15 @@ function renderAdminQuotes(main){
     </div>`).join('') || '<p class="small-note">مفيش جمل لسه</p>';
 }
 function addRotatingQuote(){
-  const val = document.getElementById('newQuoteText').value.trim();
-  if (!val) return showToast('اكتب الجملة الأول');
+  const raw = document.getElementById('newQuoteText').value;
+  const lines = raw.split('\n').map(s => s.trim()).filter(Boolean);
+  if (!lines.length) return showToast('اكتب الجملة الأول');
   if (!data.rotatingQuotes) data.rotatingQuotes = [];
-  data.rotatingQuotes.push(val);
-  saveData(); renderAdminQuotes(document.getElementById('adminMain')); showToast('اتضافت ❤️');
+  data.rotatingQuotes.push(...lines);
+  saveData();
+  document.getElementById('newQuoteText').value = '';
+  renderAdminQuotes(document.getElementById('adminMain'));
+  showToast(lines.length > 1 ? `اتضافوا ${lines.length} جمل ❤️` : 'اتضافت ❤️');
 }
 function updateRotatingQuote(i, value){ data.rotatingQuotes[i] = value; saveData(); showToast('اتحفظ ❤️'); }
 function deleteRotatingQuote(i){ data.rotatingQuotes.splice(i,1); saveData(); renderAdminQuotes(document.getElementById('adminMain')); showToast('اتحذفت'); }
@@ -1568,7 +1579,9 @@ function attemptFireAutoLonging(dateStr){
   }
 }
 
-/* ---- ريفرش دوري كل 5 ثواني: يقرا آخر نسخة من السحابة ويحدّث الشاشة، كضمان إضافي حتى لو الاتصال اللحظي (listener) اتقطع في الخلفية ---- */
+/* ---- ريفرش احتياطي كل 10 دقايق: يقرا آخر نسخة من السحابة ويحدّث الشاشة، كضمان إضافي لو الاتصال اللحظي (listener) اتقطع في الخلفية.
+   ملحوظة: المزامنة الفورية بين الطرفين (زرار الاشتياق، تعديلات الأدمن...) شغالة أصلاً لحظيًا عن طريق db.ref().on('value') في initData،
+   ومش مرتبطة بالريفرش ده — الريفرش ده مجرد نسخة احتياطية للتأكيد بس. ---- */
 let pollRefreshInterval = null;
 function startPollRefresh(){
   if (pollRefreshInterval) clearInterval(pollRefreshInterval);
@@ -1581,7 +1594,7 @@ function startPollRefresh(){
         handleRemoteDataChange();
       }
     }).catch(() => {});
-  }, 5000);
+  }, 600000); // 10 دقايق
 }
 
 function attemptDeliverSchedule(sched, dedupeKey){
