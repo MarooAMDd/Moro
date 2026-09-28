@@ -7,30 +7,38 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f6f3ea;--fg:#1e2a25;--mute:#7f7b6c;--line:#e1dbc9;--acc:#2f5d50;--gold:#b8923a;--fs:1.7}
-[data-theme=night]{--bg:#12161a;--fg:#e1dbc8;--mute:#8a8778;--line:#252b2f;--acc:#8fbfae;--gold:#d2ae5a}
+:root{--bg:#f6f3ea;--fg:#1e2a25;--mute:#7f7b6c;--line:#e1dbc9;--acc:#2f5d50;--gold:#b8923a;--fs:1.7;--pink:#c48a9c;--done:#8a8578;--friday:#c9a961}
+[data-theme=night]{--bg:#12161a;--fg:#e1dbc8;--mute:#8a8778;--line:#252b2f;--acc:#8fbfae;--gold:#d2ae5a;--pink:#c48a9c;--done:#6a675c;--friday:#d2ae5a}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
 html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--fg);font-family:Tajawal,"Segoe UI",Tahoma,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+body{background:var(--bg);color:var(--fg);font-family:Tajawal,"Segoe UI",Tahoma,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);transition:background .5s}
+body.friday-mode{background:linear-gradient(180deg,#f6f0dd 0%,#f6f3ea 60%)}
+[data-theme=night] body.friday-mode{background:linear-gradient(180deg,#1a160e 0%,#12161a 60%)}
 #app{height:100%;overflow:auto}
 h1{font-weight:700;font-size:1.8rem;margin:0}
 .screen{min-height:100%;max-width:26rem;margin:0 auto;padding:2rem 1.4rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;text-align:center}
 .mute{color:var(--mute);font-size:.92rem}
-.row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.9rem 0;border-bottom:1px solid var(--line);text-align:right}
+.row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.9rem 0;border-bottom:1px solid var(--line);text-align:right;transition:opacity .3s}
+.row.done{opacity:.55}
+.row.done b{color:var(--done)}
+.row.done .mute{color:var(--done)}
 .row b{font-weight:500;font-size:1.08rem;display:block}
-.prog{width:100%}.bar0{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:.4rem}.bar0 i{display:block;height:100%;background:var(--acc)}
+.prog{width:100%}.bar0{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:.4rem}.bar0 i{display:block;height:100%;background:var(--acc);transition:width .4s}
 .err{color:#b3473a;min-height:1.3em;font-size:.9rem}
 input{font:inherit;width:100%;padding:.75rem;border:1px solid var(--line);border-radius:.6rem;background:transparent;color:var(--fg);text-align:center}
 .btn{font:inherit;min-height:2.75rem;background:var(--acc);color:var(--bg);border:0;border-radius:.7rem;padding:.6rem 1.3rem;cursor:pointer;white-space:nowrap}
 .btn.big{font-size:1.08rem;padding:.75rem 1.8rem}.btn.ghost{background:none;color:var(--fg);border:1px solid var(--line)}
-.btn:disabled{background:var(--line);color:var(--mute);cursor:default}.btn.gold:disabled{background:var(--gold);color:#fff;opacity:.85}
+.btn:disabled{background:var(--line);color:var(--mute);cursor:default}
+.btn.done-btn{background:var(--done);color:var(--bg)}
+.btn-omar{background:#3d6b55;color:#fff;font-size:1.4rem;padding:1.4rem;font-weight:600;width:100%;letter-spacing:.5px}
+.btn-maryam{background:var(--pink);color:#fff;font-size:1.4rem;padding:1.4rem;font-weight:600;width:100%;letter-spacing:.5px}
 .seg{display:flex;gap:.6rem;width:100%}.seg .btn{flex:1}
 .link{font:inherit;font-size:.9rem;min-height:2.5rem;background:none;border:0;color:var(--mute);cursor:pointer}
 .toast{position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.5rem 1rem;border-radius:.6rem;font-size:.9rem;z-index:9}
 .fl{display:inline-block;transition:filter .3s;filter:grayscale(1) opacity(.55)}.fl.red{filter:drop-shadow(0 0 4px rgba(214,90,60,.55))}
 .qf{font-family:"Amiri Quran","Scheherazade New","Traditional Arabic",serif}
-.dk{width:100%;padding:1rem 0}.dk .t{line-height:2.4;font-size:1.45rem}.dk .s{color:var(--mute);font-size:.85rem;margin-top:.5rem}
+.dk{width:100%;padding:1rem 0}
 .nav{display:flex;gap:.6rem;width:100%;justify-content:space-between}
 #rd{position:relative;display:flex;flex-direction:column;height:100%}
 .bar{display:flex;align-items:center;justify-content:space-between;padding:.3rem .5rem;background:var(--bg);color:var(--mute);z-index:2;transition:opacity .2s}
@@ -54,152 +62,223 @@ input{font:inherit;width:100%;padding:.75rem;border:1px solid var(--line);border
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
 .rec-timer{font-size:1.3rem;font-weight:600;color:var(--acc)}
 .rec-actions{display:flex;gap:.6rem;justify-content:center;width:100%}
-.prayer-bar{width:100%;padding:.6rem .8rem;background:var(--line);border-radius:.6rem;font-size:.9rem;color:var(--fg);display:flex;justify-content:space-between;align-items:center}
+.prayer-bar{width:100%;padding:.6rem .8rem;background:var(--line);border-radius:.6rem;font-size:.9rem;color:var(--fg);display:flex;justify-content:space-between;align-items:center;transition:background .4s}
+body.friday-mode .prayer-bar{background:rgba(201,169,97,.18)}
 .prayer-bar b{color:var(--acc)}
-.pick{width:100%;padding:1.5rem 0;text-align:center}
+.pick{width:100%;padding:1.5rem 0;text-align:center;display:flex;flex-direction:column;gap:.9rem}
+.dk-item{width:100%;padding:1rem 0;border-bottom:1px solid var(--line);animation:fadeIn .35s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.dk-item .dt{font-family:"Amiri Quran",serif;font-size:1.15rem;line-height:2.1;text-align:justify;text-align-last:center;margin-bottom:.6rem}
+.dk-item .ds{color:var(--mute);font-size:.82rem;margin-bottom:.5rem}
+.dk-header{width:100%;text-align:center;padding:.6rem 0;border-bottom:1px dashed var(--line);margin-bottom:.8rem}
+.dk-header .dh-prog{color:var(--mute);font-size:.85rem;margin-bottom:.3rem}
+.dk-header .dh-title{font-family:"Amiri Quran",serif;font-size:1.25rem;color:var(--acc)}
+.dk-counter{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:1rem}
+.dk-counter .num{font-size:1.5rem;font-weight:600;color:var(--acc);min-width:5rem;text-align:center}
+.dk-counter button{width:3.5rem;height:3.5rem;border-radius:50%;border:0;background:var(--acc);color:var(--bg);font-size:1.5rem;cursor:pointer;transition:transform .15s}
+.dk-counter button:active{transform:scale(.92)}
+.dk-counter button:disabled{background:var(--line);color:var(--mute)}
+.dk-counter button.rst{background:none;color:var(--mute);border:1px solid var(--line);font-size:1.2rem}
+.day-complete{width:100%;text-align:center;padding:.5rem 0;color:var(--done);font-size:.88rem;font-weight:500}
+.friday-banner{width:100%;background:linear-gradient(135deg,rgba(201,169,97,.15),rgba(201,169,97,.05));border:1px solid rgba(201,169,97,.4);border-radius:.8rem;padding:.9rem 1rem;margin:.3rem 0;text-align:right}
+.friday-banner .fb-title{color:var(--friday);font-weight:700;font-size:.95rem;margin-bottom:.5rem;text-align:center;font-family:"Amiri Quran",serif}
+.friday-banner .fb-item{font-size:.85rem;line-height:1.8;color:var(--fg);padding:.3rem 0}
+.friday-banner .fb-hadith{font-family:"Amiri Quran",serif;font-size:.95rem;line-height:2;text-align:justify;text-align-last:center;color:var(--mute);border-top:1px dashed rgba(201,169,97,.3);padding-top:.6rem;margin-top:.5rem}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script type="module">
+/* Realtime Database rules for this version (no Firebase Auth: the account is chosen on the picker screen):
+   {"rules":{".read":true,".write":true}}   ← anyone with the link/config can read and write; private-use only. */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getDatabase, ref, get, set, update, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 // ===== CONFIG =====
 const firebaseConfig = {
-  apiKey: "AIzaSyDcZQLLUtWL8UGjib9Nwqcu-gs84hXTWyk", authDomain: "omar-1-fcd61.firebaseapp.com",
-  databaseURL: "https://omar-1-fcd61-default-rtdb.firebaseio.com", projectId: "omar-1-fcd61",
-  storageBucket: "omar-1-fcd61.firebasestorage.app", messagingSenderId: "1098323069112",
-  appId: "1:1098323069112:web:0e36a35eae752e53ac4c4d", measurementId: "G-2ZJMPDMCTP"
+  apiKey: "AIzaSyDcZQLLUtWL8UGjib9Nwqcu-gs84hXTWyk",
+  authDomain: "omar-1-fcd61.firebaseapp.com",
+  databaseURL: "https://omar-1-fcd61-default-rtdb.firebaseio.com",
+  projectId: "omar-1-fcd61",
+  storageBucket: "omar-1-fcd61.firebasestorage.app",
+  messagingSenderId: "1098323069112",
+  appId: "1:1098323069112:web:0e36a35eae752e53ac4c4d",
+  measurementId: "G-2ZJMPDMCTP"
 };
-const TASK_DURATIONS = { morning: 15 * 60, quran: 5 * 60, evening: 10 * 60, memorize: 3 * 60 };
 const CFG = { tz: "Africa/Cairo", pages: 604, plan: [4, 6, 8, 10, 12], rescues: 3, pair: "pair_001", quranApi: "https://api.alquran.cloud/v1/" };
-const USERS = { user_omar: "Omar", user_maryam: "Mariam" }, MEMBERS = Object.keys(USERS);
-const KINDS = ["morning", "quran", "evening", "memorize"];
-
-// ===== SURAHS LIST =====
+const USERS = { user_omar: "عمر", user_maryam: "مريم" };
+const MEMBERS = Object.keys(USERS);
+const KINDS = ["morning", "quran", "memorize", "evening"];
 const SHORT_SURAHS = [
-  { n: 1,  name: "الفاتحة" }, { n: 103, name: "العصر" }, { n: 108, name: "الكوثر" },
-  { n: 110, name: "النصر" }, { n: 112, name: "الإخلاص" }, { n: 113, name: "الفلق" },
-  { n: 114, name: "الناس" }, { n: 105, name: "الفيل" }, { n: 106, name: "قريش" },
-  { n: 107, name: "الماعون" }, { n: 109, name: "الكافرون" }, { n: 111, name: "المسد" },
-  { n: 102, name: "التكاثر" }, { n: 101, name: "القارعة" }, { n: 100, name: "العاديات" },
-  { n: 99,  name: "الزلزلة" }, { n: 97,  name: "القدر" }, { n: 95,  name: "التين" },
-  { n: 94,  name: "الشرح" }, { n: 93,  name: "الضحى" }, { n: 92,  name: "الليل" },
-  { n: 91,  name: "الشمس" }, { n: 90,  name: "البلد" }, { n: 89,  name: "الفجر" },
-  { n: 88,  name: "الغاشية" }, { n: 87,  name: "الأعلى" }, { n: 86,  name: "الطارق" },
-  { n: 85,  name: "البروج" }, { n: 84,  name: "الانشقاق" }, { n: 83,  name: "المطففين" }
+  { n: 1, name: "الفاتحة" }, { n: 112, name: "الإخلاص" }, { n: 113, name: "الفلق" }, { n: 114, name: "الناس" }, { n: 108, name: "الكوثر" },
+  { n: 103, name: "العصر" }, { n: 110, name: "النصر" }, { n: 109, name: "الكافرون" }, { n: 107, name: "الماعون" }, { n: 105, name: "الفيل" },
+  { n: 106, name: "قريش" }, { n: 102, name: "التكاثر" }, { n: 101, name: "القارعة" }, { n: 100, name: "العاديات" }, { n: 99, name: "الزلزلة" },
+  { n: 97, name: "القدر" }, { n: 95, name: "التين" }, { n: 94, name: "الشرح" }, { n: 93, name: "الضحى" }, { n: 92, name: "الليل" },
+  { n: 91, name: "الشمس" }, { n: 90, name: "البلد" }, { n: 89, name: "الفجر" }, { n: 88, name: "الغاشية" }, { n: 87, name: "الأعلى" },
+  { n: 86, name: "الطارق" }, { n: 85, name: "البروج" }, { n: 84, name: "الانشقاق" }, { n: 83, name: "المطففين" }
 ];
-
 const app = initializeApp(firebaseConfig), db = getDatabase(app);
 
-// ===== LOCAL STATE =====
-const local = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }, del(k) { try { localStorage.removeItem(k); } catch (e) {} } };
+// ===== LOCAL STORAGE (UI settings + last chosen account) =====
+const local = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
+  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
+};
 const settings = Object.assign({ fs: 1.7, theme: "day", rm: false }, local.get("settings", {}));
 const applySettings = () => { document.documentElement.style.setProperty("--fs", settings.fs); document.documentElement.setAttribute("data-theme", settings.theme); };
 const saveSettings = () => { local.set("settings", settings); applySettings(); };
 
-// ===== TIME =====
+// ===== TIME (Firebase server clock + Africa/Cairo) =====
 let OFFSET = 0;
 onValue(ref(db, ".info/serverTimeOffset"), s => { OFFSET = s.val() || 0; });
 const now = () => Date.now() + OFFSET;
 const dateKey = () => new Intl.DateTimeFormat("en-CA", { timeZone: CFG.tz }).format(new Date(now()));
 const addDays = (d, n) => { const t = new Date(d + "T00:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
 const waitOffset = () => new Promise(r => { const t0 = Date.now(), i = setInterval(() => { if (OFFSET !== 0 || Date.now() - t0 > 3000) { clearInterval(i); r(); } }, 100); });
-const isFriday = () => new Date(now()).getDay() === 5;
+const isFriday = () => new Intl.DateTimeFormat("en-US", { timeZone: CFG.tz, weekday: "short" }).format(new Date(now())) === "Fri";
+const cairoClock = () => new Intl.DateTimeFormat("en-GB", { timeZone: CFG.tz, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }).format(new Date(now())).split(":").map(Number);
+const cairoMin = () => { const [hh, mm] = cairoClock(); return hh * 60 + mm; };
+const secToMidnight = () => { const [hh, mm, ss] = cairoClock(); return Math.max(0, 86400 - (hh * 3600 + mm * 60 + ss)); };
 
-// ===== PRAYER TIMES (Aladhan API) =====
+// ===== PRAYER TIMES (Aladhan, Cairo) =====
 const prayerCache = {};
 async function getPrayerTimes(date) {
   if (prayerCache[date]) return prayerCache[date];
   try {
-    const d = new Date(date + "T12:00:00Z");
-    const dd = String(d.getUTCDate()).padStart(2, "0"), mm = String(d.getUTCMonth() + 1).padStart(2, "0"), yyyy = d.getUTCFullYear();
-    const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=30.0444&longitude=31.2357&method=5`;
-    const r = await fetch(url), j = await r.json();
+    const [y, m, d] = date.split("-");
+    const c = new AbortController(), tm = setTimeout(() => c.abort(), 8000);
+    const r = await fetch(`https://api.aladhan.com/v1/timings/${d}-${m}-${y}?latitude=30.0444&longitude=31.2357&method=5`, { signal: c.signal });
+    clearTimeout(tm);
+    const j = await r.json();
     if (j.code !== 200) throw 0;
     const t = j.data.timings;
-    const out = { fajr: t.Fajr, sunrise: t.Sunrise, dhuhr: t.Dhuhr, asr: t.Asr, maghrib: t.Maghrib, isha: t.Isha };
-    prayerCache[date] = out;
-    return out;
+    return (prayerCache[date] = { fajr: t.Fajr, dhuhr: t.Dhuhr, asr: t.Asr, maghrib: t.Maghrib, isha: t.Isha });
   } catch (e) { return null; }
 }
+const toMin = s => { const m = /(\d{1,2}):(\d{2})/.exec(s || ""); return m ? +m[1] * 60 + +m[2] : null; };
 function nextPrayer(times) {
   if (!times) return null;
-  const nowMin = new Date(now()).getHours() * 60 + new Date(now()).getMinutes();
-  const list = [
-    { name: "الفجر", time: times.fajr }, { name: "الظهر", time: times.dhuhr },
-    { name: "العصر", time: times.asr }, { name: "المغرب", time: times.maghrib }, { name: "العشاء", time: times.isha }
-  ];
-  for (const p of list) {
-    const [h, m] = p.time.split(":").map(Number);
-    if (h * 60 + m > nowMin) return { ...p, remaining: h * 60 + m - nowMin };
-  }
-  const [h, m] = list[0].time.split(":").map(Number);
-  return { ...list[0], remaining: (24 * 60 - nowMin) + h * 60 + m, tomorrow: true };
+  const cur = cairoMin();
+  const list = [["الفجر", times.fajr], ["الظهر", times.dhuhr], ["العصر", times.asr], ["المغرب", times.maghrib], ["العشاء", times.isha]]
+    .map(([name, t]) => ({ name, m: toMin(t) })).filter(p => p.m !== null);
+  if (!list.length) return null;
+  for (const p of list) if (p.m > cur) return { name: p.name, remaining: p.m - cur };
+  return { name: list[0].name, remaining: 1440 - cur + list[0].m, tomorrow: true };
 }
 
 // ===== HELPERS =====
 const ar = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
 const pagesTxt = n => n === 1 ? "صفحة واحدة" : n === 2 ? "صفحتان" : ar(n) + " صفحات";
-const fmt = s => ar(String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(Math.ceil(s % 60) % 60).padStart(2, "0"));
+const fmt = s => { s = Math.max(0, Math.floor(s)); return ar(String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0")); };
 const fmtMin = m => ar(String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"));
 function h(tag, a = {}, ...kids) {
   const e = document.createElement(tag);
   for (const k in a) { if (k === "on") for (const ev in a.on) e.addEventListener(ev, a.on[ev]); else if (k === "cls") e.className = a[k]; else e.setAttribute(k, a[k]); }
-  kids.flat().filter(x => x != null && x !== false).forEach(x => e.append(x)); return e;
+  kids.flat().filter(x => x != null && x !== false).forEach(x => e.append(x));
+  return e;
 }
+const put = (el, ...kids) => el.replaceChildren(...kids.flat().filter(x => x != null && x !== false));   // replaceChildren(null) would insert the text "null"
 let ticks = [], view = "", busy = false;
 const mount = n => { ticks = []; document.querySelector("#app").replaceChildren(n); };
 const toast = t => { const e = h("div", { cls: "toast" }, t); document.body.append(e); setTimeout(() => e.remove(), 3500); };
-setInterval(() => ticks.forEach(f => f()), 1000);
+const SAVE_ERR = "تعذر حفظ التقدم، حاول مرة أخرى.";
+setInterval(() => ticks.forEach(f => f()), 1000);   // display refresh only
+
+// ===== ADHKAR =====
+const AYAT_KURSI = "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ ﴿٢٥٥﴾";
+const SURAH_IKHLAS = "قُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾ اللَّهُ الصَّمَدُ ﴿٢﴾ لَمْ يَلِدْ وَلَمْ يُولَدْ ﴿٣﴾ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ ﴿٤﴾";
+const SURAH_FALAQ = "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ﴿١﴾ مِن شَرِّ مَا خَلَقَ ﴿٢﴾ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ﴿٣﴾ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ﴿٤﴾ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ ﴿٥﴾";
+const SURAH_NAS = "قُلْ أَعُوذُ بِرَبِّ النَّاسِ ﴿١﴾ مَلِكِ النَّاسِ ﴿٢﴾ إِلَٰهِ النَّاسِ ﴿٣﴾ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ﴿٤﴾ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ﴿٥﴾ مِنَ الْجِنَّةِ وَالنَّاسِ ﴿٦﴾";
+const BISM = { t: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", s: "رواه أبو داود والترمذي", times: 3, title: "بسم الله الذي لا يضر" };
+const TASBIH = { t: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", s: "رواه مسلم", times: 100, title: "سبحان الله وبحمده" };
+const COMMON = [
+  { t: AYAT_KURSI, s: "آية الكرسي — البقرة ٢٥٥", times: 1, title: "آية الكرسي" },
+  { t: SURAH_IKHLAS, s: "ثلاث مرات", times: 3, title: "سورة الإخلاص" },
+  { t: SURAH_FALAQ, s: "ثلاث مرات", times: 3, title: "سورة الفلق" },
+  { t: SURAH_NAS, s: "ثلاث مرات", times: 3, title: "سورة الناس" }
+];
+const ADHKAR = {
+  morning: [...COMMON,
+    { t: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", s: "رواه مسلم", times: 1, title: "أصبحنا وأصبح الملك لله" },
+    { t: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ", s: "رواه الترمذي", times: 1, title: "اللهم بك أصبحنا" }, BISM, TASBIH],
+  evening: [...COMMON,
+    { t: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", s: "رواه مسلم", times: 1, title: "أمسينا وأمسى الملك لله" },
+    { t: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ", s: "رواه الترمذي", times: 1, title: "اللهم بك أمسينا" }, BISM, TASBIH]
+};
+
+// ===== QURAN TEXT (api.alquran.cloud) =====
+const qcache = {}, noBasmala = t => t.split(" ").slice(4).join(" ");
+async function fetchJson(url) {
+  const c = new AbortController(), tm = setTimeout(() => c.abort(), 15000);
+  try { const r = await fetch(url, { signal: c.signal }); if (!r.ok) throw 0; return (await r.json()).data; } finally { clearTimeout(tm); }
+}
+async function quranText(refs) {
+  const key = refs.join(); if (qcache[key]) return qcache[key];
+  const out = [];
+  for (const r of refs) {
+    const d = await fetchJson(CFG.quranApi + r + "/quran-uthmani"), list = d.ayahs || [d];
+    out.push(list.map(a => (a.numberInSurah === 1 && a.surah.number > 1 && r.startsWith("surah") ? noBasmala(a.text) : a.text) + " ﴿" + ar(a.numberInSurah) + "﴾").join(" "));
+  }
+  return (qcache[key] = out.join(" "));
+}
 
 // ===== STATE =====
-let UID = null, QP = null, T = null, S = null, streakBound = false, MEM = null;
-const INIT_STREAK = { count: 0, status: "gray", fails: 0, rescues: CFG.rescues, lastEvaluated: null, rescueNotice: null };
+let UID = null, QP = null, T = null, S = null, MEM = null, streakBound = false;
+const INIT_STREAK = { count: 0, status: "gray", fails: 0, rescues: CFG.rescues, lastEvaluated: null };
 const taskPath = k => `dailyTasks/${UID}/${T.date}/tasks/${k}`;
-async function patchTask(k, o) { await update(ref(db, taskPath(k)), o); Object.assign(T.tasks[k], o); }
+async function patchTask(k, o) {      // optimistic local update, reverted if the write fails; "a/b" keys are written to Firebase only
+  const t = T.tasks[k], flat = Object.entries(o).filter(([key]) => !key.includes("/")), old = {};
+  flat.forEach(([key]) => { old[key] = t[key]; });
+  Object.assign(t, Object.fromEntries(flat));
+  try { await update(ref(db, taskPath(k)), o); } catch (e) { Object.assign(t, old); throw e; }
+}
 const stateOf = k => T.date !== dateKey() ? "locked" : T.tasks[k].state;
+
+function planForDate(qp, date) {
+  const idx = Math.floor(new Date(date + "T00:00:00Z").getTime() / 86400000);
+  const pages = CFG.plan[idx % CFG.plan.length], surah = SHORT_SURAHS[idx % SHORT_SURAHS.length];
+  return { start: qp.frontier, pages, end: Math.min(CFG.pages, qp.frontier + pages - 1), khatmah: qp.khatmah, surah: surah.n, surahName: surah.name };
+}
 
 async function load() {
   const qref = ref(db, "quranProgress/" + UID);
   QP = (await get(qref)).val();
-  if (!QP) { QP = { currentPage: 1, khatmah: 1, frontier: 1, pagesRead: 0, tasksDone: 0, lastReadAt: 0 }; await set(qref, QP); }
+  if (!QP) { QP = { currentPage: 1, khatmah: 1, frontier: 1, pagesRead: 0, lastReadAt: 0 }; await set(qref, QP); }
   const mref = ref(db, "memorize/" + UID);
   MEM = (await get(mref)).val();
   if (!MEM) { MEM = { completed: {}, count: 0 }; await set(mref, MEM); }
-  const date = dateKey(), dref = ref(db, `dailyTasks/${UID}/${date}`);
+
+  const date = dateKey(), dref = ref(db, `dailyTasks/${UID}/${date}`), initialPlan = planForDate(QP, date);
   await runTransaction(dref, cur => {
-    if (cur && cur.plan) return cur;
-    const pages = CFG.plan[QP.tasksDone % CFG.plan.length];
-    const s = SHORT_SURAHS[Math.floor(now() / 86400000) % SHORT_SURAHS.length];
-    return { plan: { start: QP.frontier, pages, end: Math.min(CFG.pages, QP.frontier + pages - 1), khatmah: QP.khatmah, surah: s.n, surahName: s.name },
-             tasks: { morning: { state: "available" }, quran: { state: "available" }, evening: { state: "available" }, memorize: { state: "available" } } };
+    if (cur && cur.plan) return cur;      // the day's plan is frozen once created; never recreate it (that would reset completed tasks)
+    return { plan: initialPlan, tasks: { morning: { state: "available" }, quran: { state: "available" }, evening: { state: "available" }, memorize: { state: "available" } } };
   });
   const d = (await get(dref)).val();
-  T = { date, plan: d.plan, tasks: d.tasks };
+  T = { date, plan: d.plan, tasks: d.tasks || {} };
   for (const k of KINDS) T.tasks[k] = Object.assign({ state: "available" }, T.tasks[k]);
-  if (!streakBound) { streakBound = true; onValue(ref(db, "streak/" + CFG.pair), s => { S = Object.assign({}, INIT_STREAK, s.val()); if (view === "home") renderHome(); }); }
+
+  if (!streakBound) {
+    streakBound = true;
+    onValue(ref(db, "streak/" + CFG.pair), s => { S = Object.assign({}, INIT_STREAK, s.val()); if (view === "home") renderHome(); });
+  }
   S = S || INIT_STREAK;
 }
 
-// ===== STREAK =====
+// ===== SHARED STREAK: evaluated for finished days only, transaction-guarded =====
 async function evaluate() {
-  const today = dateKey(), sref = ref(db, "streak/" + CFG.pair), cur0 = Object.assign({}, INIT_STREAK, (await get(sref)).val());
-  const last0 = cur0.lastEvaluated || addDays(today, -1), days = {};
+  const today = dateKey(), sref = ref(db, "streak/" + CFG.pair);
+  const cur0 = Object.assign({}, INIT_STREAK, (await get(sref)).val()), last0 = cur0.lastEvaluated || addDays(today, -1), days = {};
   for (let d = addDays(last0, 1), n = 0; d < today && n < 400; d = addDays(d, 1), n++) days[d] = (await get(ref(db, `days/${CFG.pair}/${d}`))).val() || {};
   await runTransaction(sref, cur => {
     cur = Object.assign({}, INIT_STREAK, cur);
     let last = cur.lastEvaluated || addDays(today, -1);
     for (let d = addDays(last, 1); d < today; d = addDays(d, 1)) {
-      if (!days[d]) return;
+      if (!days[d]) break;                                     // beyond what was fetched: apply what we have, continue next run
       if (MEMBERS.every(m => days[d][m] === true)) { cur.count++; cur.status = "red"; cur.fails = 0; }
       else {
         cur.status = "gray"; cur.fails++;
-        if (cur.fails >= 2) {
-          if (cur.rescues > 0) { cur.rescues--; cur.fails = 0; }
-          else { cur.count = 0; cur.fails = 0; }
-        }
+        if (cur.fails >= 2) { if (cur.rescues > 0) { cur.rescues--; cur.fails = 0; } else { cur.count = 0; cur.fails = 0; } }
       }
       last = d;
     }
@@ -208,30 +287,30 @@ async function evaluate() {
 }
 
 // ===== TASK RULES =====
-const N = k => k === "memorize" ? 1 : ADHKAR[k].length;
-const elapsed = k => (now() - (T.tasks[k].startedAt || now())) / 1000;
 const contentOk = k => {
   const t = T.tasks[k];
-  if (k === "quran") return t.reached >= T.plan.end && t.endSeen === true;
-  if (k === "memorize") return t.recitedCount >= 3 && t.recorded === true;
-  return (t.step || 0) >= N(k) - 1;
+  if (k === "quran") return (t.reached || 0) >= T.plan.end;
+  if (k === "memorize") return (t.recitedCount || 0) >= 3;
+  const c = t.counts || {};
+  return ADHKAR[k].every((x, i) => (c[i] || 0) >= x.times);
 };
-const canFinish = k => T.tasks[k].state === "inProgress" && contentOk(k) && elapsed(k) >= TASK_DURATIONS[k];
 async function startTask(k) {
   if (T.tasks[k].state !== "available") return;
-  if (k === "quran") return patchTask(k, { state: "inProgress", startedAt: now(), reached: T.plan.start - 1, endSeen: false });
-  if (k === "memorize") return patchTask(k, { state: "inProgress", startedAt: now(), recitedCount: 0, recorded: false });
+  if (k === "quran") return patchTask(k, { state: "inProgress", startedAt: now(), reached: T.plan.start - 1, lastPage: T.plan.start });
+  if (k === "memorize") return patchTask(k, { state: "inProgress", startedAt: now(), recitedCount: 0 });
   return patchTask(k, { state: "inProgress", startedAt: now(), step: 0 });
 }
-async function completeTask(k) {
-  if (busy) return; if (T.tasks[k].state === "completed") return viewHome();
-  if (!canFinish(k)) return;
+async function completeTask(k) {      // idempotent: busy flag + state check + frontier check in the transaction
+  if (busy) return;
+  if (T.tasks[k].state === "completed") return viewHome();
+  if (!contentOk(k)) return;
   busy = true;
   try {
     if (k === "quran") {
       await runTransaction(ref(db, "quranProgress/" + UID), p => {
-        p = p || QP; if (p.frontier !== T.plan.start) return;
-        p.tasksDone++; p.lastReadAt = now();
+        p = p || QP;
+        if (p.frontier !== T.plan.start) return;               // already counted
+        p.lastReadAt = now();
         if (T.plan.end >= CFG.pages) { p.khatmah++; p.frontier = 1; p.pagesRead = 0; p.currentPage = 1; }
         else { p.frontier = T.plan.end + 1; p.pagesRead = T.plan.end; }
         return p;
@@ -240,8 +319,7 @@ async function completeTask(k) {
     }
     if (k === "memorize") {
       await runTransaction(ref(db, "memorize/" + UID), m => {
-        m = m || MEM;
-        if (!m.completed) m.completed = {};
+        m = m || MEM; if (!m.completed) m.completed = {};
         if (!m.completed[T.plan.surah]) { m.completed[T.plan.surah] = T.date; m.count = (m.count || 0) + 1; }
         return m;
       });
@@ -249,170 +327,194 @@ async function completeTask(k) {
     }
     await patchTask(k, { state: "completed", completedAt: now() });
     if (KINDS.every(x => T.tasks[x].state === "completed")) await set(ref(db, `days/${CFG.pair}/${T.date}/${UID}`), true);
-    viewHome();
-  } catch (e) { toast("تعذر حفظ التقدم، حاول مرة أخرى."); } finally { busy = false; }
+    busy = false; viewHome();
+  } catch (e) { busy = false; toast(SAVE_ERR); }
 }
 function finisher(k, label) {
-  const b = h("button", { cls: "btn big", "aria-label": label }, label); b.disabled = true;
-  const upd = () => {
-    const ok = contentOk(k), rem = TASK_DURATIONS[k] - elapsed(k);
-    b.disabled = !(ok && rem <= 0); b.className = "btn big" + (b.disabled && ok ? " gold" : "");
-    b.textContent = ok && rem > 0 ? label + " · " + fmt(rem) : label;
-  };
+  const b = h("button", { cls: "btn big" }, label), upd = () => { b.disabled = busy || !contentOk(k); };
   b.onclick = () => completeTask(k); ticks.push(upd); upd(); return b;
 }
 
-// ===== ADHKAR =====
-const TASBIH = { t: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", s: "مائة مرة — رواه مسلم" };
-const BISM = { t: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", s: "ثلاث مرات — رواه أبو داود والترمذي" };
-const KURSI = { q: ["ayah/2:255"], s: "آية الكرسي — البقرة ٢٥٥" }, MUAW = { q: ["surah/112", "surah/113", "surah/114"], s: "الإخلاص والفلق والناس، ثلاث مرات" };
-const ADHKAR = {
-  morning: [KURSI, MUAW,
-    { t: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", s: "رواه مسلم" },
-    { t: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ", s: "رواه الترمذي" }, BISM, TASBIH],
-  evening: [KURSI, MUAW,
-    { t: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", s: "رواه مسلم" },
-    { t: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ", s: "رواه الترمذي" }, BISM, TASBIH]
-};
-const qcache = {}, noBasmala = t => t.split(" ").slice(4).join(" ");
-async function fetchJson(url) { const c = new AbortController(), tm = setTimeout(() => c.abort(), 15000); try { const r = await fetch(url, { signal: c.signal }); if (!r.ok) throw 0; return (await r.json()).data; } finally { clearTimeout(tm); } }
-async function quranText(refs) {
-  const key = refs.join(); if (qcache[key]) return qcache[key];
-  const out = [];
-  for (const r of refs) { const d = await fetchJson(CFG.quranApi + r + "/quran-uthmani"), list = d.ayahs || [d];
-    out.push(list.map(a => (a.numberInSurah === 1 && a.surah.number > 1 && r.startsWith("surah") ? noBasmala(a.text) : a.text) + " ﴿" + ar(a.numberInSurah) + "﴾").join(" ")); }
-  return (qcache[key] = out.join(" "));
-}
+// ===== VIEW: ADHKAR (one dhikr at a time, with counters) =====
 async function viewAdhkar(k) {
   view = "task"; sessionStorage.setItem("open", k);
   try { await startTask(k); } catch (e) {}
-  const total = N(k), t = T.tasks[k], done = t.state === "completed";
-  let i = Math.min(t.step || 0, total - 1);
-  const body = h("div", { cls: "dk" }), cnt = h("div", { cls: "mute" }), nav = h("div", { cls: "nav" }), fin = h("div", { style: "width:100%" });
-  async function draw() {
-    const x = ADHKAR[k][i]; cnt.textContent = ar(i + 1) + " / " + ar(total);
-    const tx = h("div", { cls: "t qf" }, x.t || "جارٍ التحميل…"); body.replaceChildren(tx, h("div", { cls: "s" }, x.s));
-    if (x.q) quranText(x.q).then(v => { if (ADHKAR[k][i] === x) tx.textContent = v; }).catch(() => { tx.textContent = "تعذر تحميل النص."; });
-    const prev = h("button", { cls: "btn ghost", on: { click: () => { i--; draw(); } } }, "السابق"); prev.disabled = i === 0;
-    const next = h("button", { cls: "btn", on: { click: async () => { i++; if (!done && i > (t.step || 0)) { try { await patchTask(k, { step: i }); } catch (e) {} } draw(); } } }, "التالي");
-    next.hidden = i === total - 1; nav.replaceChildren(prev, next);
-    fin.replaceChildren(i === total - 1 && !done ? finisher(k, "تم إنهاء المهمة") : "");
+  const list = ADHKAR[k], t = T.tasks[k], done = t.state === "completed", counts = t.counts || (t.counts = {});
+  const container = h("div", { cls: "dk" }), fin = h("div", { style: "width:100%" }), header = h("div", { cls: "dk-header" });
+  const currentIndex = () => { if (done) return list.length; for (let i = 0; i < list.length; i++) if ((counts[i] || 0) < list[i].times) return i; return list.length; };
+  const save = async (idx, val, prev) => {
+    try { await patchTask(k, { ["counts/" + idx]: val, step: idx }); }
+    catch (e) { counts[idx] = prev; toast(SAVE_ERR); draw(); }
+  };
+  function draw() {
+    const idx = currentIndex();
+    if (idx >= list.length) {
+      header.replaceChildren();
+      put(container, h("div", { cls: "mute", style: "padding:2rem 0;text-align:center" }, "✓ أتممت جميع الأذكار"));
+      put(fin, !done ? finisher(k, "تم") : null);
+      return;
+    }
+    const x = list[idx], c = counts[idx] || 0, need = x.times;
+    put(header, h("div", { cls: "dh-prog" }, "الذكر " + ar(idx + 1) + " من " + ar(list.length)), h("div", { cls: "dh-title" }, x.title || ""));
+    const inc = h("button", { "aria-label": "زيادة", on: { click: () => { if (done || c >= need) return; counts[idx] = c + 1; t.step = idx; draw(); save(idx, c + 1, c); } } }, "+");
+    inc.disabled = done || c >= need;
+    const rst = h("button", { cls: "rst", "aria-label": "إعادة العدّ", on: { click: () => { if (done || c === 0) return; counts[idx] = 0; draw(); save(idx, 0, c); } } }, "↺");
+    rst.disabled = done || c === 0;
+    put(container, h("div", { cls: "dk-item" }, h("div", { cls: "dt qf" }, x.t), h("div", { cls: "ds" }, x.s || ""),
+      h("div", { cls: "dk-counter" }, rst, h("span", { cls: "num" }, ar(c) + " / " + ar(need)), inc)));
+    put(fin);
   }
-  mount(h("div", { cls: "screen", style: "justify-content:flex-start" }, h("div", { cls: "mute" }, k === "morning" ? "☀️ أذكار الصباح" : "🌙 أذكار المساء"), cnt, body, nav, fin,
+  mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
+    h("div", { cls: "mute" }, k === "morning" ? "☀️ أذكار الصباح" : "🌙 أذكار المساء"), header, container, fin,
     h("button", { cls: "link", on: { click: () => viewHome() } }, "رجوع")));
   draw();
 }
 
-// ===== MEMORIZE WITH RECORDING =====
+// ===== VIEW: MEMORIZE (recite 3 times; optional voice recording, kept on the device only) =====
 async function viewMemorize() {
   view = "memorize"; sessionStorage.setItem("open", "memorize");
   try { await startTask("memorize"); } catch (e) {}
-  const s = T.plan.surah, name = T.plan.surahName;
-  const t = T.tasks.memorize, done = t.state === "completed";
-
-  const aysEl = h("div", { cls: "ays" }, "جارٍ التحميل…");
-  const recTimer = h("div", { cls: "rec-timer" }, "");
-  const recBtn = h("button", { cls: "rec-btn" }, "🎙️");
-  const playBtn = h("button", { cls: "btn", style: "display:none" }, "▶️ اسمع");
-  const stopBtn = h("button", { cls: "btn", style: "display:none" }, "⏹️ إيقاف");
-  const deleteBtn = h("button", { cls: "btn ghost", style: "display:none" }, "🗑️ امسح");
-  const recStatus = h("div", { cls: "mute" }, "اضغط الميكروفون لبدء التسجيل");
-  const recActions = h("div", { cls: "rec-actions" }, playBtn, stopBtn, deleteBtn);
-  const fin = h("div", { style: "width:100%" });
-
-  let mediaRecorder = null, chunks = [], audioURL = null, timerInt = null, seconds = 0;
-
-  const resetRec = () => {
-    if (audioURL) URL.revokeObjectURL(audioURL);
-    audioURL = null; chunks = []; seconds = 0;
-    if (timerInt) { clearInterval(timerInt); timerInt = null; }
-    recTimer.textContent = "";
-    recBtn.classList.remove("recording"); recBtn.textContent = "🎙️";
-    playBtn.style.display = "none"; stopBtn.style.display = "none"; deleteBtn.style.display = "none";
-    recActions.style.display = "flex";
-    recStatus.textContent = t.recitedCount >= 3 ? "يمكنك التسجيل للمراجعة" : "اضغط الميكروفون لبدء التسجيل";
-  };
-
+  const s = T.plan.surah, name = T.plan.surahName, t = T.tasks.memorize, done = t.state === "completed";
+  const aysEl = h("div", { cls: "ays" }, "جارٍ التحميل…"), recTimer = h("div", { cls: "rec-timer" }, ""), recBtn = h("button", { cls: "rec-btn", "aria-label": "تسجيل" }, "🎙️");
+  const playBtn = h("button", { cls: "btn", style: "display:none" }, "▶️ اسمع"), stopBtn = h("button", { cls: "btn", style: "display:none" }, "⏹️ إيقاف"), deleteBtn = h("button", { cls: "btn ghost", style: "display:none" }, "🗑️ امسح");
+  const recStatus = h("div", { cls: "mute" }, "التسجيل اختياري — اضغط للتسجيل"), recActions = h("div", { cls: "rec-actions" }, playBtn, stopBtn, deleteBtn), fin = h("div", { style: "width:100%" });
+  let mediaRecorder = null, chunks = [], audioURL = null, timerInt = null, seconds = 0, alive = true;
+  const MIN_SEC = 30, MAX_SEC = 300;
+  const pickMime = () => window.MediaRecorder ? (["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"].find(m => MediaRecorder.isTypeSupported(m)) || "") : "";
+  const clearAudio = () => { if (audioURL) { URL.revokeObjectURL(audioURL); audioURL = null; } };
+  const idleUi = () => { recBtn.classList.remove("recording"); recBtn.textContent = "🎙️"; stopBtn.style.display = "none"; if (timerInt) { clearInterval(timerInt); timerInt = null; } };
+  const cleanup = () => { alive = false; idleUi(); if (mediaRecorder && mediaRecorder.state === "recording") { try { mediaRecorder.stop(); } catch (e) {} } clearAudio(); };
+  const resetRec = () => { clearAudio(); chunks = []; seconds = 0; idleUi(); recTimer.textContent = ""; playBtn.style.display = "none"; deleteBtn.style.display = "none"; recStatus.textContent = "التسجيل اختياري — اضغط للتسجيل"; };
   const startRec = async () => {
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) { recStatus.textContent = "المتصفح لا يدعم التسجيل"; return; }
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus") ? "audio/webm;codecs=opus" : "audio/webm";
-      mediaRecorder = new MediaRecorder(stream, { mimeType: mime });
-      chunks = []; seconds = 0;
-      mediaRecorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
-      mediaRecorder.onstop = () => {
-        stream.getTracks().forEach(tr => tr.stop());
-        const blob = new Blob(chunks, { type: "audio/webm" });
-        if (blob.size > 0) {
-          audioURL = URL.createObjectURL(blob);
-          playBtn.style.display = "block"; deleteBtn.style.display = "block";
-          recStatus.textContent = "التسجيل جاهز — اسمع نفسك";
-          if (!t.recorded) patchTask("memorize", { recorded: true }).then(() => upd()).catch(() => {});
-        } else { recStatus.textContent = "التسجيل فاضي، جرب تاني"; }
-        if (timerInt) { clearInterval(timerInt); timerInt = null; }
+      if (!alive) { stream.getTracks().forEach(tr => tr.stop()); return; }
+      clearAudio(); const mime = pickMime(), rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+      mediaRecorder = rec; chunks = []; seconds = 0;
+      rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
+      rec.onstop = () => {
+        stream.getTracks().forEach(tr => tr.stop()); idleUi();
+        const blob = new Blob(chunks, { type: rec.mimeType || mime || "audio/webm" });
+        if (blob.size > 0 && seconds >= MIN_SEC) { audioURL = URL.createObjectURL(blob); playBtn.style.display = "block"; deleteBtn.style.display = "block"; recStatus.textContent = "✓ التسجيل جاهز — اسمع نفسك"; }
+        else if (blob.size > 0) recStatus.textContent = "التسجيل قصير (" + ar(seconds) + "ث) — ٣٠ ثانية على الأقل";
+        else recStatus.textContent = "التسجيل فاضي";
       };
-      mediaRecorder.start(250);
-      recBtn.classList.add("recording"); recBtn.textContent = "⏹️";
-      stopBtn.style.display = "block"; playBtn.style.display = "none"; deleteBtn.style.display = "none";
-      recStatus.textContent = "جاري التسجيل…";
-      timerInt = setInterval(() => { seconds++; recTimer.textContent = fmt(seconds); }, 1000);
-    } catch (e) {
-      recStatus.textContent = "لم يتم السماح بالوصول للميكروفون";
-      toast("الميكروفون غير متاح");
-    }
+      rec.start(250); recBtn.classList.add("recording"); recBtn.textContent = "⏹️"; stopBtn.style.display = "block"; playBtn.style.display = "none"; deleteBtn.style.display = "none"; recStatus.textContent = "جاري التسجيل…";
+      timerInt = setInterval(() => { seconds++; recTimer.textContent = fmt(seconds) + " / " + fmt(MAX_SEC); if (seconds >= MAX_SEC) { try { rec.stop(); } catch (e) {} } }, 1000);
+    } catch (e) { recStatus.textContent = e && e.name === "NotAllowedError" ? "لم يتم السماح بالوصول للميكروفون" : "تعذر بدء التسجيل"; toast("الميكروفون غير متاح"); }
   };
   const stopRec = () => { if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop(); };
-  const playRec = () => { if (audioURL) new Audio(audioURL).play(); };
-  const delRec = () => { resetRec(); };
+  recBtn.onclick = () => (mediaRecorder && mediaRecorder.state === "recording") ? stopRec() : startRec();
+  stopBtn.onclick = stopRec; playBtn.onclick = () => { if (audioURL) new Audio(audioURL).play().catch(() => {}); }; deleteBtn.onclick = resetRec;
 
-  recBtn.onclick = () => { if (mediaRecorder && mediaRecorder.state === "recording") stopRec(); else startRec(); };
-  stopBtn.onclick = stopRec;
-  playBtn.onclick = playRec;
-  deleteBtn.onclick = delRec;
-
-  const cntBtn = h("button", { cls: "btn big" }, "قرأت السورة مرة");
-  const resetBtn = h("button", { cls: "btn ghost" }, "إعادة العدّ");
-  const btns = h("div", { cls: "seg" }, cntBtn, resetBtn);
+  const cntBtn = h("button", { cls: "btn big" }, "تم"), resetBtn2 = h("button", { cls: "btn ghost" }, "إعادة العدّ");
   const upd = () => {
     const c = t.recitedCount || 0;
-    cntBtn.disabled = done || c >= 3;
-    resetBtn.disabled = done || c === 0;
-    const ready = (t.recitedCount || 0) >= 3 && t.recorded;
-    fin.replaceChildren(!done && ready ? finisher("memorize", "تم الحفظ") : "");
-    recStatus.textContent = done ? "✓ تم حفظ هذه السورة" : (t.recorded ? "✓ تم التسجيل" : "اضغط الميكروفون لبدء التسجيل");
+    cntBtn.textContent = "تم · " + ar(c) + "/٣"; cntBtn.disabled = done || c >= 3; resetBtn2.disabled = done || c === 0;
+    put(fin, !done && c >= 3 ? finisher("memorize", "إنهاء الحفظ") : null);
   };
-  cntBtn.onclick = async () => { if (done) return; const c = Math.min(3, (t.recitedCount || 0) + 1); try { await patchTask("memorize", { recitedCount: c }); } catch (e) {} upd(); };
-  resetBtn.onclick = async () => { try { await patchTask("memorize", { recitedCount: 0 }); } catch (e) {} upd(); };
-  ticks.push(upd); upd();
-
-  quranText(["surah/" + s]).then(v => { aysEl.textContent = v; }).catch(() => { aysEl.textContent = "تعذر تحميل السورة."; });
+  const setCount = async n => { try { await patchTask("memorize", { recitedCount: n }); } catch (e) { toast(SAVE_ERR); } upd(); };
+  cntBtn.onclick = () => { if (!done) setCount(Math.min(3, (t.recitedCount || 0) + 1)); };
+  resetBtn2.onclick = () => { if (!done) setCount(0); };
 
   mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
-    h("div", { cls: "mute" }, "📚 ورد الحفظ اليومي"),
-    h("div", { cls: "mem" },
-      h("div", { cls: "sn2" }, "سورة " + name),
-      aysEl
-    ),
+    h("div", { cls: "mute" }, "📚 ورد الحفظ اليومي"), h("div", { cls: "mem" }, h("div", { cls: "sn2" }, "سورة " + name), aysEl),
     h("div", { cls: "rec-area" }, recTimer, recBtn, recStatus, recActions),
-    h("div", { cls: "mute", style: "margin-top:.5rem" }, "اقرأها ٣ مرات، وسجّل صوتك للمراجعة"),
-    btns, fin,
-    h("button", { cls: "link", on: { click: () => { resetRec(); viewHome(); } } }, "رجوع")
-  ));
+    h("div", { cls: "mute", style: "margin-top:.5rem" }, "اقرأ ٣ مرات ثم اضغط «تم» بعد كل مرة"), h("div", { cls: "seg" }, cntBtn, resetBtn2), fin,
+    h("button", { cls: "link", on: { click: () => { cleanup(); resetRec(); viewHome(); } } }, "رجوع")));
+  upd();
+  quranText(["surah/" + s]).then(v => { aysEl.textContent = v; }).catch(() => { aysEl.textContent = "تعذر تحميل السورة."; });
 }
 
-// ===== USER PICKER =====
+// ===== VIEW: READER =====
+let saveT = 0;
+const pageCache = async n => {
+  const k = "qp" + n, c = local.get(k, null); if (c) return c;
+  const a = (await fetchJson(CFG.quranApi + "page/" + n + "/quran-uthmani")).ayahs.map(x => [x.surah.number, x.surah.name, x.numberInSurah, x.text, x.juz]);
+  if (!a.length) throw 0; local.set(k, a); return a;
+};
+function viewReader(mode) {
+  view = "reader"; sessionStorage.setItem("open", mode === "task" ? "quran" : "free");
+  const task = mode === "task", p = T.plan; let cur, seq = 0;
+  const init = async () => {
+    if (task) {
+      try { await startTask("quran"); } catch (e) {}
+      const q = T.tasks.quran, reached = q.reached || (p.start - 1);
+      cur = q.lastPage && q.lastPage >= p.start && q.lastPage <= p.end ? q.lastPage : Math.min(p.end, Math.max(p.start, reached + 1));
+    } else cur = QP.currentPage || local.get("lp", 1);
+    mount(rd); sync(); show(cur, 0);
+  };
+  const pg = h("div", { id: "pg" }), jIn = h("input", { type: "number", min: 1, max: CFG.pages, inputmode: "numeric", placeholder: "رقم الصفحة" });
+  const jGo = () => { const n = parseInt(jIn.value, 10); jump.hidden = true; if (n >= 1 && n <= CFG.pages) show(n); };
+  jIn.addEventListener("keydown", e => { if (e.key === "Enter") jGo(); });
+  const jump = h("div", { cls: "jump", hidden: "" }, h("div", {}, "الانتقال إلى صفحة"), jIn, h("button", { cls: "btn big", on: { click: jGo } }, "انتقال"), h("button", { cls: "link", on: { click: () => { jump.hidden = true; } } }, "إلغاء"));
+  const pgNum = h("button", { cls: "tb", on: { click: () => { if (task) return; jIn.value = ""; jump.hidden = false; jIn.focus(); } } });
+  const bTheme = h("button", { cls: "tb", "aria-label": "الوضع الليلي", on: { click: () => { settings.theme = settings.theme === "night" ? "day" : "night"; saveSettings(); sync(); } } });
+  const bRm = h("button", { cls: "tb", on: { click: () => { settings.rm = !settings.rm; saveSettings(); sync(); } } });
+  const fs = d => { settings.fs = Math.min(2.8, Math.max(1.1, +(settings.fs + d).toFixed(1))); saveSettings(); };
+  const rd = h("div", { id: "rd" },
+    h("div", { cls: "bar top" }, h("button", { cls: "tb", on: { click: async () => { document.onkeydown = null; await flushBookmark(); viewHome(); } } }, "رجوع"),
+      h("span", {}, h("button", { cls: "tb", "aria-label": "تصغير الخط", on: { click: () => fs(-0.1) } }, "A-"), h("button", { cls: "tb", "aria-label": "تكبير الخط", on: { click: () => fs(0.1) } }, "A+"), bTheme, bRm)),
+    pg, h("div", { cls: "bar bot" }, h("button", { cls: "tb", on: { click: () => go(-1) } }, "→ السابقة"), pgNum, h("button", { cls: "tb", on: { click: () => go(1) } }, "التالية ←")), jump);
+  function sync() { rd.classList.toggle("rm", settings.rm); if (!settings.rm) rd.classList.remove("show"); bTheme.textContent = settings.theme === "night" ? "☀" : "🌙"; bRm.textContent = settings.rm ? "خروج من وضع القراءة" : "وضع القراءة"; }
+  // In task mode navigation stays inside today's pages: it never auto-advances and stops at the last required page.
+  const go = d => { const n = cur + d; if (n < 1 || n > CFG.pages) return; if (task && n > p.end) { toast("انتهى وردك لهذا اليوم"); return; } if (task && n < p.start) return; show(n); };
+  function panel() {
+    if (!task || cur !== p.end || T.tasks.quran.state === "completed") return null;
+    const msg = h("div", {}), upd = () => { msg.textContent = contentOk("quran") ? "أتممت ورد القرآن لليوم — اضغط «تم»." : "اقرأ الصفحة حتى النهاية."; };
+    ticks.push(upd); upd(); return h("div", { cls: "endp" }, msg, finisher("quran", "تم"));
+  }
+  async function show(n, restore) {
+    cur = n; const my = ++seq; local.set("lp", n); QP.currentPage = n;
+    clearTimeout(saveT); saveT = setTimeout(flushBookmark, 600); pgNum.textContent = "صفحة " + ar(n);
+    const t = T.tasks.quran;
+    if (task && t.state === "inProgress") patchTask("quran", { reached: Math.max(t.reached || 0, n), lastPage: n }).catch(() => toast(SAVE_ERR));
+    pg.replaceChildren(h("div", { cls: "msg" }, "جارٍ التحميل…"));
+    try {
+      const a = await pageCache(n); if (my !== seq) return;
+      ticks = []; pg.replaceChildren(draw(a, n, panel())); pg.scrollTop = restore || 0;
+      if (n < CFG.pages) pageCache(n + 1).catch(() => {});
+    } catch (e) {
+      if (my !== seq) return;
+      pg.replaceChildren(h("div", { cls: "msg" }, navigator.onLine ? "تعذر تحميل الصفحة." : "لا يوجد اتصال بالإنترنت.", h("br"), h("br"), h("button", { cls: "btn ghost", on: { click: () => show(n) } }, "إعادة المحاولة")));
+    }
+  }
+  let sx = 0, sy = 0;
+  pg.addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  pg.addEventListener("touchend", e => { const t2 = e.changedTouches[0], dx = t2.clientX - sx, dy = t2.clientY - sy; if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) go(dx < 0 ? 1 : -1); }, { passive: true });
+  pg.addEventListener("click", () => { if (settings.rm) rd.classList.toggle("show"); });
+  document.onkeydown = e => { if (e.key === "ArrowLeft") go(1); else if (e.key === "ArrowRight") go(-1); };
+  init();
+}
+async function flushBookmark() {
+  clearTimeout(saveT); if (!UID || !QP) return;
+  try { await update(ref(db, "quranProgress/" + UID), { currentPage: QP.currentPage, lastReadAt: now() }); } catch (e) {}
+}
+function draw(a, n, panelEl) {
+  const m = h("div", { cls: "mushaf qf" }); let q = null;
+  m.append(h("div", { cls: "juz" }, "الجزء " + ar(a[0][4])));
+  a.forEach(([s, name, i, txt]) => {
+    if (i === 1) { m.append(h("div", { cls: "sn" }, name)); if (s !== 1 && s !== 9) { txt = noBasmala(txt); m.append(h("div", { cls: "bsm" }, "﷽")); } q = null; }
+    if (!q) { q = h("p", { cls: "ay" }); m.append(q); }
+    q.append(txt + " ﴿" + ar(i) + "﴾ ");
+  });
+  m.append(h("div", { cls: "juz" }, ar(n))); if (panelEl) m.append(panelEl); return m;
+}
+
+// ===== VIEWS: PICKER / LOADING / ERROR =====
 function viewPicker() {
   view = "picker";
-  const mk = (id, name) => h("button", { cls: "btn big", style: "width:100%;padding:1.2rem;font-size:1.2rem", on: { click: () => pickUser(id) } }, name);
-  mount(h("div", { cls: "screen" }, h("h1", {}, "وردي"), h("div", { cls: "pick" }, mk("user_omar", "Omar"), h("div", { style: "height:.8rem" }), mk("user_maryam", "Mariam"))));
+  mount(h("div", { cls: "screen" }, h("h1", {}, "وردي"), h("div", { cls: "mute" }, "اختر حسابك"),
+    h("div", { cls: "pick" }, h("button", { cls: "btn btn-omar", on: { click: () => pickUser("user_omar") } }, "عمر"), h("button", { cls: "btn btn-maryam", on: { click: () => pickUser("user_maryam") } }, "مريم"))));
 }
 function pickUser(id) { UID = id; local.set("uid", id); start(); }
-
+const switchAccount = () => { local.del("uid"); UID = null; T = QP = S = MEM = null; sessionStorage.removeItem("open"); viewPicker(); };
 const loadingView = () => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "جارٍ التحميل…")));
-const errorView = (msg) => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "تعذر الاتصال بالخادم."), msg ? h("div", { cls: "err" }, msg) : null,
-  h("button", { cls: "btn", on: { click: start } }, "إعادة المحاولة"),
-  h("button", { cls: "link", on: { click: () => { local.del("uid"); UID = null; T = QP = S = MEM = null; viewPicker(); } } }, "تبديل المستخدم")));
+const errorView = msg => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "تعذر الاتصال بالخادم. حاول مرة أخرى."), msg ? h("div", { cls: "err" }, msg) : null,
+  h("button", { cls: "btn", on: { click: () => start() } }, "إعادة المحاولة"), h("button", { cls: "link", on: { click: switchAccount } }, "تبديل الحساب")));
 
+// ===== VIEW: HOME =====
 async function viewHome() {
   view = "home"; sessionStorage.removeItem("open");
   if (T.date !== dateKey()) { loadingView(); try { await load(); await evaluate(); } catch (e) { return errorView(); } view = "home"; }
@@ -420,137 +522,55 @@ async function viewHome() {
 }
 function renderHome() {
   if (view !== "home") return;
-  const p = T.plan, s = S || INIT_STREAK, st = k => stateOf(k), pct = Math.floor(QP.pagesRead / CFG.pages * 100);
+  const p = T.plan, s = S || INIT_STREAK, st = k => stateOf(k), pct = Math.floor(QP.pagesRead / CFG.pages * 100), allDone = KINDS.every(k => st(k) === "completed");
   const label = { available: "لم تبدأ بعد", inProgress: "قيد التنفيذ", completed: "✓ تم", locked: "مغلقة" };
-  const btn = (k, fn) => { const x = st(k), b = h("button", { cls: "btn" + (x === "completed" ? " ghost" : ""), on: { click: fn } }, x === "completed" ? "افتح" : x === "inProgress" ? "متابعة" : k === "quran" ? "ابدأ القراءة" : k === "memorize" ? "ابدأ الحفظ" : "ابدأ"); b.disabled = x === "locked"; return b; };
-  const t0 = T.tasks.memorize || {};
+  document.body.classList.toggle("friday-mode", isFriday());
+  const fridayItems = [
+    ["📖", "اقرأ سورة الكهف — «من قرأها يوم الجمعة أضاء له من النور ما بين الجمعتين»"], ["ﷺ", "أكثِر من الصلاة على النبي ﷺ — «فأكثروا عليّ من الصلاة فيه»"],
+    ["🕌", "تحرّى ساعة الإجابة — آخر ساعة قبل المغرب"], ["🛁", "اغتسل وتطيّب والبس أحسن ثيابك"], ["🤲", "بكّر إلى المسجد وأنصت للخطبة"], ["📿", "«سبحان الله وبحمده» مائة مرة — غُفرت ذنوبه"]];
+  const btn = (k, fn) => { const x = st(k), b = h("button", { cls: "btn" + (x === "completed" ? " done-btn" : " ghost"), on: { click: fn } }, x === "completed" ? "تم ✓" : x === "inProgress" ? "متابعة" : "ابدأ"); b.disabled = x === "locked"; return b; };
   const sub = k => {
-    if (k === "quran") return st(k) === "completed" ? "✓ تم" : "وردك اليوم: " + pagesTxt(p.pages) + " (" + (p.pages === 1 ? "صفحة " + ar(p.start) : "من " + ar(p.start) + " إلى " + ar(p.end)) + ")";
-    if (k === "memorize") return st(k) === "completed" ? "✓ تم حفظ سورة " + p.surahName : "سورة " + p.surahName + (st(k) === "inProgress" ? " — " + ar(t0.recitedCount || 0) + "/٣" : "");
-    return st(k) === "inProgress" ? "قيد التنفيذ " + ar((T.tasks[k].step || 0) + 1) + "/" + ar(N(k)) : (label[st(k)] === "لم تبدأ بعد" && k === "evening" ? "لاحقًا" : label[st(k)]);
+    if (k === "quran") return st(k) === "completed" ? "✓ تم" : pagesTxt(p.pages) + " · ص " + ar(p.start) + " — ص " + ar(p.end);
+    if (k === "memorize") return st(k) === "completed" ? "✓ تم حفظ سورة " + p.surahName : "سورة " + p.surahName + (st(k) === "inProgress" ? " — " + ar(T.tasks.memorize.recitedCount || 0) + "/٣" : "");
+    const c = T.tasks[k].counts || {}, total = ADHKAR[k].reduce((a, x, i) => a + Math.min(c[i] || 0, x.times), 0), need = ADHKAR[k].reduce((a, x) => a + x.times, 0);
+    return st(k) === "completed" ? "✓ تم" : st(k) === "inProgress" ? "قيد التنفيذ " + ar(total) + "/" + ar(need) : label[st(k)];
   };
-  const row = (icon, title, k, fn) => h("div", { cls: "row" }, h("div", {}, h("b", {}, icon + " " + title), h("span", { cls: "mute" }, sub(k))), btn(k, fn));
+  const row = (icon, title, k, fn) => h("div", { cls: "row" + (st(k) === "completed" ? " done" : "") }, h("div", {}, h("b", {}, icon + " " + title), h("span", { cls: "mute" }, sub(k))), btn(k, fn));
   const extras = h("div", { style: "width:100%" });
-  getPrayerTimes(dateKey()).then(times => {
-    if (!times) return;
-    const np = nextPrayer(times);
-    if (!np) return;
-    extras.replaceChildren(h("div", { cls: "prayer-bar" },
-      h("span", {}, "🕌 " + np.name + (np.tomorrow ? " (غدًا)" : "")),
-      h("b", {}, fmtMin(np.remaining))
-    ));
-  });
-  const fridayNote = isFriday() ? h("div", { cls: "mute", style: "padding:.5rem 0" }, "📖 اليوم الجمعة — لا تنسَ قراءة سورة الكهف، وأكثِر من الصلاة على النبي ﷺ") : null;
-
-  mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "أهلًا"), h("h1", {}, "وردك اليوم"),
-    extras,
-    fridayNote,
-    h("div", { style: "width:100%" },
-      row("☀️", "أذكار الصباح", "morning", () => viewAdhkar("morning")),
-      row("📖", "القرآن الكريم", "quran", () => viewReader("task")),
-      row("📚", "حفظ سورة", "memorize", () => viewMemorize()),
-      row("🌙", "أذكار المساء", "evening", () => viewAdhkar("evening"))
-    ),
+  const fridayBanner = isFriday() ? h("div", { cls: "friday-banner" }, h("div", { cls: "fb-title" }, "﷽ يوم الجمعة"), ...fridayItems.map(([i, t]) => h("div", { cls: "fb-item" }, i + " " + t)),
+    h("div", { cls: "fb-hadith" }, "«إن من أفضل أيامكم يوم الجمعة، فأكثروا عليّ من الصلاة فيه»")) : null;
+  const ticksBox = h("div", { cls: "mute" }, ""), updCountdown = () => { ticksBox.textContent = "اليوم الجديد بعد: " + fmt(secToMidnight()); };
+  mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "أهلًا بك"), h("h1", {}, "وردك اليوم"), extras, fridayBanner,
+    h("div", { style: "width:100%" }, row("☀️", "أذكار الصباح", "morning", () => viewAdhkar("morning")), row("📖", "ورد القرآن", "quran", () => viewReader("task")), row("📚", "الحفظ", "memorize", () => viewMemorize()), row("🌙", "أذكار المساء", "evening", () => viewAdhkar("evening"))),
     h("div", { cls: "prog" }, h("div", { cls: "bar0" }, h("i", { style: "width:" + pct + "%" })), h("div", { cls: "mute" }, "ختمة " + ar(QP.khatmah) + " · " + ar(QP.pagesRead) + " / " + ar(CFG.pages) + " · " + ar(pct) + "٪")),
     h("div", { cls: "mute" }, "حفظت " + ar((MEM && MEM.count) || 0) + " سورة حتى الآن"),
     h("button", { cls: "link", on: { click: () => viewReader("free") } }, "قراءة حرة"),
-    h("div", { style: "font-size:1.1rem" }, h("span", { cls: "fl" + (s.status === "red" ? " red" : "") }, "🔥"), " " + ar(s.count)),
-    h("button", { cls: "link", on: { click: () => { local.del("uid"); UID = null; T = QP = S = MEM = null; viewPicker(); } } }, "تبديل المستخدم")));
+    h("div", { style: "font-size:1.1rem", "aria-label": "الستريك المشترك" }, h("span", { cls: "fl" + (s.status === "red" ? " red" : "") }, "🔥"), " " + ar(s.count)),
+    allDone ? h("div", { cls: "day-complete" }, "✓ تم ورد اليوم بحمد الله") : null, allDone ? ticksBox : null,
+    h("button", { cls: "link", on: { click: switchAccount } }, "تبديل الحساب")));
+  if (allDone) { ticks.push(updCountdown); updCountdown(); }          // after mount(), which clears ticks
+  getPrayerTimes(dateKey()).then(times => { const np = nextPrayer(times); if (np && view === "home") put(extras, h("div", { cls: "prayer-bar" }, h("span", {}, "🕌 " + np.name + (np.tomorrow ? " (غدًا)" : "")), h("b", {}, fmtMin(np.remaining)))); });
 }
 
-// ===== QURAN READER =====
-let saveT = 0;
-const pageCache = async n => { const k = "qp" + n, c = local.get(k, null); if (c) return c;
-  const a = (await fetchJson(CFG.quranApi + "page/" + n + "/quran-uthmani")).ayahs.map(x => [x.surah.number, x.surah.name, x.numberInSurah, x.text, x.juz]); if (!a.length) throw 0; local.set(k, a); return a; };
-function viewReader(mode) {
-  view = "reader"; sessionStorage.setItem("open", mode === "task" ? "quran" : "free");
-  const task = mode === "task", p = T.plan;
-  let cur, seq = 0, st = 0;
-  const init = async () => {
-    if (task) { try { await startTask("quran"); } catch (e) {} cur = Math.min(p.end, Math.max(p.start, T.tasks.quran.reached || p.start)); }
-    else cur = QP.currentPage || local.get("lp", 1);
-    mount(rd); sync(); show(cur, 0);
-  };
-  const pg = h("div", { id: "pg" });
-  const jIn = h("input", { type: "number", min: 1, max: CFG.pages, inputmode: "numeric", placeholder: "رقم الصفحة" });
-  const jGo = () => { const n = parseInt(jIn.value, 10); jump.hidden = true; if (n >= 1 && n <= CFG.pages) show(n); };
-  jIn.addEventListener("keydown", e => { if (e.key === "Enter") jGo(); });
-  const jump = h("div", { cls: "jump", hidden: "" }, h("div", {}, "الانتقال إلى صفحة"), jIn, h("button", { cls: "btn big", on: { click: jGo } }, "انتقال"), h("button", { cls: "link", on: { click: () => { jump.hidden = true; } } }, "إلغاء"));
-  const pgNum = h("button", { cls: "tb", on: { click: () => { if (task) return; jIn.value = ""; jump.hidden = false; jIn.focus(); } } });
-  const bTheme = h("button", { cls: "tb", on: { click: () => { settings.theme = settings.theme === "night" ? "day" : "night"; saveSettings(); sync(); } } });
-  const bRm = h("button", { cls: "tb", on: { click: () => { settings.rm = !settings.rm; saveSettings(); sync(); } } });
-  const fs = d => { settings.fs = Math.min(2.8, Math.max(1.1, +(settings.fs + d).toFixed(1))); saveSettings(); };
-  const rd = h("div", { id: "rd" },
-    h("div", { cls: "bar top" }, h("button", { cls: "tb", on: { click: async () => { document.onkeydown = null; await flushBookmark(); viewHome(); } } }, "رجوع"),
-      h("span", {}, h("button", { cls: "tb", on: { click: () => fs(-0.1) } }, "A-"), h("button", { cls: "tb", on: { click: () => fs(0.1) } }, "A+"), bTheme, bRm)),
-    pg, h("div", { cls: "bar bot" }, h("button", { cls: "tb", on: { click: () => go(-1) } }, "→ السابقة"), pgNum, h("button", { cls: "tb", on: { click: () => go(1) } }, "التالية ←")), jump);
-  function sync() { rd.classList.toggle("rm", settings.rm); if (!settings.rm) rd.classList.remove("show"); bTheme.textContent = settings.theme === "night" ? "☀" : "🌙"; bRm.textContent = settings.rm ? "خروج من وضع القراءة" : "وضع القراءة"; }
-  const go = (d, swipe) => {
-    const n = cur + d;
-    if (n < 1 || n > CFG.pages) return;
-    if (task && (n < p.start || n > p.end)) { toast("انتهى وردك لهذا اليوم"); return; }
-    if (swipe && task && cur === p.end && d > 0) return;
-    show(n);
-  };
-  const atBottom = () => pg.scrollHeight - pg.scrollTop - pg.clientHeight < 40;
-  async function checkEnd() {
-    const t = T.tasks.quran;
-    if (task && t.state === "inProgress" && cur === p.end && t.reached >= p.end && !t.endSeen && atBottom()) { try { await patchTask("quran", { endSeen: true }); } catch (e) {} }
-  }
-  function panel() {
-    if (!task || cur !== p.end || T.tasks.quran.state === "completed") return null;
-    const msg = h("div", {}), upd = () => { msg.textContent = contentOk("quran") ? "أتممت ورد القرآن لليوم." : "أكمل قراءة هذه الصفحة حتى نهايتها."; };
-    ticks.push(upd); upd(); return h("div", { cls: "endp" }, msg, finisher("quran", "تم إنهاء مهمة القرآن"));
-  }
-  async function show(n, restore) {
-    cur = n; const my = ++seq; local.set("lp", n); QP.currentPage = n;
-    clearTimeout(saveT); saveT = setTimeout(flushBookmark, 600);
-    pgNum.textContent = "صفحة " + ar(n);
-    const t = T.tasks.quran;
-    if (task && t.state === "inProgress" && n === (t.reached || p.start - 1) + 1 && n <= p.end) patchTask("quran", { reached: n }).catch(() => {});
-    pg.replaceChildren(h("div", { cls: "msg" }, "جارٍ التحميل…"));
-    try {
-      const a = await pageCache(n); if (my !== seq) return;
-      ticks = []; pg.replaceChildren(draw(a, n, panel())); pg.scrollTop = restore || 0; checkEnd();
-      if (n < CFG.pages) pageCache(n + 1).catch(() => {});
-    } catch (e) { if (my !== seq) return; pg.replaceChildren(h("div", { cls: "msg" }, navigator.onLine ? "تعذر تحميل الصفحة." : "لا يوجد اتصال بالإنترنت.", h("br"), h("br"), h("button", { cls: "btn ghost", on: { click: () => show(n) } }, "إعادة المحاولة"))); }
-  }
-  let sx = 0, sy = 0;
-  pg.addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
-  pg.addEventListener("touchend", e => { const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) go(dx < 0 ? 1 : -1, true); }, { passive: true });
-  pg.addEventListener("click", () => { if (settings.rm) rd.classList.toggle("show"); });
-  pg.addEventListener("scroll", () => { clearTimeout(st); st = setTimeout(checkEnd, 200); }, { passive: true });
-  document.onkeydown = e => { if (e.key === "ArrowLeft") go(1); else if (e.key === "ArrowRight") go(-1); };
-  init();
-}
-async function flushBookmark() { clearTimeout(saveT); if (!UID || !QP) return; try { await update(ref(db, "quranProgress/" + UID), { currentPage: QP.currentPage, lastReadAt: now() }); } catch (e) {} }
-function draw(a, n, panelEl) {
-  const m = h("div", { cls: "mushaf qf" }); let q = null;
-  m.append(h("div", { cls: "juz" }, "الجزء " + ar(a[0][4])));
-  a.forEach(([s, name, i, txt]) => {
-    if (i === 1) { m.append(h("div", { cls: "sn" }, name)); if (s !== 1 && s !== 9) { txt = noBasmala(txt); m.append(h("div", { cls: "bsm" }, "﷽")); } q = null; }
-    if (!q) { q = h("p", { cls: "ay" }); m.append(q); } q.append(txt + " ﴿" + ar(i) + "﴾ ");
-  });
-  m.append(h("div", { cls: "juz" }, ar(n))); if (panelEl) m.append(panelEl); return m;
-}
-
-// ===== INIT =====
+// ===== START =====
 async function start() {
-  applySettings(); loadingView();
+  applySettings(); loadingView(); document.body.classList.toggle("friday-mode", isFriday());
   try {
     await waitOffset(); await load(); await evaluate();
-    const open = sessionStorage.getItem("open");
+    const open = sessionStorage.getItem("open");     // a refresh returns to the same task / page
     if (open === "quran" || open === "free") viewReader(open === "quran" ? "task" : "free");
     else if (open === "memorize") viewMemorize();
     else if (open === "morning" || open === "evening") viewAdhkar(open);
     else viewHome();
   } catch (e) { console.error(e); errorView(e && e.message); }
 }
-
 const savedUid = local.get("uid", null);
-if (savedUid && USERS[savedUid]) { UID = savedUid; start(); } else { viewPicker(); }
+if (savedUid && USERS[savedUid]) { UID = savedUid; start(); } else viewPicker();
 
-setInterval(async () => { if (!UID || !T) return; try { if (T.date !== dateKey()) { await evaluate(); if (view === "home") viewHome(); } else if (view === "home") await evaluate(); } catch (e) {} }, 30000);
+setInterval(async () => {
+  if (!UID || !T) return;
+  try { if (T.date !== dateKey()) { await evaluate(); if (view === "home") viewHome(); } else if (view === "home") await evaluate(); } catch (e) {}
+}, 30000);
 document.addEventListener("visibilitychange", () => { if (document.hidden) flushBookmark(); });
 window.addEventListener("pagehide", flushBookmark);
 </script>
