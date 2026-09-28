@@ -56,15 +56,7 @@ input{font:inherit;width:100%;padding:.75rem;border:1px solid var(--line);border
 <body>
 <div id="app"></div>
 <script type="module">
-/* Suggested Realtime Database rules (Firebase console → Realtime Database → Rules).
-{"rules":{
- "dailyTasks":{"$u":{".read":"auth!=null && auth.token.email==$u+'@wird.example'",".write":"auth!=null && auth.token.email==$u+'@wird.example'"}},
- "quranProgress":{"$u":{".read":"auth!=null && auth.token.email==$u+'@wird.example'",".write":"auth!=null && auth.token.email==$u+'@wird.example'"}},
- "memorize":{"$u":{".read":"auth!=null && auth.token.email==$u+'@wird.example'",".write":"auth!=null && auth.token.email==$u+'@wird.example'"}},
- "days":{"pair_001":{".read":"auth!=null","$d":{"$u":{".write":"auth!=null && auth.token.email==$u+'@wird.example'"}}}},
- "streak":{"pair_001":{".read":"auth!=null",".write":"auth!=null"}}}} */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getDatabase, ref, get, set, update, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 // ===== CONFIG =====
@@ -79,48 +71,25 @@ const CFG = { tz: "Africa/Cairo", pages: 604, plan: [2, 3, 1, 4], rescues: 3, pa
 const PASSWORDS = { user_omar: "Omar", user_maryam: "Mariam" };
 const USERS = { user_omar: "Omar", user_maryam: "Maryam" }, MEMBERS = Object.keys(USERS);
 const KINDS = ["morning", "quran", "evening", "memorize"];
-const email = id => id + "@wird.example", pw = p => "wird::" + p;
 
-// ===== SURAHS LIST (سور قصيرة للحفظ) =====
+// ===== SURAHS LIST =====
 const SHORT_SURAHS = [
-  { n: 1,  name: "الفاتحة" },
-  { n: 103, name: "العصر" },
-  { n: 108, name: "الكوثر" },
-  { n: 110, name: "النصر" },
-  { n: 112, name: "الإخلاص" },
-  { n: 113, name: "الفلق" },
-  { n: 114, name: "الناس" },
-  { n: 105, name: "الفيل" },
-  { n: 106, name: "قريش" },
-  { n: 107, name: "الماعون" },
-  { n: 109, name: "الكافرون" },
-  { n: 111, name: "المسد" },
-  { n: 102, name: "التكاثر" },
-  { n: 101, name: "القارعة" },
-  { n: 100, name: "العاديات" },
-  { n: 99,  name: "الزلزلة" },
-  { n: 97,  name: "القدر" },
-  { n: 95,  name: "التين" },
-  { n: 94,  name: "الشرح" },
-  { n: 93,  name: "الضحى" },
-  { n: 92,  name: "الليل" },
-  { n: 91,  name: "الشمس" },
-  { n: 90,  name: "البلد" },
-  { n: 89,  name: "الفجر" },
-  { n: 88,  name: "الغاشية" },
-  { n: 87,  name: "الأعلى" },
-  { n: 86,  name: "الطارق" },
-  { n: 85,  name: "البروج" },
-  { n: 84,  name: "الانشقاق" },
-  { n: 83,  name: "المطففين" }
+  { n: 1,  name: "الفاتحة" }, { n: 103, name: "العصر" }, { n: 108, name: "الكوثر" },
+  { n: 110, name: "النصر" }, { n: 112, name: "الإخلاص" }, { n: 113, name: "الفلق" },
+  { n: 114, name: "الناس" }, { n: 105, name: "الفيل" }, { n: 106, name: "قريش" },
+  { n: 107, name: "الماعون" }, { n: 109, name: "الكافرون" }, { n: 111, name: "المسد" },
+  { n: 102, name: "التكاثر" }, { n: 101, name: "القارعة" }, { n: 100, name: "العاديات" },
+  { n: 99,  name: "الزلزلة" }, { n: 97,  name: "القدر" }, { n: 95,  name: "التين" },
+  { n: 94,  name: "الشرح" }, { n: 93,  name: "الضحى" }, { n: 92,  name: "الليل" },
+  { n: 91,  name: "الشمس" }, { n: 90,  name: "البلد" }, { n: 89,  name: "الفجر" },
+  { n: 88,  name: "الغاشية" }, { n: 87,  name: "الأعلى" }, { n: 86,  name: "الطارق" },
+  { n: 85,  name: "البروج" }, { n: 84,  name: "الانشقاق" }, { n: 83,  name: "المطففين" }
 ];
-// اختيار السورة اليومية: نفس السورة لكل الأعضاء في نفس اليوم (لأن الستريك مشترك)
-const todaySurah = () => { const day = Math.floor(now() / 86400000); return SHORT_SURAHS[day % SHORT_SURAHS.length]; };
 
-const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getDatabase(app);
+const app = initializeApp(firebaseConfig), db = getDatabase(app);
 
 // ===== LOCAL STATE =====
-const local = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const local = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }, del(k) { try { localStorage.removeItem(k); } catch (e) {} } };
 const settings = Object.assign({ fs: 1.7, theme: "day", rm: false }, local.get("settings", {}));
 const applySettings = () => { document.documentElement.style.setProperty("--fs", settings.fs); document.documentElement.setAttribute("data-theme", settings.theme); };
 const saveSettings = () => { local.set("settings", settings); applySettings(); };
@@ -134,7 +103,6 @@ const addDays = (d, n) => { const t = new Date(d + "T00:00:00Z"); t.setUTCDate(t
 const waitOffset = () => new Promise(r => { const t0 = Date.now(), i = setInterval(() => { if (OFFSET !== 0 || Date.now() - t0 > 3000) { clearInterval(i); r(); } }, 100); });
 
 // ===== HELPERS =====
-const $ = s => document.querySelector(s);
 const ar = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
 const pagesTxt = n => n === 1 ? "صفحة واحدة" : n === 2 ? "صفحتان" : ar(n) + " صفحات";
 const fmt = s => ar(String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(Math.ceil(s % 60) % 60).padStart(2, "0"));
@@ -144,7 +112,7 @@ function h(tag, a = {}, ...kids) {
   kids.flat().filter(x => x != null && x !== false).forEach(x => e.append(x)); return e;
 }
 let ticks = [], view = "", busy = false;
-const mount = n => { ticks = []; $("#app").replaceChildren(n); };
+const mount = n => { ticks = []; document.querySelector("#app").replaceChildren(n); };
 const toast = t => { const e = h("div", { cls: "toast" }, t); document.body.append(e); setTimeout(() => e.remove(), 3500); };
 setInterval(() => ticks.forEach(f => f()), 1000);
 
@@ -207,7 +175,7 @@ const elapsed = k => (now() - (T.tasks[k].startedAt || now())) / 1000;
 const contentOk = k => {
   const t = T.tasks[k];
   if (k === "quran") return t.reached >= T.plan.end && t.endSeen === true;
-  if (k === "memorize") return (t.recitedCount || 0) >= 3;   // لازم يقرأها ٣ مرات للإتقان
+  if (k === "memorize") return (t.recitedCount || 0) >= 3;
   return (t.step || 0) >= N(k) - 1;
 };
 const canFinish = k => T.tasks[k].state === "inProgress" && contentOk(k) && elapsed(k) >= TASK_DURATIONS[k];
@@ -259,7 +227,7 @@ function finisher(k, label) {
 // ===== ADHKAR =====
 const TASBIH = { t: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", s: "مائة مرة — رواه مسلم" };
 const BISM = { t: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", s: "ثلاث مرات — رواه أبو داود والترمذي" };
-const KURSI = { q: ["ayah/2:255"], s: "آية الكرسي — البقرة ٢٥٥" }, MUAW = { q: ["surah/112", "surah/113", "surah/114"], s: "الإخلاص والفلق والناس، ثلاث مرات — رواه أبو داود والترمذي" };
+const KURSI = { q: ["ayah/2:255"], s: "آية الكرسي — البقرة ٢٥٥" }, MUAW = { q: ["surah/112", "surah/113", "surah/114"], s: "الإخلاص والفلق والناس، ثلاث مرات" };
 const ADHKAR = {
   morning: [KURSI, MUAW,
     { t: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", s: "رواه مسلم" },
@@ -288,7 +256,7 @@ async function viewAdhkar(k) {
     const tx = h("div", { cls: "t qf" }, x.t || "جارٍ التحميل…"); body.replaceChildren(tx, h("div", { cls: "s" }, x.s));
     if (x.q) quranText(x.q).then(v => { if (ADHKAR[k][i] === x) tx.textContent = v; }).catch(() => { tx.textContent = "تعذر تحميل النص. تحقق من الاتصال."; });
     const prev = h("button", { cls: "btn ghost", on: { click: () => { i--; draw(); } } }, "السابق"); prev.disabled = i === 0;
-    const next = h("button", { cls: "btn", on: { click: async () => { i++; if (!done && i > (t.step || 0)) { try { await patchTask(k, { step: i }); } catch (e) { toast("تعذر حفظ التقدم، حاول مرة أخرى."); } } draw(); } } }, "التالي");
+    const next = h("button", { cls: "btn", on: { click: async () => { i++; if (!done && i > (t.step || 0)) { try { await patchTask(k, { step: i }); } catch (e) {} } draw(); } } }, "التالي");
     next.hidden = i === total - 1; nav.replaceChildren(prev, next);
     fin.replaceChildren(i === total - 1 && !done ? finisher(k, "تم إنهاء المهمة") : "");
   }
@@ -297,20 +265,18 @@ async function viewAdhkar(k) {
   draw();
 }
 
-// ===== MEMORIZE (حفظ سورة) =====
+// ===== MEMORIZE =====
 async function viewMemorize() {
   view = "memorize"; sessionStorage.setItem("open", "memorize");
-  try { await startTask("memorize"); } catch (e) { toast("تعذر حفظ التقدم، حاول مرة أخرى."); }
+  try { await startTask("memorize"); } catch (e) {}
   const s = T.plan.surah, name = T.plan.surahName;
   const t = T.tasks.memorize, done = t.state === "completed";
-
   const aysEl = h("div", { cls: "ays" }, "جارٍ التحميل…");
   const recEl = h("div", { cls: "mute" }, "");
   const fin = h("div", { style: "width:100%" });
-  const cntBtn = h("button", { cls: "btn big", style: "background:var(--acc);color:var(--bg)" }, "قرأت السورة مرة");
+  const cntBtn = h("button", { cls: "btn big" }, "قرأت السورة مرة");
   const resetBtn = h("button", { cls: "btn ghost" }, "إعادة العدّ");
   const btns = h("div", { cls: "seg" }, cntBtn, resetBtn);
-
   const upd = () => {
     const c = t.recitedCount || 0;
     recEl.textContent = "عدد المرات: " + ar(c) + " / ٣";
@@ -318,17 +284,10 @@ async function viewMemorize() {
     resetBtn.disabled = done || c === 0;
     fin.replaceChildren(!done && c >= 3 ? finisher("memorize", "تم الحفظ") : "");
   };
-  cntBtn.onclick = async () => {
-    if (done) return;
-    const c = Math.min(3, (t.recitedCount || 0) + 1);
-    try { await patchTask("memorize", { recitedCount: c }); } catch (e) { toast("تعذر الحفظ"); }
-    upd();
-  };
+  cntBtn.onclick = async () => { if (done) return; const c = Math.min(3, (t.recitedCount || 0) + 1); try { await patchTask("memorize", { recitedCount: c }); } catch (e) {} upd(); };
   resetBtn.onclick = async () => { try { await patchTask("memorize", { recitedCount: 0 }); } catch (e) {} upd(); };
   ticks.push(upd); upd();
-
   quranText(["surah/" + s]).then(v => { aysEl.textContent = v; }).catch(() => { aysEl.textContent = "تعذر تحميل السورة. تحقق من الاتصال."; });
-
   mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
     h("div", { cls: "mute" }, "📚 ورد الحفظ اليومي"),
     h("div", { cls: "mem" },
@@ -341,32 +300,31 @@ async function viewMemorize() {
   ));
 }
 
-// ===== VIEWS =====
-const NAME_TO_ID = { "Omar": "user_omar", "Mariam": "user_maryam" };
+// ===== LOGIN (بدون Firebase Auth) =====
+const NAME_TO_ID = { "omar": "user_omar", "mariam": "user_maryam" };
 function viewLogin(msg) {
   view = "login";
-  const p = h("input", { type: "text", placeholder: "اكتب Omar أو Mariam", autocomplete: "username", "aria-label": "كلمة السر", style: "text-align:center" });
+  const p = h("input", { type: "text", placeholder: "اكتب Omar أو Mariam", autocomplete: "off", style: "text-align:center" });
   const err = h("div", { cls: "err" }, msg || "");
-  const go = async () => {
-    const typed = (p.value || "").trim();
+  const go = () => {
+    const typed = (p.value || "").trim().toLowerCase();
     if (!typed) return;
+    const id = NAME_TO_ID[typed];
+    if (!id) { err.textContent = "كلمة السر غير صحيحة"; return; }
     err.textContent = "";
-    const matchKey = Object.keys(NAME_TO_ID).find(k => k.toLowerCase() === typed.toLowerCase());
-    if (!matchKey) { err.textContent = "كلمة السر غير صحيحة"; return; }
-    const id = NAME_TO_ID[matchKey], pwd = PASSWORDS[id];
-    try { await signInWithEmailAndPassword(auth, email(id), pw(pwd)); }
-    catch (e) {
-      if (e.code === "auth/invalid-credential" || e.code === "auth/user-not-found") {
-        try { await createUserWithEmailAndPassword(auth, email(id), pw(pwd)); }
-        catch (e2) { err.textContent = e2.code === "auth/email-already-in-use" ? "كلمة المرور غير صحيحة" : "تعذر الاتصال بالخادم. حاول مرة أخرى."; }
-      } else err.textContent = "تعذر الاتصال بالخادم. حاول مرة أخرى.";
-    }
+    UID = id;
+    local.set("uid", id);
+    start();
   };
   p.addEventListener("keydown", e => { if (e.key === "Enter") go(); });
-  mount(h("div", { cls: "screen" }, h("h1", {}, "وردي"), h("div", { cls: "mute" }, "اكتب اسمك للمتابعة"), p, err, h("button", { cls: "btn big", on: { click: go } }, "دخول")));
+  mount(h("div", { cls: "screen" },
+    h("h1", {}, "وردي"),
+    h("div", { cls: "mute" }, "اكتب اسمك للمتابعة"),
+    p, err,
+    h("button", { cls: "btn big", on: { click: go } }, "دخول")));
 }
 const loadingView = () => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "جارٍ التحميل…")));
-const errorView = () => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "تعذر الاتصال بالخادم. حاول مرة أخرى."), h("button", { cls: "btn", on: { click: start } }, "إعادة المحاولة")));
+const errorView = () => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "تعذر الاتصال بالخادم. حاول مرة أخرى."), h("button", { cls: "btn", on: { click: start } }, "إعادة المحاولة"), h("button", { cls: "link", on: { click: () => { local.del("uid"); UID = null; viewLogin(); } } }, "تسجيل الخروج")));
 
 async function viewHome() {
   view = "home"; sessionStorage.removeItem("open");
@@ -378,14 +336,14 @@ function renderHome() {
   const p = T.plan, s = S || INIT_STREAK, st = k => stateOf(k), pct = Math.floor(QP.pagesRead / CFG.pages * 100);
   const label = { available: "لم تبدأ بعد", inProgress: "قيد التنفيذ", completed: "✓ تم", locked: "مغلقة" };
   const btn = (k, fn) => { const x = st(k), b = h("button", { cls: "btn" + (x === "completed" ? " ghost" : ""), on: { click: fn } }, x === "completed" ? "افتح" : x === "inProgress" ? "متابعة" : k === "quran" ? "ابدأ القراءة" : k === "memorize" ? "ابدأ الحفظ" : "ابدأ"); b.disabled = x === "locked"; return b; };
+  const t0 = T.tasks.memorize || {};
   const sub = k => {
     if (k === "quran") return st(k) === "completed" ? "✓ تم" : "مهمتك اليوم: " + pagesTxt(p.pages) + " (" + (p.pages === 1 ? "صفحة " + ar(p.start) : "من " + ar(p.start) + " إلى " + ar(p.end)) + ")";
     if (k === "memorize") return st(k) === "completed" ? "✓ تم حفظ سورة " + p.surahName : "سورة " + p.surahName + (st(k) === "inProgress" ? " — " + ar(t0.recitedCount || 0) + "/٣" : "");
     return st(k) === "inProgress" ? "قيد التنفيذ " + ar((T.tasks[k].step || 0) + 1) + "/" + ar(N(k)) : (label[st(k)] === "لم تبدأ بعد" && k === "evening" ? "لاحقًا" : label[st(k)]);
   };
-  const t0 = T.tasks.memorize || {};
   const row = (icon, title, k, fn) => h("div", { cls: "row" }, h("div", {}, h("b", {}, icon + " " + title), h("span", { cls: "mute" }, sub(k))), btn(k, fn));
-  mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "أهلًا بك"), h("h1", {}, "وردك اليوم"),
+  mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "أهلًا " + USERS[UID]), h("h1", {}, "وردك اليوم"),
     h("div", { style: "width:100%" },
       row("☀️", "أذكار الصباح", "morning", () => viewAdhkar("morning")),
       row("📖", "القرآن الكريم", "quran", () => viewReader("task")),
@@ -395,13 +353,13 @@ function renderHome() {
     h("div", { cls: "prog" }, h("div", { cls: "bar0" }, h("i", { style: "width:" + pct + "%" })), h("div", { cls: "mute" }, "ختمة " + ar(QP.khatmah) + " · " + ar(QP.pagesRead) + " / " + ar(CFG.pages) + " · " + ar(pct) + "٪")),
     h("div", { cls: "mute" }, "حفظت " + ar((MEM && MEM.count) || 0) + " سورة حتى الآن"),
     h("button", { cls: "link", on: { click: () => viewReader("free") } }, "قراءة حرة"),
-    h("div", { style: "font-size:1.1rem", "aria-label": "الستريك المشترك" }, h("span", { cls: "fl" + (s.status === "red" ? " red" : "") }, "🔥"), " " + ar(s.count)),
+    h("div", { style: "font-size:1.1rem" }, h("span", { cls: "fl" + (s.status === "red" ? " red" : "") }, "🔥"), " " + ar(s.count)),
     s.rescueNotice && s.rescueNotice >= addDays(dateKey(), -2) ? h("div", { cls: "mute" }, "تم استرجاع الستريك بمساعدة.") : null,
-    h("button", { cls: "link", on: { click: () => signOut(auth) } }, "تسجيل الخروج")));
+    h("button", { cls: "link", on: { click: () => { local.del("uid"); UID = null; T = QP = S = MEM = null; viewLogin(); } } }, "تسجيل الخروج")));
 }
 
 // ===== QURAN READER =====
-let pgEl = null, saveT = 0;
+let saveT = 0;
 const pageCache = async n => { const k = "qp" + n, c = local.get(k, null); if (c) return c;
   const a = (await fetchJson(CFG.quranApi + "page/" + n + "/quran-uthmani")).ayahs.map(x => [x.surah.number, x.surah.name, x.numberInSurah, x.text, x.juz]); if (!a.length) throw 0; local.set(k, a); return a; };
 function viewReader(mode) {
@@ -409,17 +367,17 @@ function viewReader(mode) {
   const task = mode === "task", p = T.plan;
   let cur, seq = 0, st = 0;
   const init = async () => {
-    if (task) { try { await startTask("quran"); } catch (e) { toast("تعذر حفظ التقدم، حاول مرة أخرى."); } cur = Math.min(p.end, Math.max(p.start, T.tasks.quran.reached || p.start)); }
+    if (task) { try { await startTask("quran"); } catch (e) {} cur = Math.min(p.end, Math.max(p.start, T.tasks.quran.reached || p.start)); }
     else cur = QP.currentPage || local.get("lp", 1);
     mount(rd); sync(); show(cur, 0);
   };
-  const pg = h("div", { id: "pg" }); pgEl = pg;
+  const pg = h("div", { id: "pg" });
   const jIn = h("input", { type: "number", min: 1, max: CFG.pages, inputmode: "numeric", placeholder: "رقم الصفحة (١ – ٦٠٤)" });
   const jGo = () => { const n = parseInt(jIn.value, 10); jump.hidden = true; if (n >= 1 && n <= CFG.pages) show(n); };
   jIn.addEventListener("keydown", e => { if (e.key === "Enter") jGo(); });
   const jump = h("div", { cls: "jump", hidden: "" }, h("div", {}, "الانتقال إلى صفحة"), jIn, h("button", { cls: "btn big", on: { click: jGo } }, "انتقال"), h("button", { cls: "link", on: { click: () => { jump.hidden = true; } } }, "إلغاء"));
-  const pgNum = h("button", { cls: "tb", "aria-label": "الانتقال إلى صفحة", on: { click: () => { jIn.value = ""; jump.hidden = false; jIn.focus(); } } });
-  const bTheme = h("button", { cls: "tb", "aria-label": "الوضع الليلي", on: { click: () => { settings.theme = settings.theme === "night" ? "day" : "night"; saveSettings(); sync(); } } });
+  const pgNum = h("button", { cls: "tb", on: { click: () => { jIn.value = ""; jump.hidden = false; jIn.focus(); } } });
+  const bTheme = h("button", { cls: "tb", on: { click: () => { settings.theme = settings.theme === "night" ? "day" : "night"; saveSettings(); sync(); } } });
   const bRm = h("button", { cls: "tb", on: { click: () => { settings.rm = !settings.rm; saveSettings(); sync(); } } });
   const fs = d => { settings.fs = Math.min(2.8, Math.max(1.1, +(settings.fs + d).toFixed(1))); saveSettings(); };
   const rd = h("div", { id: "rd" },
@@ -443,13 +401,13 @@ function viewReader(mode) {
     clearTimeout(saveT); saveT = setTimeout(flushBookmark, 600);
     pgNum.textContent = "صفحة " + ar(n);
     const t = T.tasks.quran;
-    if (task && t.state === "inProgress" && n === (t.reached || p.start - 1) + 1 && n <= p.end) patchTask("quran", { reached: n }).catch(() => toast("تعذر حفظ التقدم، حاول مرة أخرى."));
+    if (task && t.state === "inProgress" && n === (t.reached || p.start - 1) + 1 && n <= p.end) patchTask("quran", { reached: n }).catch(() => {});
     pg.replaceChildren(h("div", { cls: "msg" }, "جارٍ التحميل…"));
     try {
       const a = await pageCache(n); if (my !== seq) return;
       ticks = []; pg.replaceChildren(draw(a, n, panel())); pg.scrollTop = restore || 0; checkEnd();
       if (n < CFG.pages) pageCache(n + 1).catch(() => {});
-    } catch (e) { if (my !== seq) return; pg.replaceChildren(h("div", { cls: "msg" }, navigator.onLine ? "تعذر تحميل الصفحة. تحقق من الاتصال." : "لا يوجد اتصال بالإنترنت.", h("br"), h("br"), h("button", { cls: "btn ghost", on: { click: () => show(n) } }, "إعادة المحاولة"))); }
+    } catch (e) { if (my !== seq) return; pg.replaceChildren(h("div", { cls: "msg" }, navigator.onLine ? "تعذر تحميل الصفحة." : "لا يوجد اتصال بالإنترنت.", h("br"), h("br"), h("button", { cls: "btn ghost", on: { click: () => show(n) } }, "إعادة المحاولة"))); }
   }
   let sx = 0, sy = 0;
   pg.addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
@@ -459,7 +417,7 @@ function viewReader(mode) {
   document.onkeydown = e => { if (e.key === "ArrowLeft") go(1); else if (e.key === "ArrowRight") go(-1); };
   init();
 }
-async function flushBookmark() { clearTimeout(saveT); if (!UID || !QP) return; try { await update(ref(db, "quranProgress/" + UID), { currentPage: QP.currentPage, lastReadAt: now() }); } catch (e) { toast("تعذر حفظ التقدم، حاول مرة أخرى."); } }
+async function flushBookmark() { clearTimeout(saveT); if (!UID || !QP) return; try { await update(ref(db, "quranProgress/" + UID), { currentPage: QP.currentPage, lastReadAt: now() }); } catch (e) {} }
 function draw(a, n, panelEl) {
   const m = h("div", { cls: "mushaf qf" }); let q = null;
   m.append(h("div", { cls: "juz" }, "الجزء " + ar(a[0][4])));
@@ -480,18 +438,16 @@ async function start() {
     else if (open === "memorize") viewMemorize();
     else if (open === "morning" || open === "evening") viewAdhkar(open);
     else viewHome();
-  } catch (e) { errorView(); }
+  } catch (e) { console.error(e); errorView(); }
 }
-onAuthStateChanged(auth, u => {
-  if (!u) { UID = null; T = QP = S = MEM = null; return viewLogin(); }
-  const id = (u.email || "").split("@")[0];
-  if (!USERS[id]) { signOut(auth); return viewLogin("هذا الحساب غير مسموح."); }
-  UID = id; start();
-});
+
+// auto-login من localStorage
+const savedUid = local.get("uid", null);
+if (savedUid && USERS[savedUid]) { UID = savedUid; start(); } else { viewLogin(); }
+
 setInterval(async () => { if (!UID || !T) return; try { if (T.date !== dateKey()) { await evaluate(); if (view === "home") viewHome(); } else if (view === "home") await evaluate(); } catch (e) {} }, 30000);
 document.addEventListener("visibilitychange", () => { if (document.hidden) flushBookmark(); });
 window.addEventListener("pagehide", flushBookmark);
-window.addEventListener("online", () => { if (view === "reader") flushBookmark(); });
 </script>
 </body>
 </html>
