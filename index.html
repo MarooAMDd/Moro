@@ -47,10 +47,16 @@ input{font:inherit;width:100%;padding:.75rem;border:1px solid var(--line);border
 .jump{position:absolute;inset:0;z-index:5;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;padding:2rem}.jump input{max-width:16rem}
 .mem{width:100%;text-align:center;padding:1rem 0}
 .mem .sn2{font-family:"Amiri Quran",serif;font-size:1.6rem;color:var(--acc);margin-bottom:.5rem}
-.mem .ays{font-family:"Amiri Quran",serif;font-size:1.15rem;line-height:2.3;max-height:40vh;overflow-y:auto;padding:.5rem;border:1px solid var(--line);border-radius:.6rem;text-align:justify;text-align-last:center}
-.mem .st{margin-top:.8rem;font-size:1rem;font-weight:600}
+.mem .ays{font-family:"Amiri Quran",serif;font-size:1.15rem;line-height:2.3;max-height:35vh;overflow-y:auto;padding:.5rem;border:1px solid var(--line);border-radius:.6rem;text-align:justify;text-align-last:center}
+.rec-area{width:100%;margin:1rem 0;padding:1rem;border:1px dashed var(--line);border-radius:.7rem;display:flex;flex-direction:column;align-items:center;gap:.8rem}
+.rec-btn{width:4.5rem;height:4.5rem;border-radius:50%;background:var(--acc);color:var(--bg);border:0;font-size:1.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.rec-btn.recording{background:#b3473a;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.rec-timer{font-size:1.3rem;font-weight:600;color:var(--acc)}
+.rec-actions{display:flex;gap:.6rem;justify-content:center;width:100%}
+.prayer-bar{width:100%;padding:.6rem .8rem;background:var(--line);border-radius:.6rem;font-size:.9rem;color:var(--fg);display:flex;justify-content:space-between;align-items:center}
+.prayer-bar b{color:var(--acc)}
 .pick{width:100%;padding:1.5rem 0;text-align:center}
-.pick .who{font-family:"Amiri Quran",serif;font-size:2rem;color:var(--acc);margin-bottom:1rem}
 </style>
 </head>
 <body>
@@ -67,7 +73,7 @@ const firebaseConfig = {
   appId: "1:1098323069112:web:0e36a35eae752e53ac4c4d", measurementId: "G-2ZJMPDMCTP"
 };
 const TASK_DURATIONS = { morning: 15 * 60, quran: 5 * 60, evening: 10 * 60, memorize: 3 * 60 };
-const CFG = { tz: "Africa/Cairo", pages: 604, plan: [2, 3, 1, 4], rescues: 3, pair: "pair_001", quranApi: "https://api.alquran.cloud/v1/" };
+const CFG = { tz: "Africa/Cairo", pages: 604, plan: [4, 6, 8, 10, 12], rescues: 3, pair: "pair_001", quranApi: "https://api.alquran.cloud/v1/" };
 const USERS = { user_omar: "Omar", user_maryam: "Mariam" }, MEMBERS = Object.keys(USERS);
 const KINDS = ["morning", "quran", "evening", "memorize"];
 
@@ -100,11 +106,44 @@ const now = () => Date.now() + OFFSET;
 const dateKey = () => new Intl.DateTimeFormat("en-CA", { timeZone: CFG.tz }).format(new Date(now()));
 const addDays = (d, n) => { const t = new Date(d + "T00:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
 const waitOffset = () => new Promise(r => { const t0 = Date.now(), i = setInterval(() => { if (OFFSET !== 0 || Date.now() - t0 > 3000) { clearInterval(i); r(); } }, 100); });
+const isFriday = () => new Date(now()).getDay() === 5;
+
+// ===== PRAYER TIMES (Aladhan API) =====
+const prayerCache = {};
+async function getPrayerTimes(date) {
+  if (prayerCache[date]) return prayerCache[date];
+  try {
+    const d = new Date(date + "T12:00:00Z");
+    const dd = String(d.getUTCDate()).padStart(2, "0"), mm = String(d.getUTCMonth() + 1).padStart(2, "0"), yyyy = d.getUTCFullYear();
+    const url = `https://api.aladhan.com/v1/timings/${dd}-${mm}-${yyyy}?latitude=30.0444&longitude=31.2357&method=5`;
+    const r = await fetch(url), j = await r.json();
+    if (j.code !== 200) throw 0;
+    const t = j.data.timings;
+    const out = { fajr: t.Fajr, sunrise: t.Sunrise, dhuhr: t.Dhuhr, asr: t.Asr, maghrib: t.Maghrib, isha: t.Isha };
+    prayerCache[date] = out;
+    return out;
+  } catch (e) { return null; }
+}
+function nextPrayer(times) {
+  if (!times) return null;
+  const nowMin = new Date(now()).getHours() * 60 + new Date(now()).getMinutes();
+  const list = [
+    { name: "الفجر", time: times.fajr }, { name: "الظهر", time: times.dhuhr },
+    { name: "العصر", time: times.asr }, { name: "المغرب", time: times.maghrib }, { name: "العشاء", time: times.isha }
+  ];
+  for (const p of list) {
+    const [h, m] = p.time.split(":").map(Number);
+    if (h * 60 + m > nowMin) return { ...p, remaining: h * 60 + m - nowMin };
+  }
+  const [h, m] = list[0].time.split(":").map(Number);
+  return { ...list[0], remaining: (24 * 60 - nowMin) + h * 60 + m, tomorrow: true };
+}
 
 // ===== HELPERS =====
 const ar = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
 const pagesTxt = n => n === 1 ? "صفحة واحدة" : n === 2 ? "صفحتان" : ar(n) + " صفحات";
 const fmt = s => ar(String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(Math.ceil(s % 60) % 60).padStart(2, "0"));
+const fmtMin = m => ar(String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"));
 function h(tag, a = {}, ...kids) {
   const e = document.createElement(tag);
   for (const k in a) { if (k === "on") for (const ev in a.on) e.addEventListener(ev, a.on[ev]); else if (k === "cls") e.className = a[k]; else e.setAttribute(k, a[k]); }
@@ -158,7 +197,7 @@ async function evaluate() {
       else {
         cur.status = "gray"; cur.fails++;
         if (cur.fails >= 2) {
-          if (cur.rescues > 0) { cur.rescues--; cur.fails = 0; cur.rescueNotice = d; }
+          if (cur.rescues > 0) { cur.rescues--; cur.fails = 0; }
           else { cur.count = 0; cur.fails = 0; }
         }
       }
@@ -174,14 +213,14 @@ const elapsed = k => (now() - (T.tasks[k].startedAt || now())) / 1000;
 const contentOk = k => {
   const t = T.tasks[k];
   if (k === "quran") return t.reached >= T.plan.end && t.endSeen === true;
-  if (k === "memorize") return (t.recitedCount || 0) >= 3;
+  if (k === "memorize") return t.recitedCount >= 3 && t.recorded === true;
   return (t.step || 0) >= N(k) - 1;
 };
 const canFinish = k => T.tasks[k].state === "inProgress" && contentOk(k) && elapsed(k) >= TASK_DURATIONS[k];
 async function startTask(k) {
   if (T.tasks[k].state !== "available") return;
   if (k === "quran") return patchTask(k, { state: "inProgress", startedAt: now(), reached: T.plan.start - 1, endSeen: false });
-  if (k === "memorize") return patchTask(k, { state: "inProgress", startedAt: now(), recitedCount: 0 });
+  if (k === "memorize") return patchTask(k, { state: "inProgress", startedAt: now(), recitedCount: 0, recorded: false });
   return patchTask(k, { state: "inProgress", startedAt: now(), step: 0 });
 }
 async function completeTask(k) {
@@ -264,70 +303,113 @@ async function viewAdhkar(k) {
   draw();
 }
 
-// ===== MEMORIZE =====
+// ===== MEMORIZE WITH RECORDING =====
 async function viewMemorize() {
   view = "memorize"; sessionStorage.setItem("open", "memorize");
   try { await startTask("memorize"); } catch (e) {}
   const s = T.plan.surah, name = T.plan.surahName;
   const t = T.tasks.memorize, done = t.state === "completed";
+
   const aysEl = h("div", { cls: "ays" }, "جارٍ التحميل…");
-  const recEl = h("div", { cls: "mute" }, "");
+  const recTimer = h("div", { cls: "rec-timer" }, "");
+  const recBtn = h("button", { cls: "rec-btn" }, "🎙️");
+  const playBtn = h("button", { cls: "btn", style: "display:none" }, "▶️ اسمع");
+  const stopBtn = h("button", { cls: "btn", style: "display:none" }, "⏹️ إيقاف");
+  const deleteBtn = h("button", { cls: "btn ghost", style: "display:none" }, "🗑️ امسح");
+  const recStatus = h("div", { cls: "mute" }, "اضغط الميكروفون لبدء التسجيل");
+  const recActions = h("div", { cls: "rec-actions" }, playBtn, stopBtn, deleteBtn);
   const fin = h("div", { style: "width:100%" });
+
+  let mediaRecorder = null, chunks = [], audioURL = null, timerInt = null, seconds = 0;
+
+  const resetRec = () => {
+    if (audioURL) URL.revokeObjectURL(audioURL);
+    audioURL = null; chunks = []; seconds = 0;
+    if (timerInt) { clearInterval(timerInt); timerInt = null; }
+    recTimer.textContent = "";
+    recBtn.classList.remove("recording"); recBtn.textContent = "🎙️";
+    playBtn.style.display = "none"; stopBtn.style.display = "none"; deleteBtn.style.display = "none";
+    recActions.style.display = "flex";
+    recStatus.textContent = t.recitedCount >= 3 ? "يمكنك التسجيل للمراجعة" : "اضغط الميكروفون لبدء التسجيل";
+  };
+
+  const startRec = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mime = MediaRecorder.isTypeSupported("audio/webm;codecs=opus") ? "audio/webm;codecs=opus" : "audio/webm";
+      mediaRecorder = new MediaRecorder(stream, { mimeType: mime });
+      chunks = []; seconds = 0;
+      mediaRecorder.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+      mediaRecorder.onstop = () => {
+        stream.getTracks().forEach(tr => tr.stop());
+        const blob = new Blob(chunks, { type: "audio/webm" });
+        if (blob.size > 0) {
+          audioURL = URL.createObjectURL(blob);
+          playBtn.style.display = "block"; deleteBtn.style.display = "block";
+          recStatus.textContent = "التسجيل جاهز — اسمع نفسك";
+          if (!t.recorded) patchTask("memorize", { recorded: true }).then(() => upd()).catch(() => {});
+        } else { recStatus.textContent = "التسجيل فاضي، جرب تاني"; }
+        if (timerInt) { clearInterval(timerInt); timerInt = null; }
+      };
+      mediaRecorder.start(250);
+      recBtn.classList.add("recording"); recBtn.textContent = "⏹️";
+      stopBtn.style.display = "block"; playBtn.style.display = "none"; deleteBtn.style.display = "none";
+      recStatus.textContent = "جاري التسجيل…";
+      timerInt = setInterval(() => { seconds++; recTimer.textContent = fmt(seconds); }, 1000);
+    } catch (e) {
+      recStatus.textContent = "لم يتم السماح بالوصول للميكروفون";
+      toast("الميكروفون غير متاح");
+    }
+  };
+  const stopRec = () => { if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop(); };
+  const playRec = () => { if (audioURL) new Audio(audioURL).play(); };
+  const delRec = () => { resetRec(); };
+
+  recBtn.onclick = () => { if (mediaRecorder && mediaRecorder.state === "recording") stopRec(); else startRec(); };
+  stopBtn.onclick = stopRec;
+  playBtn.onclick = playRec;
+  deleteBtn.onclick = delRec;
+
   const cntBtn = h("button", { cls: "btn big" }, "قرأت السورة مرة");
   const resetBtn = h("button", { cls: "btn ghost" }, "إعادة العدّ");
   const btns = h("div", { cls: "seg" }, cntBtn, resetBtn);
   const upd = () => {
     const c = t.recitedCount || 0;
-    recEl.textContent = "عدد المرات: " + ar(c) + " / ٣";
     cntBtn.disabled = done || c >= 3;
     resetBtn.disabled = done || c === 0;
-    fin.replaceChildren(!done && c >= 3 ? finisher("memorize", "تم الحفظ") : "");
+    const ready = (t.recitedCount || 0) >= 3 && t.recorded;
+    fin.replaceChildren(!done && ready ? finisher("memorize", "تم الحفظ") : "");
+    recStatus.textContent = done ? "✓ تم حفظ هذه السورة" : (t.recorded ? "✓ تم التسجيل" : "اضغط الميكروفون لبدء التسجيل");
   };
   cntBtn.onclick = async () => { if (done) return; const c = Math.min(3, (t.recitedCount || 0) + 1); try { await patchTask("memorize", { recitedCount: c }); } catch (e) {} upd(); };
   resetBtn.onclick = async () => { try { await patchTask("memorize", { recitedCount: 0 }); } catch (e) {} upd(); };
   ticks.push(upd); upd();
+
   quranText(["surah/" + s]).then(v => { aysEl.textContent = v; }).catch(() => { aysEl.textContent = "تعذر تحميل السورة."; });
+
   mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
     h("div", { cls: "mute" }, "📚 ورد الحفظ اليومي"),
     h("div", { cls: "mem" },
       h("div", { cls: "sn2" }, "سورة " + name),
-      h("div", { cls: "mute", style: "margin-bottom:.6rem" }, "اقرأها ٣ مرات بحضور قلب، ثم اضغط حفظ"),
-      aysEl, recEl
+      aysEl
     ),
+    h("div", { cls: "rec-area" }, recTimer, recBtn, recStatus, recActions),
+    h("div", { cls: "mute", style: "margin-top:.5rem" }, "اقرأها ٣ مرات، وسجّل صوتك للمراجعة"),
     btns, fin,
-    h("button", { cls: "link", on: { click: () => viewHome() } }, "رجوع")
+    h("button", { cls: "link", on: { click: () => { resetRec(); viewHome(); } } }, "رجوع")
   ));
 }
 
-// ===== USER PICKER (بدون كلمة سر) =====
+// ===== USER PICKER =====
 function viewPicker() {
   view = "picker";
-  const mk = (id, name, emoji) => h("button", {
-    cls: "btn big",
-    style: "width:100%;padding:1.2rem;font-size:1.2rem",
-    on: { click: () => pickUser(id) }
-  }, emoji + "  " + name);
-  mount(h("div", { cls: "screen" },
-    h("h1", {}, "وردي"),
-    h("div", { cls: "mute" }, "مين اللي بيفتح؟"),
-    h("div", { cls: "pick" },
-      mk("user_omar", "Omar", "🧑"),
-      h("div", { style: "height:.8rem" }),
-      mk("user_maryam", "Mariam", "👩")
-    ),
-    h("div", { cls: "mute", style: "margin-top:2rem;font-size:.8rem" }, "الستريك مشترك بين الاتنين 🤝")
-  ));
+  const mk = (id, name) => h("button", { cls: "btn big", style: "width:100%;padding:1.2rem;font-size:1.2rem", on: { click: () => pickUser(id) } }, name);
+  mount(h("div", { cls: "screen" }, h("h1", {}, "وردي"), h("div", { cls: "pick" }, mk("user_omar", "Omar"), h("div", { style: "height:.8rem" }), mk("user_maryam", "Mariam"))));
 }
-function pickUser(id) {
-  UID = id;
-  local.set("uid", id);
-  start();
-}
+function pickUser(id) { UID = id; local.set("uid", id); start(); }
 
 const loadingView = () => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "جارٍ التحميل…")));
-const errorView = (msg) => mount(h("div", { cls: "screen" },
-  h("div", { cls: "mute" }, "تعذر الاتصال بالخادم. حاول مرة أخرى."),
-  msg ? h("div", { cls: "err" }, msg) : null,
+const errorView = (msg) => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "تعذر الاتصال بالخادم."), msg ? h("div", { cls: "err" }, msg) : null,
   h("button", { cls: "btn", on: { click: start } }, "إعادة المحاولة"),
   h("button", { cls: "link", on: { click: () => { local.del("uid"); UID = null; T = QP = S = MEM = null; viewPicker(); } } }, "تبديل المستخدم")));
 
@@ -343,12 +425,26 @@ function renderHome() {
   const btn = (k, fn) => { const x = st(k), b = h("button", { cls: "btn" + (x === "completed" ? " ghost" : ""), on: { click: fn } }, x === "completed" ? "افتح" : x === "inProgress" ? "متابعة" : k === "quran" ? "ابدأ القراءة" : k === "memorize" ? "ابدأ الحفظ" : "ابدأ"); b.disabled = x === "locked"; return b; };
   const t0 = T.tasks.memorize || {};
   const sub = k => {
-    if (k === "quran") return st(k) === "completed" ? "✓ تم" : "مهمتك اليوم: " + pagesTxt(p.pages) + " (" + (p.pages === 1 ? "صفحة " + ar(p.start) : "من " + ar(p.start) + " إلى " + ar(p.end)) + ")";
+    if (k === "quran") return st(k) === "completed" ? "✓ تم" : "وردك اليوم: " + pagesTxt(p.pages) + " (" + (p.pages === 1 ? "صفحة " + ar(p.start) : "من " + ar(p.start) + " إلى " + ar(p.end)) + ")";
     if (k === "memorize") return st(k) === "completed" ? "✓ تم حفظ سورة " + p.surahName : "سورة " + p.surahName + (st(k) === "inProgress" ? " — " + ar(t0.recitedCount || 0) + "/٣" : "");
     return st(k) === "inProgress" ? "قيد التنفيذ " + ar((T.tasks[k].step || 0) + 1) + "/" + ar(N(k)) : (label[st(k)] === "لم تبدأ بعد" && k === "evening" ? "لاحقًا" : label[st(k)]);
   };
   const row = (icon, title, k, fn) => h("div", { cls: "row" }, h("div", {}, h("b", {}, icon + " " + title), h("span", { cls: "mute" }, sub(k))), btn(k, fn));
-  mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "أهلًا " + USERS[UID]), h("h1", {}, "وردك اليوم"),
+  const extras = h("div", { style: "width:100%" });
+  getPrayerTimes(dateKey()).then(times => {
+    if (!times) return;
+    const np = nextPrayer(times);
+    if (!np) return;
+    extras.replaceChildren(h("div", { cls: "prayer-bar" },
+      h("span", {}, "🕌 " + np.name + (np.tomorrow ? " (غدًا)" : "")),
+      h("b", {}, fmtMin(np.remaining))
+    ));
+  });
+  const fridayNote = isFriday() ? h("div", { cls: "mute", style: "padding:.5rem 0" }, "📖 اليوم الجمعة — لا تنسَ قراءة سورة الكهف، وأكثِر من الصلاة على النبي ﷺ") : null;
+
+  mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "أهلًا"), h("h1", {}, "وردك اليوم"),
+    extras,
+    fridayNote,
     h("div", { style: "width:100%" },
       row("☀️", "أذكار الصباح", "morning", () => viewAdhkar("morning")),
       row("📖", "القرآن الكريم", "quran", () => viewReader("task")),
@@ -359,7 +455,6 @@ function renderHome() {
     h("div", { cls: "mute" }, "حفظت " + ar((MEM && MEM.count) || 0) + " سورة حتى الآن"),
     h("button", { cls: "link", on: { click: () => viewReader("free") } }, "قراءة حرة"),
     h("div", { style: "font-size:1.1rem" }, h("span", { cls: "fl" + (s.status === "red" ? " red" : "") }, "🔥"), " " + ar(s.count)),
-    s.rescueNotice && s.rescueNotice >= addDays(dateKey(), -2) ? h("div", { cls: "mute" }, "تم استرجاع الستريك بمساعدة.") : null,
     h("button", { cls: "link", on: { click: () => { local.del("uid"); UID = null; T = QP = S = MEM = null; viewPicker(); } } }, "تبديل المستخدم")));
 }
 
@@ -377,11 +472,11 @@ function viewReader(mode) {
     mount(rd); sync(); show(cur, 0);
   };
   const pg = h("div", { id: "pg" });
-  const jIn = h("input", { type: "number", min: 1, max: CFG.pages, inputmode: "numeric", placeholder: "رقم الصفحة (١ – ٦٠٤)" });
+  const jIn = h("input", { type: "number", min: 1, max: CFG.pages, inputmode: "numeric", placeholder: "رقم الصفحة" });
   const jGo = () => { const n = parseInt(jIn.value, 10); jump.hidden = true; if (n >= 1 && n <= CFG.pages) show(n); };
   jIn.addEventListener("keydown", e => { if (e.key === "Enter") jGo(); });
   const jump = h("div", { cls: "jump", hidden: "" }, h("div", {}, "الانتقال إلى صفحة"), jIn, h("button", { cls: "btn big", on: { click: jGo } }, "انتقال"), h("button", { cls: "link", on: { click: () => { jump.hidden = true; } } }, "إلغاء"));
-  const pgNum = h("button", { cls: "tb", on: { click: () => { jIn.value = ""; jump.hidden = false; jIn.focus(); } } });
+  const pgNum = h("button", { cls: "tb", on: { click: () => { if (task) return; jIn.value = ""; jump.hidden = false; jIn.focus(); } } });
   const bTheme = h("button", { cls: "tb", on: { click: () => { settings.theme = settings.theme === "night" ? "day" : "night"; saveSettings(); sync(); } } });
   const bRm = h("button", { cls: "tb", on: { click: () => { settings.rm = !settings.rm; saveSettings(); sync(); } } });
   const fs = d => { settings.fs = Math.min(2.8, Math.max(1.1, +(settings.fs + d).toFixed(1))); saveSettings(); };
@@ -390,7 +485,13 @@ function viewReader(mode) {
       h("span", {}, h("button", { cls: "tb", on: { click: () => fs(-0.1) } }, "A-"), h("button", { cls: "tb", on: { click: () => fs(0.1) } }, "A+"), bTheme, bRm)),
     pg, h("div", { cls: "bar bot" }, h("button", { cls: "tb", on: { click: () => go(-1) } }, "→ السابقة"), pgNum, h("button", { cls: "tb", on: { click: () => go(1) } }, "التالية ←")), jump);
   function sync() { rd.classList.toggle("rm", settings.rm); if (!settings.rm) rd.classList.remove("show"); bTheme.textContent = settings.theme === "night" ? "☀" : "🌙"; bRm.textContent = settings.rm ? "خروج من وضع القراءة" : "وضع القراءة"; }
-  const go = (d, swipe) => { const n = cur + d; if (n < 1 || n > CFG.pages) return; if (swipe && task && cur === p.end && d > 0) return; show(n); };
+  const go = (d, swipe) => {
+    const n = cur + d;
+    if (n < 1 || n > CFG.pages) return;
+    if (task && (n < p.start || n > p.end)) { toast("انتهى وردك لهذا اليوم"); return; }
+    if (swipe && task && cur === p.end && d > 0) return;
+    show(n);
+  };
   const atBottom = () => pg.scrollHeight - pg.scrollTop - pg.clientHeight < 40;
   async function checkEnd() {
     const t = T.tasks.quran;
@@ -443,10 +544,9 @@ async function start() {
     else if (open === "memorize") viewMemorize();
     else if (open === "morning" || open === "evening") viewAdhkar(open);
     else viewHome();
-  } catch (e) { console.error("خطأ:", e); errorView(e && e.message); }
+  } catch (e) { console.error(e); errorView(e && e.message); }
 }
 
-// auto-login من localStorage
 const savedUid = local.get("uid", null);
 if (savedUid && USERS[savedUid]) { UID = savedUid; start(); } else { viewPicker(); }
 
