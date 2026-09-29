@@ -510,6 +510,19 @@ function viewPicker() {
 }
 function pickUser(id) { UID = id; local.set("uid", id); start(); }
 const switchAccount = () => { local.del("uid"); UID = null; T = QP = S = MEM = null; sessionStorage.removeItem("open"); viewPicker(); };
+async function resetMyData() {      // resets only this account's own Quran/memorize/today's tasks; the shared streak and past days are untouched
+  if (busy) return;
+  if (!confirm("سيُمسح تقدمك في القرآن والحفظ ومهام اليوم، وتبدأ من جديد كأول مرة. هذا لا يؤثر على حساب الطرف الآخر ولا على الستريك المشترك. متابعة؟")) return;
+  busy = true;
+  try {
+    await set(ref(db, "quranProgress/" + UID), { currentPage: 1, khatmah: 1, frontier: 1, pagesRead: 0, lastReadAt: 0 });
+    await set(ref(db, "memorize/" + UID), { completed: {}, count: 0 });
+    await set(ref(db, `dailyTasks/${UID}/${T.date}`), null);
+    await set(ref(db, `days/${CFG.pair}/${T.date}/${UID}`), null);   // remove today's own contribution only; past evaluated days stay as they are
+    local.del("lp"); sessionStorage.removeItem("open");
+    busy = false; await load(); viewHome();
+  } catch (e) { busy = false; toast(SAVE_ERR); }
+}
 const loadingView = () => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "جارٍ التحميل…")));
 const errorView = msg => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "تعذر الاتصال بالخادم. حاول مرة أخرى."), msg ? h("div", { cls: "err" }, msg) : null,
   h("button", { cls: "btn", on: { click: () => start() } }, "إعادة المحاولة"), h("button", { cls: "link", on: { click: switchAccount } }, "تبديل الحساب")));
@@ -547,7 +560,8 @@ function renderHome() {
     h("button", { cls: "link", on: { click: () => viewReader("free") } }, "قراءة حرة"),
     h("div", { style: "font-size:1.1rem", "aria-label": "الستريك المشترك" }, h("span", { cls: "fl" + (s.status === "red" ? " red" : "") }, "🔥"), " " + ar(s.count)),
     allDone ? h("div", { cls: "day-complete" }, "✓ تم ورد اليوم بحمد الله") : null, allDone ? ticksBox : null,
-    h("button", { cls: "link", on: { click: switchAccount } }, "تبديل الحساب")));
+    h("button", { cls: "link", on: { click: switchAccount } }, "تبديل الحساب"),
+    h("button", { cls: "link", on: { click: resetMyData } }, "بدء من جديد")));
   if (allDone) { ticks.push(updCountdown); updCountdown(); }          // after mount(), which clears ticks
   getPrayerTimes(dateKey()).then(times => { const np = nextPrayer(times); if (np && view === "home") put(extras, h("div", { cls: "prayer-bar" }, h("span", {}, "🕌 " + np.name + (np.tomorrow ? " (غدًا)" : "")), h("b", {}, fmtMin(np.remaining)))); });
 }
