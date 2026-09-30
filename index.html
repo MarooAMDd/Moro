@@ -4,97 +4,330 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>وردي</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f6f3ea;--fg:#1e2a25;--mute:#7f7b6c;--line:#e1dbc9;--acc:#2f5d50;--gold:#b8923a;--fs:1.7;--pink:#c48a9c;--done:#8a8578;--friday:#c9a961}
-[data-theme=night]{--bg:#12161a;--fg:#e1dbc8;--mute:#8a8778;--line:#252b2f;--acc:#8fbfae;--gold:#d2ae5a;--pink:#c48a9c;--done:#6a675c;--friday:#d2ae5a}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-[hidden]{display:none!important}
-html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--fg);font-family:Tajawal,"Segoe UI",Tahoma,sans-serif;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);transition:background .5s}
-body.friday-mode{background:linear-gradient(180deg,#f6f0dd 0%,#f6f3ea 60%)}
-[data-theme=night] body.friday-mode{background:linear-gradient(180deg,#1a160e 0%,#12161a 60%)}
-#app{height:100%;overflow:auto}
-h1{font-weight:700;font-size:1.8rem;margin:0}
-.screen{min-height:100%;max-width:26rem;margin:0 auto;padding:2rem 1.4rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;text-align:center}
-.mute{color:var(--mute);font-size:.92rem}
-.row{width:100%;display:flex;align-items:center;justify-content:space-between;gap:.8rem;padding:.9rem 0;border-bottom:1px solid var(--line);text-align:right;transition:opacity .3s}
-.row.done{opacity:.55}
-.row.done b{color:var(--done)}
-.row.done .mute{color:var(--done)}
-.row b{font-weight:500;font-size:1.08rem;display:block}
-.prog{width:100%}.bar0{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin-bottom:.4rem}.bar0 i{display:block;height:100%;background:var(--acc);transition:width .4s}
-.err{color:#b3473a;min-height:1.3em;font-size:.9rem}
-input{font:inherit;width:100%;padding:.75rem;border:1px solid var(--line);border-radius:.6rem;background:transparent;color:var(--fg);text-align:center}
-.btn{font:inherit;min-height:2.75rem;background:var(--acc);color:var(--bg);border:0;border-radius:.7rem;padding:.6rem 1.3rem;cursor:pointer;white-space:nowrap}
-.btn.big{font-size:1.08rem;padding:.75rem 1.8rem}.btn.ghost{background:none;color:var(--fg);border:1px solid var(--line)}
-.btn:disabled{background:var(--line);color:var(--mute);cursor:default}
-.btn.done-btn{background:var(--done);color:var(--bg)}
-.btn-omar{background:#3d6b55;color:#fff;font-size:1.4rem;padding:1.4rem;font-weight:600;width:100%;letter-spacing:.5px}
-.btn-maryam{background:var(--pink);color:#fff;font-size:1.4rem;padding:1.4rem;font-weight:600;width:100%;letter-spacing:.5px}
-.seg{display:flex;gap:.6rem;width:100%}.seg .btn{flex:1}
-.link{font:inherit;font-size:.9rem;min-height:2.5rem;background:none;border:0;color:var(--mute);cursor:pointer}
-.toast{position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.5rem 1rem;border-radius:.6rem;font-size:.9rem;z-index:9}
-.fl{display:inline-block;transition:filter .3s;filter:grayscale(1) opacity(.55)}.fl.red{filter:drop-shadow(0 0 4px rgba(214,90,60,.55))}
-.qf{font-family:"Amiri Quran","Scheherazade New","Traditional Arabic",serif}
-.dk{width:100%;padding:1rem 0}
-.nav{display:flex;gap:.6rem;width:100%;justify-content:space-between}
-#rd{position:relative;display:flex;flex-direction:column;height:100%}
-.bar{display:flex;align-items:center;justify-content:space-between;padding:.3rem .5rem;background:var(--bg);color:var(--mute);z-index:2;transition:opacity .2s}
-.rm .bar{position:absolute;left:0;right:0;opacity:0;pointer-events:none}.rm .top{top:0}.rm .bot{bottom:0}.rm.show .bar{opacity:1;pointer-events:auto}
-.tb{font:inherit;font-size:.92rem;min-height:2.75rem;background:none;border:0;color:var(--mute);padding:.4rem .5rem;cursor:pointer}
-.top{border-bottom:1px solid var(--line)}.bot{border-top:1px solid var(--line)}
-#pg{flex:1;overflow-y:auto;padding:.8rem 1.3rem 3rem}.rm #pg{padding-top:1.6rem}
-.mushaf{max-width:38rem;margin:0 auto;font-size:calc(var(--fs)*1rem);line-height:2.5}.rm .mushaf{font-size:calc((var(--fs) + .25)*1rem)}
-.ay{margin:0;text-align:justify;text-align-last:center}
-.juz{text-align:center;color:var(--mute);font-size:.7em;line-height:2}
-.sn{text-align:center;color:var(--acc);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:1rem 0 .5rem;font-size:1.05em;line-height:2.2}.rm .sn{color:var(--mute);border-color:transparent}
-.bsm{text-align:center}.msg{text-align:center;color:var(--mute);margin-top:28vh}
-.endp{text-align:center;margin:1.5rem 0;font-family:Tajawal,sans-serif;font-size:1rem;line-height:1.9}
-.jump{position:absolute;inset:0;z-index:5;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.9rem;padding:2rem}.jump input{max-width:16rem}
-.mem{width:100%;text-align:center;padding:1rem 0}
-.mem .sn2{font-family:"Amiri Quran",serif;font-size:1.6rem;color:var(--acc);margin-bottom:.5rem}
-.mem .ays{font-family:"Amiri Quran",serif;font-size:1.15rem;line-height:2.3;max-height:35vh;overflow-y:auto;padding:.5rem;border:1px solid var(--line);border-radius:.6rem;text-align:justify;text-align-last:center}
-.rec-area{width:100%;margin:1rem 0;padding:1rem;border:1px dashed var(--line);border-radius:.7rem;display:flex;flex-direction:column;align-items:center;gap:.8rem}
-.rec-btn{width:4.5rem;height:4.5rem;border-radius:50%;background:var(--acc);color:var(--bg);border:0;font-size:1.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.rec-btn.recording{background:#b3473a;animation:pulse 1.2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
-.rec-timer{font-size:1.3rem;font-weight:600;color:var(--acc)}
-.rec-actions{display:flex;gap:.6rem;justify-content:center;width:100%}
-.prayer-bar{width:100%;padding:.6rem .8rem;background:var(--line);border-radius:.6rem;font-size:.9rem;color:var(--fg);display:flex;justify-content:space-between;align-items:center;transition:background .4s}
-body.friday-mode .prayer-bar{background:rgba(201,169,97,.18)}
-.prayer-bar b{color:var(--acc)}
-.pick{width:100%;padding:1.5rem 0;text-align:center;display:flex;flex-direction:column;gap:.9rem}
-.dk-item{width:100%;padding:1rem 0;border-bottom:1px solid var(--line);animation:fadeIn .35s}
-@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.dk-item .dt{font-family:"Amiri Quran",serif;font-size:1.15rem;line-height:2.1;text-align:justify;text-align-last:center;margin-bottom:.6rem}
-.dk-item .ds{color:var(--mute);font-size:.82rem;margin-bottom:.5rem}
-.dk-header{width:100%;text-align:center;padding:.6rem 0;border-bottom:1px dashed var(--line);margin-bottom:.8rem}
-.dk-header .dh-prog{color:var(--mute);font-size:.85rem;margin-bottom:.3rem}
-.dk-header .dh-title{font-family:"Amiri Quran",serif;font-size:1.25rem;color:var(--acc)}
-.dk-counter{display:flex;align-items:center;justify-content:center;gap:1rem;margin-top:1rem}
-.dk-counter .num{font-size:1.5rem;font-weight:600;color:var(--acc);min-width:5rem;text-align:center}
-.dk-counter button{width:3.5rem;height:3.5rem;border-radius:50%;border:0;background:var(--acc);color:var(--bg);font-size:1.5rem;cursor:pointer;transition:transform .15s}
-.dk-counter button:active{transform:scale(.92)}
-.dk-counter button:disabled{background:var(--line);color:var(--mute)}
-.dk-counter button.rst{background:none;color:var(--mute);border:1px solid var(--line);font-size:1.2rem}
-.day-complete{width:100%;text-align:center;padding:.5rem 0;color:var(--done);font-size:.88rem;font-weight:500}
-.friday-banner{width:100%;background:linear-gradient(135deg,rgba(201,169,97,.15),rgba(201,169,97,.05));border:1px solid rgba(201,169,97,.4);border-radius:.8rem;padding:.9rem 1rem;margin:.3rem 0;text-align:right}
-.friday-banner .fb-title{color:var(--friday);font-weight:700;font-size:.95rem;margin-bottom:.5rem;text-align:center;font-family:"Amiri Quran",serif}
-.friday-banner .fb-item{font-size:.85rem;line-height:1.8;color:var(--fg);padding:.3rem 0}
-.friday-banner .fb-hadith{font-family:"Amiri Quran",serif;font-size:.95rem;line-height:2;text-align:justify;text-align-last:center;color:var(--mute);border-top:1px dashed rgba(201,169,97,.3);padding-top:.6rem;margin-top:.5rem}
+  :root {
+    --bg: #f6f3ea;
+    --fg: #1e2a25;
+    --mute: #7f7b6c;
+    --line: #e1dbc9;
+    --acc: #2f5d50;
+    --done: #8a8578;
+    --friday: #c9a961;
+    --danger: #b3473a;
+    --fs: 1.7;
+  }
+  [data-theme=night] {
+    --bg: #12161a;
+    --fg: #e1dbc8;
+    --mute: #8a8778;
+    --line: #252b2f;
+    --acc: #8fbfae;
+    --done: #6a675c;
+    --friday: #d2ae5a;
+    --danger: #d6725f;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: Tajawal, "Segoe UI", Tahoma, sans-serif;
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    transition: background .5s;
+  }
+  body.friday-mode { background: linear-gradient(180deg, #f6f0dd 0%, #f6f3ea 60%); }
+  [data-theme=night] body.friday-mode { background: linear-gradient(180deg, #1a160e 0%, #12161a 60%); }
+  #app { height: 100%; overflow: auto; }
+  h1 { font-weight: 700; font-size: 1.8rem; margin: 0; }
+  .screen {
+    min-height: 100%;
+    max-width: 26rem;
+    margin: 0 auto;
+    padding: 2rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    text-align: center;
+  }
+  .mute { color: var(--mute); font-size: .92rem; }
+  .row {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .8rem;
+    padding: .9rem 0;
+    border-bottom: 1px solid var(--line);
+    text-align: right;
+    transition: opacity .3s;
+  }
+  .row.done { opacity: .55; }
+  .row.done b, .row.done .mute { color: var(--done); }
+  .row b { font-weight: 500; font-size: 1.08rem; display: block; }
+  .prog { width: 100%; }
+  .bar0 { height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; margin-bottom: .4rem; }
+  .bar0 i { display: block; height: 100%; background: var(--acc); transition: width .4s; }
+  .err { color: var(--danger); min-height: 1.3em; font-size: .9rem; }
+  input {
+    font: inherit;
+    width: 100%;
+    padding: .75rem;
+    border: 1px solid var(--line);
+    border-radius: .6rem;
+    background: transparent;
+    color: var(--fg);
+    text-align: center;
+  }
+  .btn {
+    font: inherit;
+    min-height: 2.75rem;
+    background: var(--acc);
+    color: var(--bg);
+    border: 0;
+    border-radius: .7rem;
+    padding: .6rem 1.3rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn.big { font-size: 1.08rem; padding: .75rem 1.8rem; }
+  .btn.ghost { background: none; color: var(--fg); border: 1px solid var(--line); }
+  .btn.danger { background: none; color: var(--danger); border: 1px solid var(--danger); }
+  .btn:disabled { background: var(--line); color: var(--mute); cursor: default; }
+  .btn.done-btn { background: var(--done); color: var(--bg); }
+  .btn-omar { background: #3d6b55; color: #fff; font-size: 1.4rem; padding: 1.4rem; font-weight: 600; width: 100%; letter-spacing: .5px; }
+  .btn-maryam { background: #6f5a8f; color: #fff; font-size: 1.4rem; padding: 1.4rem; font-weight: 600; width: 100%; letter-spacing: .5px; }
+  .seg { display: flex; gap: .6rem; width: 100%; }
+  .seg .btn { flex: 1; }
+  .link { font: inherit; font-size: .9rem; min-height: 2.5rem; background: none; border: 0; color: var(--mute); cursor: pointer; }
+  .toast {
+    position: fixed;
+    bottom: 4.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--fg);
+    color: var(--bg);
+    padding: .5rem 1rem;
+    border-radius: .6rem;
+    font-size: .9rem;
+    z-index: 9;
+    max-width: 90vw;
+  }
+  .fl { display: inline-block; transition: filter .3s; filter: grayscale(1) opacity(.55); }
+  .fl.red { filter: drop-shadow(0 0 4px rgba(214,90,60,.55)); }
+  .qf { font-family: "Amiri Quran", "Scheherazade New", "Traditional Arabic", serif; }
+
+  /* ===== Adhkar cards ===== */
+  .dk-list { width: 100%; display: flex; flex-direction: column; gap: .1rem; }
+  .dk-card {
+    width: 100%;
+    text-align: right;
+    padding: .9rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .dk-card.complete { opacity: .6; }
+  .dk-card .dk-title { font-size: .85rem; color: var(--acc); margin-bottom: .35rem; font-weight: 600; }
+  .dk-card .dk-text { font-family: "Amiri Quran", serif; font-size: 1.3rem; line-height: 2.2; text-align: justify; text-align-last: center; }
+  .dk-card .dk-src { color: var(--mute); font-size: .78rem; margin-top: .4rem; }
+  .dk-card .dk-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .8rem;
+    margin-top: .6rem;
+  }
+  .dk-count { font-size: 1rem; font-weight: 600; color: var(--acc); min-width: 4.5rem; text-align: center; }
+  .dk-plus {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    border: 0;
+    background: var(--acc);
+    color: var(--bg);
+    font-size: 1.3rem;
+    cursor: pointer;
+  }
+  .dk-plus:disabled { background: var(--line); color: var(--mute); }
+  .dk-check { font-size: 1.3rem; color: var(--acc); }
+
+  /* ===== Memorization ===== */
+  .mem { width: 100%; text-align: center; padding: 1rem 0; }
+  .mem .sn2 { font-family: "Amiri Quran", serif; font-size: 1.6rem; color: var(--acc); margin-bottom: .5rem; }
+  .mem .ays {
+    font-family: "Amiri Quran", serif;
+    font-size: 1.2rem;
+    line-height: 2.4;
+    max-height: 40vh;
+    overflow-y: auto;
+    padding: .7rem;
+    border: 1px solid var(--line);
+    border-radius: .6rem;
+    text-align: justify;
+    text-align-last: center;
+  }
+
+  /* ===== Recorder card (spec §31) ===== */
+  .rec-card {
+    width: 100%;
+    border: 1px dashed var(--line);
+    border-radius: .8rem;
+    padding: 1.1rem 1rem;
+    margin: .9rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .7rem;
+  }
+  .rec-title { font-weight: 600; font-size: .98rem; }
+  .rec-time { font-size: 1.6rem; font-weight: 700; color: var(--acc); font-variant-numeric: tabular-nums; }
+  .rec-msg { color: var(--mute); font-size: .85rem; text-align: center; }
+  .rec-btn {
+    min-width: 8rem;
+    min-height: 2.9rem;
+    border-radius: .7rem;
+    border: 0;
+    background: var(--acc);
+    color: var(--bg);
+    font: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: .6rem 1.2rem;
+  }
+  .rec-btn.recording { background: var(--danger); animation: pulse 1.2s infinite; }
+  .rec-actions { display: flex; gap: .6rem; width: 100%; justify-content: center; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
+
+  .nav { display: flex; gap: .6rem; width: 100%; justify-content: space-between; }
+  #rd { position: relative; display: flex; flex-direction: column; height: 100%; }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .3rem .5rem;
+    background: var(--bg);
+    color: var(--mute);
+    z-index: 2;
+    transition: opacity .2s;
+  }
+  .rm .bar { position: absolute; left: 0; right: 0; opacity: 0; pointer-events: none; }
+  .rm .top { top: 0; }
+  .rm .bot { bottom: 0; }
+  .rm.show .bar { opacity: 1; pointer-events: auto; }
+  .tb {
+    font: inherit;
+    font-size: .92rem;
+    min-height: 2.75rem;
+    background: none;
+    border: 0;
+    color: var(--mute);
+    padding: .4rem .5rem;
+    cursor: pointer;
+  }
+  .top { border-bottom: 1px solid var(--line); }
+  .bot { border-top: 1px solid var(--line); }
+  #pg { flex: 1; overflow-y: auto; padding: .8rem 1.3rem 3rem; }
+  .rm #pg { padding-top: 1.6rem; }
+  .mushaf { max-width: 38rem; margin: 0 auto; font-size: calc(var(--fs)*1rem); line-height: 2.5; }
+  .rm .mushaf { font-size: calc((var(--fs) + .25)*1rem); }
+  .ay { margin: 0; text-align: justify; text-align-last: center; }
+  .juz { text-align: center; color: var(--mute); font-size: .7em; line-height: 2; }
+  .sn {
+    text-align: center;
+    color: var(--acc);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 1rem 0 .5rem;
+    font-size: 1.05em;
+    line-height: 2.2;
+  }
+  .rm .sn { color: var(--mute); border-color: transparent; }
+  .bsm { text-align: center; }
+  .msg { text-align: center; color: var(--mute); margin-top: 28vh; }
+  .endp { text-align: center; margin: 1.5rem 0; font-family: Tajawal, sans-serif; font-size: 1rem; line-height: 1.9; }
+  .jump {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .9rem;
+    padding: 2rem;
+  }
+  .jump input { max-width: 16rem; }
+
+  .prayer-bar {
+    width: 100%;
+    padding: .6rem .8rem;
+    background: var(--line);
+    border-radius: .6rem;
+    font-size: .9rem;
+    color: var(--fg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background .4s;
+  }
+  body.friday-mode .prayer-bar { background: rgba(201,169,97,.18); }
+  .prayer-bar b { color: var(--acc); }
+  .pick { width: 100%; padding: 1.5rem 0; text-align: center; display: flex; flex-direction: column; gap: .9rem; }
+  .day-complete { width: 100%; text-align: center; padding: .5rem 0; color: var(--done); font-size: .88rem; font-weight: 500; }
+  .friday-banner {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(201,169,97,.15), rgba(201,169,97,.05));
+    border: 1px solid rgba(201,169,97,.4);
+    border-radius: .8rem;
+    padding: .9rem 1rem;
+    margin: .3rem 0;
+    text-align: right;
+  }
+  .friday-banner .fb-title { color: var(--friday); font-weight: 700; font-size: .95rem; margin-bottom: .5rem; text-align: center; font-family: "Amiri Quran", serif; }
+  .friday-banner .fb-item { font-size: .85rem; line-height: 1.8; color: var(--fg); padding: .3rem 0; }
+  .friday-banner .fb-hadith {
+    font-family: "Amiri Quran", serif;
+    font-size: .95rem;
+    line-height: 2;
+    text-align: justify;
+    text-align-last: center;
+    color: var(--mute);
+    border-top: 1px dashed rgba(201,169,97,.3);
+    padding-top: .6rem;
+    margin-top: .5rem;
+  }
 </style>
 </head>
 <body>
 <div id="app"></div>
-<script type="module">
-/* Realtime Database rules for this version (no Firebase Auth: the account is chosen on the picker screen):
-   {"rules":{".read":true,".write":true}}   ← anyone with the link/config can read and write; private-use only. */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, get, set, update, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-// ===== CONFIG =====
+<!-- بيانات السور القصيرة لمهمة الحفظ. سكريبت عادي (وليس module) حتى يصبح SHORT_SURAHS متاحًا في الوحدة أدناه. -->
+<script src="./surahs.js"></script>
+
+<script type="module">
+/*
+  Realtime Database rules لهذا الإصدار (لا يوجد Firebase Authentication؛ الحساب يُختار من شاشة الاختيار
+  ويُحمى بكلمة مرور ثابتة داخل الكود فقط):
+
+  { "rules": { ".read": true, ".write": true } }
+
+  ملاحظة أمان: هذه القواعد تسمح لأي شخص يملك رابط/إعدادات Firebase بقراءة وكتابة القاعدة كاملة.
+  هذا مقبول فقط لاستخدام خاص جدًا بين شخصين، وليس مناسبًا لو أصبح المشروع عامًا.
+*/
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getDatabase, ref, get, set, update, runTransaction, onValue
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+/* ======================================================================
+   CONFIG
+   ====================================================================== */
 const firebaseConfig = {
   apiKey: "AIzaSyDcZQLLUtWL8UGjib9Nwqcu-gs84hXTWyk",
   authDomain: "omar-1-fcd61.firebaseapp.com",
@@ -105,488 +338,1588 @@ const firebaseConfig = {
   appId: "1:1098323069112:web:0e36a35eae752e53ac4c4d",
   measurementId: "G-2ZJMPDMCTP"
 };
-const CFG = { tz: "Africa/Cairo", pages: 604, plan: [4, 6, 8, 10, 12], rescues: 3, pair: "pair_001", quranApi: "https://api.alquran.cloud/v1/" };
+
+const CFG = {
+  tz: "Africa/Cairo",
+  totalPages: 604,
+  quranPagePlan: [4, 6, 8, 10, 12],      // الأهداف اليومية المسموحة لصفحات القرآن (Deterministic، تدور حسب رقم اليوم)
+  memorizeRepeats: 3,                    // عدد مرات "تم" المطلوبة لإكمال مهمة الحفظ
+  rescuesTotal: 3,                       // عدد محاولات الاسترجاع المتاحة قبل تصفير الـ streak
+  pair: "pair_001",
+  quranApiBase: "https://api.alquran.cloud/v1/",
+  editionPrimary: "quran-uthmani-quran-academy",   // edition رسمي من Al Quran Cloud لعرض صفحات المصحف
+  editionFallback: "quran-uthmani",                 // احتياطي فقط إذا فشل الأول تمامًا، لتفادي "جارٍ التحميل" الدائم
+  pageCacheLimit: 20,                    // أقصى عدد صفحات محفوظة في ذاكرة المتصفح (Map، وليس localStorage)
+  fetchTimeoutMs: 12000,
+  fetchRetriesPerEdition: 1,             // محاولة إضافية واحدة لكل edition قبل الانتقال للتالي
+  bootTimeoutMs: 15000                   // حد أقصى لأي شاشة "جارٍ التحميل" عند بدء التشغيل
+};
+
 const USERS = { user_omar: "عمر", user_maryam: "مريم" };
 const MEMBERS = Object.keys(USERS);
 const KINDS = ["morning", "quran", "memorize", "evening"];
-const SHORT_SURAHS = [
-  { n: 1, name: "الفاتحة" }, { n: 112, name: "الإخلاص" }, { n: 113, name: "الفلق" }, { n: 114, name: "الناس" }, { n: 108, name: "الكوثر" },
-  { n: 103, name: "العصر" }, { n: 110, name: "النصر" }, { n: 109, name: "الكافرون" }, { n: 107, name: "الماعون" }, { n: 105, name: "الفيل" },
-  { n: 106, name: "قريش" }, { n: 102, name: "التكاثر" }, { n: 101, name: "القارعة" }, { n: 100, name: "العاديات" }, { n: 99, name: "الزلزلة" },
-  { n: 97, name: "القدر" }, { n: 95, name: "التين" }, { n: 94, name: "الشرح" }, { n: 93, name: "الضحى" }, { n: 92, name: "الليل" },
-  { n: 91, name: "الشمس" }, { n: 90, name: "البلد" }, { n: 89, name: "الفجر" }, { n: 88, name: "الغاشية" }, { n: 87, name: "الأعلى" },
-  { n: 86, name: "الطارق" }, { n: 85, name: "البروج" }, { n: 84, name: "الانشقاق" }, { n: 83, name: "المطففين" }
-];
-const app = initializeApp(firebaseConfig), db = getDatabase(app);
 
-// ===== LOCAL STORAGE (UI settings + last chosen account) =====
-const local = {
-  get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
-  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} },
-  del(k) { try { localStorage.removeItem(k); } catch (e) {} }
-};
-const settings = Object.assign({ fs: 1.7, theme: "day", rm: false }, local.get("settings", {}));
-const applySettings = () => { document.documentElement.style.setProperty("--fs", settings.fs); document.documentElement.setAttribute("data-theme", settings.theme); };
-const saveSettings = () => { local.set("settings", settings); applySettings(); };
+// كلمات مرور ثابتة (مطلوبة سابقًا، ولم يُطلب حذفها). مناسبة للاستخدام الخاص فقط لأنها ظاهرة في مصدر الصفحة.
+const PASSWORDS = { user_omar: "Omar", user_maryam: "Mariam" };
 
-// ===== TIME (Firebase server clock + Africa/Cairo) =====
-let OFFSET = 0;
-onValue(ref(db, ".info/serverTimeOffset"), s => { OFFSET = s.val() || 0; });
-const now = () => Date.now() + OFFSET;
-const dateKey = () => new Intl.DateTimeFormat("en-CA", { timeZone: CFG.tz }).format(new Date(now()));
-const addDays = (d, n) => { const t = new Date(d + "T00:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
-const waitOffset = () => new Promise(r => { const t0 = Date.now(), i = setInterval(() => { if (OFFSET !== 0 || Date.now() - t0 > 3000) { clearInterval(i); r(); } }, 100); });
-const isFriday = () => new Intl.DateTimeFormat("en-US", { timeZone: CFG.tz, weekday: "short" }).format(new Date(now())) === "Fri";
-const cairoClock = () => new Intl.DateTimeFormat("en-GB", { timeZone: CFG.tz, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" }).format(new Date(now())).split(":").map(Number);
-const cairoMin = () => { const [hh, mm] = cairoClock(); return hh * 60 + mm; };
-const secToMidnight = () => { const [hh, mm, ss] = cairoClock(); return Math.max(0, 86400 - (hh * 3600 + mm * 60 + ss)); };
+// الحساب الوحيد الذي يرى زر "إعادة ضبط كل البيانات".
+const RESET_ALLOWED_UID = "user_omar";
 
-// ===== PRAYER TIMES (Aladhan, Cairo) =====
-const prayerCache = {};
-async function getPrayerTimes(date) {
-  if (prayerCache[date]) return prayerCache[date];
-  try {
-    const [y, m, d] = date.split("-");
-    const c = new AbortController(), tm = setTimeout(() => c.abort(), 8000);
-    const r = await fetch(`https://api.aladhan.com/v1/timings/${d}-${m}-${y}?latitude=30.0444&longitude=31.2357&method=5`, { signal: c.signal });
-    clearTimeout(tm);
-    const j = await r.json();
-    if (j.code !== 200) throw 0;
-    const t = j.data.timings;
-    return (prayerCache[date] = { fajr: t.Fajr, dhuhr: t.Dhuhr, asr: t.Asr, maghrib: t.Maghrib, isha: t.Isha });
-  } catch (e) { return null; }
-}
-const toMin = s => { const m = /(\d{1,2}):(\d{2})/.exec(s || ""); return m ? +m[1] * 60 + +m[2] : null; };
-function nextPrayer(times) {
-  if (!times) return null;
-  const cur = cairoMin();
-  const list = [["الفجر", times.fajr], ["الظهر", times.dhuhr], ["العصر", times.asr], ["المغرب", times.maghrib], ["العشاء", times.isha]]
-    .map(([name, t]) => ({ name, m: toMin(t) })).filter(p => p.m !== null);
-  if (!list.length) return null;
-  for (const p of list) if (p.m > cur) return { name: p.name, remaining: p.m - cur };
-  return { name: list[0].name, remaining: 1440 - cur + list[0].m, tomorrow: true };
+/* ======================================================================
+   FIREBASE
+   ====================================================================== */
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getDatabase(firebaseApp);
+
+/* ======================================================================
+   DATE / TIME
+   (ساعة خادم Firebase + توقيت القاهرة؛ لا تُستخدم ساعة الجهاز أبدًا لتحديد اليوم)
+   ====================================================================== */
+let serverOffsetMs = 0;
+onValue(ref(db, ".info/serverTimeOffset"), snap => {
+  serverOffsetMs = snap.val() || 0;
+});
+
+function serverNow() {
+  return Date.now() + serverOffsetMs;
 }
 
-// ===== HELPERS =====
-const ar = n => String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
-const pagesTxt = n => n === 1 ? "صفحة واحدة" : n === 2 ? "صفحتان" : ar(n) + " صفحات";
-const fmt = s => { s = Math.max(0, Math.floor(s)); return ar(String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0")); };
-const fmtMin = m => ar(String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"));
-function h(tag, a = {}, ...kids) {
-  const e = document.createElement(tag);
-  for (const k in a) { if (k === "on") for (const ev in a.on) e.addEventListener(ev, a.on[ev]); else if (k === "cls") e.className = a[k]; else e.setAttribute(k, a[k]); }
-  kids.flat().filter(x => x != null && x !== false).forEach(x => e.append(x));
-  return e;
-}
-const put = (el, ...kids) => el.replaceChildren(...kids.flat().filter(x => x != null && x !== false));   // replaceChildren(null) would insert the text "null"
-let ticks = [], view = "", busy = false;
-const mount = n => { ticks = []; document.querySelector("#app").replaceChildren(n); };
-const toast = t => { const e = h("div", { cls: "toast" }, t); document.body.append(e); setTimeout(() => e.remove(), 3500); };
-const SAVE_ERR = "تعذر حفظ التقدم، حاول مرة أخرى.";
-setInterval(() => ticks.forEach(f => f()), 1000);   // display refresh only
-
-// ===== ADHKAR =====
-const AYAT_KURSI = "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ ﴿٢٥٥﴾";
-const SURAH_IKHLAS = "قُلْ هُوَ اللَّهُ أَحَدٌ ﴿١﴾ اللَّهُ الصَّمَدُ ﴿٢﴾ لَمْ يَلِدْ وَلَمْ يُولَدْ ﴿٣﴾ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ ﴿٤﴾";
-const SURAH_FALAQ = "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ﴿١﴾ مِن شَرِّ مَا خَلَقَ ﴿٢﴾ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ﴿٣﴾ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ﴿٤﴾ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ ﴿٥﴾";
-const SURAH_NAS = "قُلْ أَعُوذُ بِرَبِّ النَّاسِ ﴿١﴾ مَلِكِ النَّاسِ ﴿٢﴾ إِلَٰهِ النَّاسِ ﴿٣﴾ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ﴿٤﴾ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ﴿٥﴾ مِنَ الْجِنَّةِ وَالنَّاسِ ﴿٦﴾";
-const BISM = { t: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", s: "رواه أبو داود والترمذي", times: 3, title: "بسم الله الذي لا يضر" };
-const TASBIH = { t: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", s: "رواه مسلم", times: 100, title: "سبحان الله وبحمده" };
-const COMMON = [
-  { t: AYAT_KURSI, s: "آية الكرسي — البقرة ٢٥٥", times: 1, title: "آية الكرسي" },
-  { t: SURAH_IKHLAS, s: "ثلاث مرات", times: 3, title: "سورة الإخلاص" },
-  { t: SURAH_FALAQ, s: "ثلاث مرات", times: 3, title: "سورة الفلق" },
-  { t: SURAH_NAS, s: "ثلاث مرات", times: 3, title: "سورة الناس" }
-];
-const ADHKAR = {
-  morning: [...COMMON,
-    { t: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", s: "رواه مسلم", times: 1, title: "أصبحنا وأصبح الملك لله" },
-    { t: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ", s: "رواه الترمذي", times: 1, title: "اللهم بك أصبحنا" }, BISM, TASBIH],
-  evening: [...COMMON,
-    { t: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ", s: "رواه مسلم", times: 1, title: "أمسينا وأمسى الملك لله" },
-    { t: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ", s: "رواه الترمذي", times: 1, title: "اللهم بك أمسينا" }, BISM, TASBIH]
-};
-
-// ===== QURAN TEXT (api.alquran.cloud) =====
-const qcache = {}, noBasmala = t => t.split(" ").slice(4).join(" ");
-async function fetchJson(url) {
-  const c = new AbortController(), tm = setTimeout(() => c.abort(), 15000);
-  try { const r = await fetch(url, { signal: c.signal }); if (!r.ok) throw 0; return (await r.json()).data; } finally { clearTimeout(tm); }
-}
-async function quranText(refs) {
-  const key = refs.join(); if (qcache[key]) return qcache[key];
-  const out = [];
-  for (const r of refs) {
-    const d = await fetchJson(CFG.quranApi + r + "/quran-uthmani"), list = d.ayahs || [d];
-    out.push(list.map(a => (a.numberInSurah === 1 && a.surah.number > 1 && r.startsWith("surah") ? noBasmala(a.text) : a.text) + " ﴿" + ar(a.numberInSurah) + "﴾").join(" "));
-  }
-  return (qcache[key] = out.join(" "));
+function dateKey() {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: CFG.tz }).format(new Date(serverNow()));
 }
 
-// ===== STATE =====
-let UID = null, QP = null, T = null, S = null, MEM = null, streakBound = false;
-const INIT_STREAK = { count: 0, status: "gray", fails: 0, rescues: CFG.rescues, lastEvaluated: null };
-const taskPath = k => `dailyTasks/${UID}/${T.date}/tasks/${k}`;
-async function patchTask(k, o) {      // optimistic local update, reverted if the write fails; "a/b" keys are written to Firebase only
-  const t = T.tasks[k], flat = Object.entries(o).filter(([key]) => !key.includes("/")), old = {};
-  flat.forEach(([key]) => { old[key] = t[key]; });
-  Object.assign(t, Object.fromEntries(flat));
-  try { await update(ref(db, taskPath(k)), o); } catch (e) { Object.assign(t, old); throw e; }
-}
-const stateOf = k => T.date !== dateKey() ? "locked" : T.tasks[k].state;
-
-function planForDate(qp, date) {
-  const idx = Math.floor(new Date(date + "T00:00:00Z").getTime() / 86400000);
-  const pages = CFG.plan[idx % CFG.plan.length], surah = SHORT_SURAHS[idx % SHORT_SURAHS.length];
-  return { start: qp.frontier, pages, end: Math.min(CFG.pages, qp.frontier + pages - 1), khatmah: qp.khatmah, surah: surah.n, surahName: surah.name };
+function addDays(dateStr, n) {
+  const t = new Date(dateStr + "T00:00:00Z");
+  t.setUTCDate(t.getUTCDate() + n);
+  return t.toISOString().slice(0, 10);
 }
 
-async function load() {
-  const qref = ref(db, "quranProgress/" + UID);
-  QP = (await get(qref)).val();
-  if (!QP) { QP = { currentPage: 1, khatmah: 1, frontier: 1, pagesRead: 0, lastReadAt: 0 }; await set(qref, QP); }
-  const mref = ref(db, "memorize/" + UID);
-  MEM = (await get(mref)).val();
-  if (!MEM) { MEM = { completed: {}, count: 0 }; await set(mref, MEM); }
-
-  const date = dateKey(), dref = ref(db, `dailyTasks/${UID}/${date}`), initialPlan = planForDate(QP, date);
-  await runTransaction(dref, cur => {
-    if (cur && cur.plan) return cur;      // the day's plan is frozen once created; never recreate it (that would reset completed tasks)
-    return { plan: initialPlan, tasks: { morning: { state: "available" }, quran: { state: "available" }, evening: { state: "available" }, memorize: { state: "available" } } };
-  });
-  const d = (await get(dref)).val();
-  T = { date, plan: d.plan, tasks: d.tasks || {} };
-  for (const k of KINDS) T.tasks[k] = Object.assign({ state: "available" }, T.tasks[k]);
-
-  if (!streakBound) {
-    streakBound = true;
-    onValue(ref(db, "streak/" + CFG.pair), s => { S = Object.assign({}, INIT_STREAK, s.val()); if (view === "home") renderHome(); });
-  }
-  S = S || INIT_STREAK;
+function dayIndexOf(dateStr) {
+  // رقم يوم ثابت منذ ١٩٧٠-٠١-٠١ UTC، يُستخدم فقط لاختيار الهدف اليومي (deterministic)، وليس عدّاد "اليوم الأول/الثاني".
+  return Math.floor(new Date(dateStr + "T00:00:00Z").getTime() / 86400000);
 }
 
-// ===== SHARED STREAK: evaluated for finished days only, transaction-guarded =====
-async function evaluate() {
-  const today = dateKey(), sref = ref(db, "streak/" + CFG.pair);
-  const cur0 = Object.assign({}, INIT_STREAK, (await get(sref)).val()), last0 = cur0.lastEvaluated || addDays(today, -1), days = {};
-  for (let d = addDays(last0, 1), n = 0; d < today && n < 400; d = addDays(d, 1), n++) days[d] = (await get(ref(db, `days/${CFG.pair}/${d}`))).val() || {};
-  await runTransaction(sref, cur => {
-    cur = Object.assign({}, INIT_STREAK, cur);
-    let last = cur.lastEvaluated || addDays(today, -1);
-    for (let d = addDays(last, 1); d < today; d = addDays(d, 1)) {
-      if (!days[d]) break;                                     // beyond what was fetched: apply what we have, continue next run
-      if (MEMBERS.every(m => days[d][m] === true)) { cur.count++; cur.status = "red"; cur.fails = 0; }
-      else {
-        cur.status = "gray"; cur.fails++;
-        if (cur.fails >= 2) { if (cur.rescues > 0) { cur.rescues--; cur.fails = 0; } else { cur.count = 0; cur.fails = 0; } }
+function waitForServerOffset() {
+  return new Promise(resolve => {
+    const start = Date.now();
+    const i = setInterval(() => {
+      if (serverOffsetMs !== 0 || Date.now() - start > 3000) {
+        clearInterval(i);
+        resolve();
       }
-      last = d;
-    }
-    cur.lastEvaluated = last; return cur;
+    }, 100);
   });
 }
 
-// ===== TASK RULES =====
-const contentOk = k => {
-  const t = T.tasks[k];
-  if (k === "quran") return (t.reached || 0) >= T.plan.end;
-  if (k === "memorize") return (t.recitedCount || 0) >= 3;
-  const c = t.counts || {};
-  return ADHKAR[k].every((x, i) => (c[i] || 0) >= x.times);
-};
-async function startTask(k) {
-  if (T.tasks[k].state !== "available") return;
-  if (k === "quran") return patchTask(k, { state: "inProgress", startedAt: now(), reached: T.plan.start - 1, lastPage: T.plan.start });
-  if (k === "memorize") return patchTask(k, { state: "inProgress", startedAt: now(), recitedCount: 0 });
-  return patchTask(k, { state: "inProgress", startedAt: now(), step: 0 });
+function isFriday() {
+  return new Intl.DateTimeFormat("en-US", { timeZone: CFG.tz, weekday: "short" }).format(new Date(serverNow())) === "Fri";
 }
-async function completeTask(k) {      // idempotent: busy flag + state check + frontier check in the transaction
-  if (busy) return;
-  if (T.tasks[k].state === "completed") return viewHome();
-  if (!contentOk(k)) return;
-  busy = true;
+
+function cairoClockParts() {
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: CFG.tz, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
+  }).format(new Date(serverNow())).split(":").map(Number);
+  return parts; // [hh, mm, ss]
+}
+
+function cairoMinutesOfDay() {
+  const [hh, mm] = cairoClockParts();
+  return hh * 60 + mm;
+}
+function cairoSecondsOfDay() {
+  const [hh, mm, ss] = cairoClockParts();
+  return hh * 3600 + mm * 60 + ss;
+}
+
+function secondsToMidnight() {
+  const [hh, mm, ss] = cairoClockParts();
+  return Math.max(0, 86400 - (hh * 3600 + mm * 60 + ss));
+}
+
+// يمنع أي شاشة "جارٍ التحميل" من الاستمرار للأبد: يرفض الـ Promise بعد مهلة محددة إن لم يكتمل.
+function withTimeout(promise, ms, label) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error("timeout:" + (label || ""))), ms);
+    promise.then(
+      v => { clearTimeout(timer); resolve(v); },
+      e => { clearTimeout(timer); reject(e); }
+    );
+  });
+}
+
+/* ======================================================================
+   SETTINGS
+   (تفضيلات الواجهة فقط: حجم الخط، الوضع الليلي، وضع القراءة — محلية بالكامل)
+   ====================================================================== */
+const localStore = {
+  get(key, fallback) {
+    try {
+      const raw = localStorage.getItem(key);
+      return raw === null ? fallback : JSON.parse(raw);
+    } catch (e) { return fallback; }
+  },
+  set(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* التخزين قد يكون ممتلئًا أو معطلاً؛ ليس خطأً فادحًا */ }
+  },
+  remove(key) {
+    try { localStorage.removeItem(key); } catch (e) {}
+  }
+};
+
+const settings = Object.assign({ fontScale: 1.7, theme: "day", readingMode: false }, localStore.get("settings", {}));
+
+function applySettings() {
+  document.documentElement.style.setProperty("--fs", settings.fontScale);
+  document.documentElement.setAttribute("data-theme", settings.theme);
+}
+function saveSettings() {
+  localStore.set("settings", settings);
+  applySettings();
+}
+
+/* ======================================================================
+   UI HELPERS
+   ====================================================================== */
+function ar(n) {
+  return String(n).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+}
+function pagesLabel(n) {
+  if (n === 1) return "صفحة واحدة";
+  if (n === 2) return "صفحتان";
+  return ar(n) + " صفحات";
+}
+// كل وقت يظهر في الواجهة (عدّاد اليوم الجديد، تسجيل الصوت، الوقت المتبقي للصلاة) يُعرض بنفس الشكل: ساعات:دقائق:ثوانٍ.
+function formatClock(totalSeconds) {
+  totalSeconds = Math.max(0, Math.floor(totalSeconds));
+  const hh = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+  const mm = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+  const ss = String(totalSeconds % 60).padStart(2, "0");
+  return ar(hh + ":" + mm + ":" + ss);
+}
+
+function h(tag, attrs, ...children) {
+  attrs = attrs || {};
+  const el = document.createElement(tag);
+  for (const key in attrs) {
+    if (key === "on") {
+      for (const evt in attrs.on) el.addEventListener(evt, attrs.on[evt]);
+    } else if (key === "cls") {
+      el.className = attrs.cls;
+    } else {
+      el.setAttribute(key, attrs[key]);
+    }
+  }
+  children.flat().forEach(child => {
+    if (child == null || child === false) return;
+    el.append(child);
+  });
+  return el;
+}
+
+// يستبدل أبناء عنصر موجود، ويتجاهل null/false بدل إدراجها كنص "null".
+function put(el, ...children) {
+  el.replaceChildren(...children.flat().filter(c => c != null && c !== false));
+}
+
+let activeTicks = [];        // دوال تُستدعى كل ثانية لتحديث عناصر حيّة على الشاشة الحالية (عداد وقت، إلخ)
+let currentView = "";
+let uiBusy = false;          // يمنع الضغط المزدوج أثناء عملية كتابة جارية إلى Firebase
+
+function mount(node) {
+  activeTicks = [];
+  document.querySelector("#app").replaceChildren(node);
+}
+
+function toast(message) {
+  const el = h("div", { cls: "toast" }, message);
+  document.body.append(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+const SAVE_ERROR_MSG = "تعذر حفظ التقدم، حاول مرة أخرى.";
+const CONNECT_ERROR_MSG = "تعذر الاتصال بالخادم. حاول مرة أخرى.";
+
+setInterval(() => activeTicks.forEach(fn => fn()), 1000);
+
+/* ======================================================================
+   STATE
+   UID          — معرف الحساب الحالي (user_omar / user_maryam)
+   QP           — تقدم القرآن لهذا الحساب (quranProgress/UID في Firebase)
+   T            — حالة اليوم الحالي (dailyTasks/UID/date)
+   S            — حالة الـ Shared Streak (streak/pair_001)
+   MEM          — حالة الحفظ لهذا الحساب (memorize/UID)
+   ====================================================================== */
+let UID = null;
+let QP = null;
+let T = null;
+let S = null;
+let MEM = null;
+let streakListenerBound = false;
+
+const INITIAL_STREAK = {
+  count: 0,
+  status: "gray",
+  fails: 0,
+  rescues: CFG.rescuesTotal,
+  lastEvaluated: null
+};
+
+/* ======================================================================
+   QURAN API
+   (تُستخدم فقط لعرض صفحات المصحف في القارئ. مهمة الحفظ تستخدم surahs.js المحلي بالكامل.)
+   ====================================================================== */
+
+// يحذف تشكيل الآية (حركات/تنوين/شدة/سكون) فقط لغرض المقارنة الحرفية، دون التأثير على النص المعروض فعليًا.
+const ARABIC_DIACRITICS_RE = /[\u064B-\u065F\u0670\u06D6-\u06ED\u08F0-\u08FF]/;
+const BARE_BASMALA = "بسم الله الرحمن الرحيم".replace(/\s+/g, "");
+
+// يحذف البسملة من بداية نص الآية الأولى في السورة (إن وُجدت) بالاعتماد على تطابق الحروف الفعلية حرفًا حرفًا،
+// وليس على عدّ الكلمات — تفاديًا لأي حذف خاطئ من نص الآية نفسها.
+// يُعيد null إن لم يبدأ النص بالبسملة أصلًا (فتُعرض الآية كما هي، مع سطر البسملة المنفصل الثابت فوقها).
+function stripLeadingBasmala(ayahText) {
+  let bareIdx = 0;
+  let i = 0;
+  while (i < ayahText.length && bareIdx < BARE_BASMALA.length) {
+    const ch = ayahText[i];
+    if (ARABIC_DIACRITICS_RE.test(ch)) { i++; continue; }
+    if (ch === " " || ch === "\u00A0") { i++; continue; }
+    if (ch === BARE_BASMALA[bareIdx]) { bareIdx++; i++; continue; }
+    return null;
+  }
+  if (bareIdx < BARE_BASMALA.length) return null;
+  while (i < ayahText.length && /\s/.test(ayahText[i])) i++;
+  return ayahText.slice(i);
+}
+
+async function fetchQuranJson(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), CFG.fetchTimeoutMs);
   try {
-    if (k === "quran") {
-      await runTransaction(ref(db, "quranProgress/" + UID), p => {
-        p = p || QP;
-        if (p.frontier !== T.plan.start) return;               // already counted
-        p.lastReadAt = now();
-        if (T.plan.end >= CFG.pages) { p.khatmah++; p.frontier = 1; p.pagesRead = 0; p.currentPage = 1; }
-        else { p.frontier = T.plan.end + 1; p.pagesRead = T.plan.end; }
-        return p;
+    const response = await fetch(url, { signal: controller.signal });
+    if (!response.ok) throw new Error("http-" + response.status);
+    let body;
+    try {
+      body = await response.json();
+    } catch (parseErr) {
+      throw new Error("invalid-json");
+    }
+    if (!body || body.code !== 200 || !body.data) throw new Error("invalid-payload");
+    return body.data;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchMushafPage(pageNumber) {
+  const editions = [CFG.editionPrimary, CFG.editionFallback];
+  let lastError = null;
+  for (const edition of editions) {
+    for (let attempt = 0; attempt <= CFG.fetchRetriesPerEdition; attempt++) {
+      try {
+        const url = CFG.quranApiBase + "page/" + pageNumber + "/" + edition;
+        const data = await fetchQuranJson(url);
+        if (!data || !Array.isArray(data.ayahs) || data.ayahs.length === 0) {
+          throw new Error("empty-ayahs");
+        }
+        return data.ayahs.map(a => ({
+          surah: a.surah.number,
+          surahName: a.surah.name,
+          numberInSurah: a.numberInSurah,
+          text: a.text,
+          juz: a.juz
+        }));
+      } catch (err) {
+        lastError = err;
+        console.error("fetchMushafPage failed", { pageNumber, edition, attempt, err });
+      }
+    }
+  }
+  throw lastError || new Error("fetch-failed");
+}
+
+/* ======================================================================
+   QURAN CACHE
+   (Map محدود بآخر CFG.pageCacheLimit صفحة — وليس localStorage — لمنع تضخم التخزين)
+   ====================================================================== */
+const quranPageCache = new Map();
+
+function cacheGetPage(pageNumber) {
+  const key = pageNumber;
+  if (!quranPageCache.has(key)) return null;
+  const value = quranPageCache.get(key);
+  quranPageCache.delete(key);
+  quranPageCache.set(key, value); // إعادة الإدخال في النهاية = "استُخدم مؤخرًا" لسياسة LRU بسيطة
+  return value;
+}
+function cacheSetPage(pageNumber, ayahs) {
+  quranPageCache.set(pageNumber, ayahs);
+  while (quranPageCache.size > CFG.pageCacheLimit) {
+    const oldestKey = quranPageCache.keys().next().value;
+    quranPageCache.delete(oldestKey);
+  }
+}
+function clearQuranPageCache() {
+  quranPageCache.clear();
+}
+
+async function getMushafPage(pageNumber) {
+  const cached = cacheGetPage(pageNumber);
+  if (cached) return cached;
+  const ayahs = await fetchMushafPage(pageNumber);
+  cacheSetPage(pageNumber, ayahs);
+  return ayahs;
+}
+
+/* ======================================================================
+   ADHKAR DATA
+   (نصوص ثابتة محليًا من "حصن المسلم" وأحاديث صحيحة مشهورة — لا اختراع ولا API)
+   ====================================================================== */
+const AYAT_AL_KURSI =
+  "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ " +
+  "مَن ذَا الَّذِي يَشْفَعُ عِندَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِّنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ " +
+  "وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ";
+
+const SURAH_IKHLAS_TEXT = "قُلْ هُوَ اللَّهُ أَحَدٌ * اللَّهُ الصَّمَدُ * لَمْ يَلِدْ وَلَمْ يُولَدْ * وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ";
+const SURAH_FALAQ_TEXT = "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ * مِن شَرِّ مَا خَلَقَ * وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ * وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ * وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ";
+const SURAH_NAS_TEXT = "قُلْ أَعُوذُ بِرَبِّ النَّاسِ * مَلِكِ النَّاسِ * إِلَٰهِ النَّاسِ * مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ * الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ * مِنَ الْجِنَّةِ وَالنَّاسِ";
+
+const COMMON_ADHKAR = [
+  { title: "آية الكرسي", text: AYAT_AL_KURSI, source: "البقرة ٢٥٥ — رواه الحاكم والنسائي والطبراني", repeat: 1 },
+  { title: "سورة الإخلاص", text: SURAH_IKHLAS_TEXT, source: "ثلاث مرات — رواه أبو داود والترمذي", repeat: 3 },
+  { title: "سورة الفلق", text: SURAH_FALAQ_TEXT, source: "ثلاث مرات — رواه أبو داود والترمذي", repeat: 3 },
+  { title: "سورة الناس", text: SURAH_NAS_TEXT, source: "ثلاث مرات — رواه أبو داود والترمذي", repeat: 3 },
+  {
+    title: "سيد الاستغفار",
+    text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ",
+    source: "رواه البخاري",
+    repeat: 1
+  },
+  {
+    title: "اللهم عافني",
+    text: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ",
+    source: "رواه أبو داود وأحمد",
+    repeat: 3
+  },
+  {
+    title: "اللهم إني أسألك العفو والعافية",
+    text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ، اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي، اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي، اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي",
+    source: "رواه أبو داود وابن ماجه",
+    repeat: 1
+  },
+  {
+    title: "أعوذ بك من الكفر والفقر",
+    text: "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَٰهَ إِلَّا أَنْتَ",
+    source: "رواه أبو داود وأحمد والنسائي",
+    repeat: 3
+  },
+  {
+    title: "حسبي الله",
+    text: "حَسْبِيَ اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ، عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ",
+    source: "رواه أبو داود",
+    repeat: 7
+  },
+  {
+    title: "بسم الله الذي لا يضر",
+    text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ",
+    source: "رواه أبو داود والترمذي",
+    repeat: 3
+  },
+  {
+    title: "رضيت بالله ربًا",
+    text: "رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ ﷺ نَبِيًّا",
+    source: "رواه أبو داود والترمذي وابن ماجه",
+    repeat: 3
+  },
+  {
+    title: "يا حي يا قيوم",
+    text: "يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَىٰ نَفْسِي طَرْفَةَ عَيْنٍ",
+    source: "رواه الحاكم والنسائي، وصححه الألباني",
+    repeat: 1
+  },
+  {
+    title: "لا إله إلا الله وحده",
+    text: "لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+    source: "رواه أحمد وأبو داود والترمذي والنسائي وابن ماجه",
+    repeat: 10
+  },
+  { title: "سبحان الله وبحمده", text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", source: "رواه مسلم", repeat: 100 },
+  {
+    title: "سبحان الله عدد خلقه",
+    text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ",
+    source: "رواه مسلم",
+    repeat: 3
+  },
+  { title: "الاستغفار", text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", source: "رواه البخاري", repeat: 100 },
+  {
+    title: "الصلاة على النبي ﷺ",
+    text: "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَىٰ نَبِيِّنَا مُحَمَّدٍ",
+    source: "رواه الطبراني",
+    repeat: 10
+  }
+];
+
+const MORNING_ADHKAR = [
+  ...COMMON_ADHKAR,
+  {
+    title: "أصبحنا وأصبح الملك لله",
+    text: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+    source: "رواه مسلم",
+    repeat: 1
+  },
+  {
+    title: "أصبحنا وأصبح الملك لله (الرواية الطويلة)",
+    text: "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+    source: "رواه مسلم",
+    repeat: 1
+  },
+  {
+    title: "اللهم بك أصبحنا",
+    text: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ",
+    source: "رواه الترمذي",
+    repeat: 1
+  },
+  {
+    title: "أصبحنا على فطرة الإسلام",
+    text: "أَصْبَحْنَا عَلَىٰ فِطْرَةِ الْإِسْلَامِ، وَعَلَىٰ كَلِمَةِ الْإِخْلَاصِ، وَعَلَىٰ دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَىٰ مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+    source: "رواه أحمد",
+    repeat: 1
+  },
+  {
+    title: "اللهم إني أصبحت أشهدك",
+    text: "اللَّهُمَّ إِنِّي أَصْبَحْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+    source: "رواه أبو داود، أربع مرات",
+    repeat: 4
+  },
+  {
+    title: "اللهم ما أصبح بي من نعمة",
+    text: "اللَّهُمَّ مَا أَصْبَحَ بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ، فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+    source: "رواه أبو داود والنسائي وابن السني",
+    repeat: 1
+  },
+  {
+    title: "اللهم إني أسألك علمًا نافعًا",
+    text: "اللَّهُمَّ إِنِّي أَسْأَلُكَ عِلْمًا نَافِعًا، وَرِزْقًا طَيِّبًا، وَعَمَلًا مُتَقَبَّلًا",
+    source: "رواه ابن ماجه وابن السني — تُقال إذا أصبح خاصة",
+    repeat: 1
+  }
+];
+
+const EVENING_ADHKAR = [
+  ...COMMON_ADHKAR,
+  {
+    title: "أمسينا وأمسى الملك لله",
+    text: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ",
+    source: "رواه مسلم",
+    repeat: 1
+  },
+  {
+    title: "أمسينا وأمسى الملك لله (الرواية الطويلة)",
+    text: "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ، رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا، رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ، رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ",
+    source: "رواه مسلم",
+    repeat: 1
+  },
+  {
+    title: "اللهم بك أمسينا",
+    text: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ",
+    source: "رواه الترمذي",
+    repeat: 1
+  },
+  {
+    title: "أمسينا على فطرة الإسلام",
+    text: "أَمْسَيْنَا عَلَىٰ فِطْرَةِ الْإِسْلَامِ، وَعَلَىٰ كَلِمَةِ الْإِخْلَاصِ، وَعَلَىٰ دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَىٰ مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ",
+    source: "رواه أحمد",
+    repeat: 1
+  },
+  {
+    title: "اللهم إني أمسيت أشهدك",
+    text: "اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَٰهَ إِلَّا أَنْتَ وَحْدَكَ لَا شَرِيكَ لَكَ، وَأَنَّ مُحَمَّدًا عَبْدُكَ وَرَسُولُكَ",
+    source: "رواه أبو داود، أربع مرات",
+    repeat: 4
+  },
+  {
+    title: "اللهم ما أمسى بي من نعمة",
+    text: "اللَّهُمَّ مَا أَمْسَى بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ، فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ",
+    source: "رواه أبو داود والنسائي وابن السني",
+    repeat: 1
+  }
+];
+
+const ADHKAR_BY_KIND = { morning: MORNING_ADHKAR, evening: EVENING_ADHKAR };
+
+/* ======================================================================
+   DAILY TASKS
+   (اختيار الهدف اليومي deterministic بالكامل: يعتمد على رقم اليوم + تقدّم المستخدم، وليس Math.random)
+   ====================================================================== */
+function planForDate(quranProgress, date) {
+  const idx = dayIndexOf(date);
+  const pages = CFG.quranPagePlan[idx % CFG.quranPagePlan.length];
+  const surah = SHORT_SURAHS[idx % SHORT_SURAHS.length];
+  return {
+    start: quranProgress.frontier,
+    pages,
+    end: Math.min(CFG.totalPages, quranProgress.frontier + pages - 1),
+    khatmah: quranProgress.khatmah,
+    surahNumber: surah.number,
+    surahName: surah.name
+  };
+}
+
+function taskPath(kind) {
+  return `dailyTasks/${UID}/${T.date}/tasks/${kind}`;
+}
+
+// تحديث محلي متفائل (Optimistic) + كتابة فعلية على Firebase، مع تراجع محلي إذا فشلت الكتابة.
+async function patchTask(kind, changes) {
+  const taskObj = T.tasks[kind];
+  const flatChanges = Object.entries(changes).filter(([key]) => !key.includes("/"));
+  const previousValues = {};
+  flatChanges.forEach(([key]) => { previousValues[key] = taskObj[key]; });
+  Object.assign(taskObj, Object.fromEntries(flatChanges));
+  try {
+    await update(ref(db, taskPath(kind)), changes);
+  } catch (err) {
+    Object.assign(taskObj, previousValues);
+    throw err;
+  }
+}
+
+function stateOf(kind) {
+  if (T.date !== dateKey()) return "locked"; // يوم قديم انتهى ولم يُحدَّث بعد
+  return T.tasks[kind].state;
+}
+
+async function loadAccountData() {
+  const quranRef = ref(db, "quranProgress/" + UID);
+  QP = (await get(quranRef)).val();
+  if (!QP) {
+    QP = { currentPage: 1, khatmah: 1, frontier: 1, pagesRead: 0, lastReadAt: 0 };
+    await set(quranRef, QP);
+  }
+
+  const memRef = ref(db, "memorize/" + UID);
+  MEM = (await get(memRef)).val();
+  if (!MEM) {
+    MEM = { completed: {}, count: 0 };
+    await set(memRef, MEM);
+  }
+
+  const date = dateKey();
+  const dayRef = ref(db, `dailyTasks/${UID}/${date}`);
+  const freshPlan = planForDate(QP, date);
+
+  // يُثبَّت هدف اليوم عند أول إنشاء فقط، ولا يُعاد توليده أبدًا (Refresh، تغيير جهاز، تسجيل خروج/دخول، تغيير ساعة الجهاز — كله بلا تأثير).
+  await runTransaction(dayRef, current => {
+    if (current && current.plan) return current;
+    return {
+      plan: freshPlan,
+      tasks: {
+        morning: { state: "available" },
+        quran: { state: "available" },
+        evening: { state: "available" },
+        memorize: { state: "available" }
+      }
+    };
+  });
+
+  const dayData = (await get(dayRef)).val();
+  T = { date, plan: dayData.plan, tasks: dayData.tasks || {} };
+  for (const kind of KINDS) {
+    T.tasks[kind] = Object.assign({ state: "available" }, T.tasks[kind]);
+  }
+
+  if (!streakListenerBound) {
+    streakListenerBound = true;
+    onValue(ref(db, "streak/" + CFG.pair), snap => {
+      S = Object.assign({}, INITIAL_STREAK, snap.val());
+      if (currentView === "home") renderHome();
+    });
+  }
+  S = S || INITIAL_STREAK;
+}
+
+/* ======================================================================
+   STREAK
+   (تقييم الأيام المنتهية فقط، بترانزاكشن يمنع تكرار احتساب نفس اليوم من أكثر من جهاز)
+   ====================================================================== */
+async function evaluateStreak() {
+  const today = dateKey();
+  const streakRef = ref(db, "streak/" + CFG.pair);
+  const currentSnapshot = Object.assign({}, INITIAL_STREAK, (await get(streakRef)).val());
+  const lastEvaluatedBefore = currentSnapshot.lastEvaluated || addDays(today, -1);
+
+  // اجلب حالة الأيام غير المقيَّمة بعد (كل يوم: هل أكمل الاثنان كل مهامهما؟) قبل الدخول في الترانزاكشن.
+  const fetchedDays = {};
+  for (let d = addDays(lastEvaluatedBefore, 1), guard = 0; d < today && guard < 400; d = addDays(d, 1), guard++) {
+    fetchedDays[d] = (await get(ref(db, `days/${CFG.pair}/${d}`))).val() || {};
+  }
+
+  await runTransaction(streakRef, current => {
+    current = Object.assign({}, INITIAL_STREAK, current);
+    let lastEvaluated = current.lastEvaluated || addDays(today, -1);
+    for (let d = addDays(lastEvaluated, 1); d < today; d = addDays(d, 1)) {
+      if (!fetchedDays[d]) break; // لم نجلب بيانات هذا اليوم (نادر) — نكمل في المرة القادمة
+      const bothCompleted = MEMBERS.every(member => fetchedDays[d][member] === true);
+      if (bothCompleted) {
+        current.count += 1;
+        current.status = "red";
+        current.fails = 0;
+      } else {
+        current.status = "gray";
+        current.fails += 1;
+        if (current.fails >= 2) { // مرّت ٤٨ ساعة دون يوم ناجح
+          if (current.rescues > 0) {
+            current.rescues -= 1;
+            current.fails = 0;
+          } else {
+            current.count = 0;
+            current.fails = 0;
+          }
+        }
+      }
+      lastEvaluated = d;
+    }
+    current.lastEvaluated = lastEvaluated;
+    return current;
+  });
+}
+
+/* ======================================================================
+   TASK COMPLETION RULES
+   (بدون Timer وبدون Confirmation: "تم" تُنهي المهمة فورًا بمجرد استيفاء المحتوى فقط)
+   ====================================================================== */
+function adhkarProgress(kind) {
+  const list = ADHKAR_BY_KIND[kind];
+  const counts = T.tasks[kind].counts || {};
+  const done = list.reduce((sum, item, i) => sum + Math.min(counts[i] || 0, item.repeat), 0);
+  const need = list.reduce((sum, item) => sum + item.repeat, 0);
+  return { done, need };
+}
+
+function contentOk(kind) {
+  const task = T.tasks[kind];
+  if (kind === "quran") return (task.reached || 0) >= T.plan.end;
+  if (kind === "memorize") return (task.recitedCount || 0) >= CFG.memorizeRepeats;
+  const list = ADHKAR_BY_KIND[kind];
+  const counts = task.counts || {};
+  return list.every((item, i) => (counts[i] || 0) >= item.repeat);
+}
+
+async function startTask(kind) {
+  if (T.tasks[kind].state !== "available") return;
+  if (kind === "quran") {
+    return patchTask(kind, { state: "inProgress", reached: T.plan.start - 1, lastPage: T.plan.start });
+  }
+  if (kind === "memorize") {
+    return patchTask(kind, { state: "inProgress", recitedCount: 0 });
+  }
+  return patchTask(kind, { state: "inProgress" });
+}
+
+async function completeTask(kind) {
+  if (uiBusy) return;
+  if (T.tasks[kind].state === "completed") { viewHome(); return; }
+  if (!contentOk(kind)) return;
+  uiBusy = true;
+  try {
+    if (kind === "quran") {
+      await runTransaction(ref(db, "quranProgress/" + UID), progress => {
+        progress = progress || QP;
+        if (progress.frontier !== T.plan.start) return; // سبق احتسابها (منع الاحتساب المزدوج)
+        progress.lastReadAt = serverNow();
+        if (T.plan.end >= CFG.totalPages) {
+          progress.khatmah += 1;
+          progress.frontier = 1;
+          progress.pagesRead = 0;
+          progress.currentPage = 1;
+        } else {
+          progress.frontier = T.plan.end + 1;
+          progress.pagesRead = T.plan.end;
+        }
+        return progress;
       });
       QP = (await get(ref(db, "quranProgress/" + UID))).val();
     }
-    if (k === "memorize") {
-      await runTransaction(ref(db, "memorize/" + UID), m => {
-        m = m || MEM; if (!m.completed) m.completed = {};
-        if (!m.completed[T.plan.surah]) { m.completed[T.plan.surah] = T.date; m.count = (m.count || 0) + 1; }
-        return m;
+    if (kind === "memorize") {
+      await runTransaction(ref(db, "memorize/" + UID), mem => {
+        mem = mem || MEM;
+        if (!mem.completed) mem.completed = {};
+        if (!mem.completed[T.plan.surahNumber]) {
+          mem.completed[T.plan.surahNumber] = T.date;
+          mem.count = (mem.count || 0) + 1;
+        }
+        return mem;
       });
       MEM = (await get(ref(db, "memorize/" + UID))).val();
     }
-    await patchTask(k, { state: "completed", completedAt: now() });
-    if (KINDS.every(x => T.tasks[x].state === "completed")) await set(ref(db, `days/${CFG.pair}/${T.date}/${UID}`), true);
-    busy = false; viewHome();
-  } catch (e) { busy = false; toast(SAVE_ERR); }
-}
-function finisher(k, label) {
-  const b = h("button", { cls: "btn big" }, label), upd = () => { b.disabled = busy || !contentOk(k); };
-  b.onclick = () => completeTask(k); ticks.push(upd); upd(); return b;
+    await patchTask(kind, { state: "completed" });
+    if (KINDS.every(k => T.tasks[k].state === "completed")) {
+      await set(ref(db, `days/${CFG.pair}/${T.date}/${UID}`), true);
+    }
+    uiBusy = false;
+    viewHome();
+  } catch (err) {
+    uiBusy = false;
+    toast(SAVE_ERROR_MSG);
+  }
 }
 
-// ===== VIEW: ADHKAR (one dhikr at a time, with counters) =====
-async function viewAdhkar(k) {
-  view = "task"; sessionStorage.setItem("open", k);
-  try { await startTask(k); } catch (e) {}
-  const list = ADHKAR[k], t = T.tasks[k], done = t.state === "completed", counts = t.counts || (t.counts = {});
-  const container = h("div", { cls: "dk" }), fin = h("div", { style: "width:100%" }), header = h("div", { cls: "dk-header" });
-  const currentIndex = () => { if (done) return list.length; for (let i = 0; i < list.length; i++) if ((counts[i] || 0) < list[i].times) return i; return list.length; };
-  const save = async (idx, val, prev) => {
-    try { await patchTask(k, { ["counts/" + idx]: val, step: idx }); }
-    catch (e) { counts[idx] = prev; toast(SAVE_ERR); draw(); }
-  };
-  function draw() {
-    const idx = currentIndex();
-    if (idx >= list.length) {
-      header.replaceChildren();
-      put(container, h("div", { cls: "mute", style: "padding:2rem 0;text-align:center" }, "✓ أتممت جميع الأذكار"));
-      put(fin, !done ? finisher(k, "تم") : null);
+// زر "تم" العام: مُعطَّل حتى يكتمل المحتوى فقط، بلا أي عدّاد وقت وبلا نافذة تأكيد.
+function finishButton(kind, label) {
+  const button = h("button", { cls: "btn big" }, label);
+  const update = () => { button.disabled = uiBusy || !contentOk(kind); };
+  button.onclick = () => completeTask(kind);
+  activeTicks.push(update);
+  update();
+  return button;
+}
+
+/* ======================================================================
+   RESET (لعمر فقط — يعيد كل شيء إلى الصفر لكلا الحسابين)
+   ====================================================================== */
+async function resetEverything() {
+  if (UID !== RESET_ALLOWED_UID) return; // حماية إضافية، الزر أصلاً لا يظهر لغير عمر
+  if (uiBusy) return;
+  const confirmed = confirm(
+    "سيتم تصفير: تقدم القرآن والختمات لعمر ومريم، الحفظ، مهام اليوم، الستريك المشترك، والمحاولات. " +
+    "لن يتأثر تسجيل دخولك. متابعة؟"
+  );
+  if (!confirmed) return;
+  uiBusy = true;
+  try {
+    const freshQuran = { currentPage: 1, khatmah: 1, frontier: 1, pagesRead: 0, lastReadAt: 0 };
+    const freshMemorize = { completed: {}, count: 0 };
+    const freshStreak = { count: 0, status: "gray", fails: 0, rescues: CFG.rescuesTotal, lastEvaluated: null };
+
+    const multiPathUpdate = {};
+    for (const memberId of MEMBERS) {
+      multiPathUpdate["quranProgress/" + memberId] = freshQuran;
+      multiPathUpdate["memorize/" + memberId] = freshMemorize;
+      multiPathUpdate["dailyTasks/" + memberId] = null;
+    }
+    multiPathUpdate["days/" + CFG.pair] = null;
+    multiPathUpdate["streak/" + CFG.pair] = freshStreak;
+
+    await update(ref(db), multiPathUpdate); // تحديث ذرّي عبر عدة مسارات دفعة واحدة
+
+    clearQuranPageCache();
+    localStore.remove("lastFreePage");
+    sessionStorage.removeItem("openView");
+
+    uiBusy = false;
+    loadingView();
+    await loadAccountData();
+    await evaluateStreak();
+    viewHome();
+  } catch (err) {
+    uiBusy = false;
+    toast(SAVE_ERROR_MSG);
+  }
+}
+
+/* ======================================================================
+   AUDIO RECORDING
+   (تسجيل محلي بالكامل، لا يُرفع إلى Firebase أبدًا، ولا علاقة له بإكمال مهمة الحفظ)
+   ====================================================================== */
+const MIN_RECORDING_SECONDS = 3;
+const MAX_RECORDING_SECONDS = 300;
+
+// عنصر التسجيل النشط حاليًا (إن وُجد)، لإيقافه بأمان عند إغلاق الصفحة أو مغادرة الشاشة.
+let activeRecorderTeardown = null;
+
+function pickSupportedMimeType() {
+  if (!window.MediaRecorder) return "";
+  const candidates = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"];
+  return candidates.find(type => MediaRecorder.isTypeSupported(type)) || "";
+}
+
+// يبني بطاقة التسجيل كاملة (عنصر DOM) + دالة تفكيك (teardown) تُستدعى عند مغادرة الشاشة.
+function createRecorderCard() {
+  let mediaRecorder = null;
+  let mediaStream = null;
+  let recordedChunks = [];
+  let audioObjectUrl = null;
+  let audioElement = null;
+  let elapsedSeconds = 0;
+  let tickInterval = null;
+  let state = "idle"; // idle | recording | recorded | playing
+  let starting = false; // يمنع ضغطتين سريعتين على "تسجيل" قبل استلام إذن الميكروفون
+
+  const titleEl = h("div", { cls: "rec-title" }, "🎙 تسجيل التلاوة");
+  const timeEl = h("div", { cls: "rec-time" }, "");
+  const messageEl = h("div", { cls: "rec-msg" }, "التسجيل اختياري، ولا يؤثر على إكمال مهمة الحفظ.");
+  const actionsEl = h("div", { cls: "rec-actions" });
+
+  function stopAllTracks() {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(track => track.stop());
+      mediaStream = null;
+    }
+  }
+
+  function revokeAudio() {
+    if (audioElement) {
+      audioElement.pause();
+      audioElement = null;
+    }
+    if (audioObjectUrl) {
+      URL.revokeObjectURL(audioObjectUrl);
+      audioObjectUrl = null;
+    }
+  }
+
+  function render() {
+    if (state === "idle") {
+      titleEl.textContent = "🎙 تسجيل التلاوة";
+      timeEl.textContent = "";
+      timeEl.hidden = true;
+      const startBtn = h("button", { cls: "rec-btn", on: { click: beginRecording } }, "🎙 تسجيل");
+      startBtn.disabled = starting;
+      put(actionsEl, startBtn);
+    } else if (state === "recording") {
+      titleEl.textContent = "🎙 تسجيل التلاوة";
+      timeEl.hidden = false;
+      timeEl.textContent = formatClock(elapsedSeconds);
+      put(actionsEl, h("button", { cls: "rec-btn recording", on: { click: stopRecording } }, "⏹ إيقاف"));
+    } else if (state === "recorded" || state === "playing") {
+      titleEl.textContent = "✓ تم التسجيل";
+      timeEl.hidden = true;
+      timeEl.textContent = "";
+      const playBtn = h("button", {
+        cls: "rec-btn",
+        on: { click: state === "playing" ? pausePlayback : startPlayback }
+      }, state === "playing" ? "⏸ إيقاف الاستماع" : "▶ استماع");
+      const deleteBtn = h("button", { cls: "btn ghost", on: { click: deleteRecording } }, "🗑 حذف");
+      put(actionsEl, playBtn, deleteBtn);
+    }
+  }
+
+  async function beginRecording() {
+    if (starting || state === "recording") return; // يمنع بدء تسجيل ثانٍ أثناء تسجيل جارٍ
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
+      messageEl.textContent = "المتصفح لا يدعم تسجيل الصوت.";
       return;
     }
-    const x = list[idx], c = counts[idx] || 0, need = x.times;
-    put(header, h("div", { cls: "dh-prog" }, "الذكر " + ar(idx + 1) + " من " + ar(list.length)), h("div", { cls: "dh-title" }, x.title || ""));
-    const inc = h("button", { "aria-label": "زيادة", on: { click: () => { if (done || c >= need) return; counts[idx] = c + 1; t.step = idx; draw(); save(idx, c + 1, c); } } }, "+");
-    inc.disabled = done || c >= need;
-    const rst = h("button", { cls: "rst", "aria-label": "إعادة العدّ", on: { click: () => { if (done || c === 0) return; counts[idx] = 0; draw(); save(idx, 0, c); } } }, "↺");
-    rst.disabled = done || c === 0;
-    put(container, h("div", { cls: "dk-item" }, h("div", { cls: "dt qf" }, x.t), h("div", { cls: "ds" }, x.s || ""),
-      h("div", { cls: "dk-counter" }, rst, h("span", { cls: "num" }, ar(c) + " / " + ar(need)), inc)));
-    put(fin);
-  }
-  mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
-    h("div", { cls: "mute" }, k === "morning" ? "☀️ أذكار الصباح" : "🌙 أذكار المساء"), header, container, fin,
-    h("button", { cls: "link", on: { click: () => viewHome() } }, "رجوع")));
-  draw();
-}
-
-// ===== VIEW: MEMORIZE (recite 3 times; optional voice recording, kept on the device only) =====
-async function viewMemorize() {
-  view = "memorize"; sessionStorage.setItem("open", "memorize");
-  try { await startTask("memorize"); } catch (e) {}
-  const s = T.plan.surah, name = T.plan.surahName, t = T.tasks.memorize, done = t.state === "completed";
-  const aysEl = h("div", { cls: "ays" }, "جارٍ التحميل…"), recTimer = h("div", { cls: "rec-timer" }, ""), recBtn = h("button", { cls: "rec-btn", "aria-label": "تسجيل" }, "🎙️");
-  const playBtn = h("button", { cls: "btn", style: "display:none" }, "▶️ اسمع"), stopBtn = h("button", { cls: "btn", style: "display:none" }, "⏹️ إيقاف"), deleteBtn = h("button", { cls: "btn ghost", style: "display:none" }, "🗑️ امسح");
-  const recStatus = h("div", { cls: "mute" }, "التسجيل اختياري — اضغط للتسجيل"), recActions = h("div", { cls: "rec-actions" }, playBtn, stopBtn, deleteBtn), fin = h("div", { style: "width:100%" });
-  let mediaRecorder = null, chunks = [], audioURL = null, timerInt = null, seconds = 0, alive = true;
-  const MIN_SEC = 30, MAX_SEC = 300;
-  const pickMime = () => window.MediaRecorder ? (["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg"].find(m => MediaRecorder.isTypeSupported(m)) || "") : "";
-  const clearAudio = () => { if (audioURL) { URL.revokeObjectURL(audioURL); audioURL = null; } };
-  const idleUi = () => { recBtn.classList.remove("recording"); recBtn.textContent = "🎙️"; stopBtn.style.display = "none"; if (timerInt) { clearInterval(timerInt); timerInt = null; } };
-  const cleanup = () => { alive = false; idleUi(); if (mediaRecorder && mediaRecorder.state === "recording") { try { mediaRecorder.stop(); } catch (e) {} } clearAudio(); };
-  const resetRec = () => { clearAudio(); chunks = []; seconds = 0; idleUi(); recTimer.textContent = ""; playBtn.style.display = "none"; deleteBtn.style.display = "none"; recStatus.textContent = "التسجيل اختياري — اضغط للتسجيل"; };
-  const startRec = async () => {
+    starting = true;
+    render();
     try {
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) { recStatus.textContent = "المتصفح لا يدعم التسجيل"; return; }
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      if (!alive) { stream.getTracks().forEach(tr => tr.stop()); return; }
-      clearAudio(); const mime = pickMime(), rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
-      mediaRecorder = rec; chunks = []; seconds = 0;
-      rec.ondataavailable = e => { if (e.data && e.data.size) chunks.push(e.data); };
-      rec.onstop = () => {
-        stream.getTracks().forEach(tr => tr.stop()); idleUi();
-        const blob = new Blob(chunks, { type: rec.mimeType || mime || "audio/webm" });
-        if (blob.size > 0 && seconds >= MIN_SEC) { audioURL = URL.createObjectURL(blob); playBtn.style.display = "block"; deleteBtn.style.display = "block"; recStatus.textContent = "✓ التسجيل جاهز — اسمع نفسك"; }
-        else if (blob.size > 0) recStatus.textContent = "التسجيل قصير (" + ar(seconds) + "ث) — ٣٠ ثانية على الأقل";
-        else recStatus.textContent = "التسجيل فاضي";
+      starting = false;
+      revokeAudio(); // أي تسجيل سابق يُحذف بمجرد بدء تسجيل جديد (لا يمكن الوصول لهذه الحالة أصلًا إلا من idle، لكن للأمان)
+      mediaStream = stream;
+      recordedChunks = [];
+      elapsedSeconds = 0;
+      const mimeType = pickSupportedMimeType();
+      mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+
+      mediaRecorder.ondataavailable = event => {
+        if (event.data && event.data.size > 0) recordedChunks.push(event.data);
       };
-      rec.start(250); recBtn.classList.add("recording"); recBtn.textContent = "⏹️"; stopBtn.style.display = "block"; playBtn.style.display = "none"; deleteBtn.style.display = "none"; recStatus.textContent = "جاري التسجيل…";
-      timerInt = setInterval(() => { seconds++; recTimer.textContent = fmt(seconds) + " / " + fmt(MAX_SEC); if (seconds >= MAX_SEC) { try { rec.stop(); } catch (e) {} } }, 1000);
-    } catch (e) { recStatus.textContent = e && e.name === "NotAllowedError" ? "لم يتم السماح بالوصول للميكروفون" : "تعذر بدء التسجيل"; toast("الميكروفون غير متاح"); }
-  };
-  const stopRec = () => { if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop(); };
-  recBtn.onclick = () => (mediaRecorder && mediaRecorder.state === "recording") ? stopRec() : startRec();
-  stopBtn.onclick = stopRec; playBtn.onclick = () => { if (audioURL) new Audio(audioURL).play().catch(() => {}); }; deleteBtn.onclick = resetRec;
+      mediaRecorder.onstop = () => {
+        stopAllTracks();
+        if (tickInterval) { clearInterval(tickInterval); tickInterval = null; }
+        const blob = new Blob(recordedChunks, { type: mediaRecorder.mimeType || mimeType || "audio/webm" });
+        if (blob.size === 0) {
+          messageEl.textContent = "لم يتم تسجيل أي صوت.";
+          state = "idle";
+        } else if (elapsedSeconds < MIN_RECORDING_SECONDS) {
+          messageEl.textContent = "التسجيل قصير جدًا، الحد الأدنى ٣ ثوانٍ.";
+          state = "idle";
+        } else {
+          audioObjectUrl = URL.createObjectURL(blob);
+          messageEl.textContent = "يمكنك الاستماع إلى تسجيلك أو حذفه.";
+          state = "recorded";
+        }
+        render();
+      };
 
-  const cntBtn = h("button", { cls: "btn big" }, "تم"), resetBtn2 = h("button", { cls: "btn ghost" }, "إعادة العدّ");
-  const upd = () => {
-    const c = t.recitedCount || 0;
-    cntBtn.textContent = "تم · " + ar(c) + "/٣"; cntBtn.disabled = done || c >= 3; resetBtn2.disabled = done || c === 0;
-    put(fin, !done && c >= 3 ? finisher("memorize", "إنهاء الحفظ") : null);
-  };
-  const setCount = async n => { try { await patchTask("memorize", { recitedCount: n }); } catch (e) { toast(SAVE_ERR); } upd(); };
-  cntBtn.onclick = () => { if (!done) setCount(Math.min(3, (t.recitedCount || 0) + 1)); };
-  resetBtn2.onclick = () => { if (!done) setCount(0); };
+      mediaRecorder.start(250);
+      state = "recording";
+      messageEl.textContent = "جارٍ التسجيل…";
+      render();
 
-  mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
-    h("div", { cls: "mute" }, "📚 ورد الحفظ اليومي"), h("div", { cls: "mem" }, h("div", { cls: "sn2" }, "سورة " + name), aysEl),
-    h("div", { cls: "rec-area" }, recTimer, recBtn, recStatus, recActions),
-    h("div", { cls: "mute", style: "margin-top:.5rem" }, "اقرأ ٣ مرات ثم اضغط «تم» بعد كل مرة"), h("div", { cls: "seg" }, cntBtn, resetBtn2), fin,
-    h("button", { cls: "link", on: { click: () => { cleanup(); resetRec(); viewHome(); } } }, "رجوع")));
-  upd();
-  quranText(["surah/" + s]).then(v => { aysEl.textContent = v; }).catch(() => { aysEl.textContent = "تعذر تحميل السورة."; });
-}
-
-// ===== VIEW: READER =====
-let saveT = 0;
-const pageCache = async n => {
-  const k = "qp" + n, c = local.get(k, null); if (c) return c;
-  const a = (await fetchJson(CFG.quranApi + "page/" + n + "/quran-uthmani")).ayahs.map(x => [x.surah.number, x.surah.name, x.numberInSurah, x.text, x.juz]);
-  if (!a.length) throw 0; local.set(k, a); return a;
-};
-function viewReader(mode) {
-  view = "reader"; sessionStorage.setItem("open", mode === "task" ? "quran" : "free");
-  const task = mode === "task", p = T.plan; let cur, seq = 0;
-  const init = async () => {
-    if (task) {
-      try { await startTask("quran"); } catch (e) {}
-      const q = T.tasks.quran, reached = q.reached || (p.start - 1);
-      cur = q.lastPage && q.lastPage >= p.start && q.lastPage <= p.end ? q.lastPage : Math.min(p.end, Math.max(p.start, reached + 1));
-    } else cur = QP.currentPage || local.get("lp", 1);
-    mount(rd); sync(); show(cur, 0);
-  };
-  const pg = h("div", { id: "pg" }), jIn = h("input", { type: "number", min: 1, max: CFG.pages, inputmode: "numeric", placeholder: "رقم الصفحة" });
-  const jGo = () => { const n = parseInt(jIn.value, 10); jump.hidden = true; if (n >= 1 && n <= CFG.pages) show(n); };
-  jIn.addEventListener("keydown", e => { if (e.key === "Enter") jGo(); });
-  const jump = h("div", { cls: "jump", hidden: "" }, h("div", {}, "الانتقال إلى صفحة"), jIn, h("button", { cls: "btn big", on: { click: jGo } }, "انتقال"), h("button", { cls: "link", on: { click: () => { jump.hidden = true; } } }, "إلغاء"));
-  const pgNum = h("button", { cls: "tb", on: { click: () => { if (task) return; jIn.value = ""; jump.hidden = false; jIn.focus(); } } });
-  const bTheme = h("button", { cls: "tb", "aria-label": "الوضع الليلي", on: { click: () => { settings.theme = settings.theme === "night" ? "day" : "night"; saveSettings(); sync(); } } });
-  const bRm = h("button", { cls: "tb", on: { click: () => { settings.rm = !settings.rm; saveSettings(); sync(); } } });
-  const fs = d => { settings.fs = Math.min(2.8, Math.max(1.1, +(settings.fs + d).toFixed(1))); saveSettings(); };
-  const rd = h("div", { id: "rd" },
-    h("div", { cls: "bar top" }, h("button", { cls: "tb", on: { click: async () => { document.onkeydown = null; await flushBookmark(); viewHome(); } } }, "رجوع"),
-      h("span", {}, h("button", { cls: "tb", "aria-label": "تصغير الخط", on: { click: () => fs(-0.1) } }, "A-"), h("button", { cls: "tb", "aria-label": "تكبير الخط", on: { click: () => fs(0.1) } }, "A+"), bTheme, bRm)),
-    pg, h("div", { cls: "bar bot" }, h("button", { cls: "tb", on: { click: () => go(-1) } }, "→ السابقة"), pgNum, h("button", { cls: "tb", on: { click: () => go(1) } }, "التالية ←")), jump);
-  function sync() { rd.classList.toggle("rm", settings.rm); if (!settings.rm) rd.classList.remove("show"); bTheme.textContent = settings.theme === "night" ? "☀" : "🌙"; bRm.textContent = settings.rm ? "خروج من وضع القراءة" : "وضع القراءة"; }
-  // In task mode navigation stays inside today's pages: it never auto-advances and stops at the last required page.
-  const go = d => { const n = cur + d; if (n < 1 || n > CFG.pages) return; if (task && n > p.end) { toast("انتهى وردك لهذا اليوم"); return; } if (task && n < p.start) return; show(n); };
-  function panel() {
-    if (!task || cur !== p.end || T.tasks.quran.state === "completed") return null;
-    const msg = h("div", {}), upd = () => { msg.textContent = contentOk("quran") ? "أتممت ورد القرآن لليوم — اضغط «تم»." : "اقرأ الصفحة حتى النهاية."; };
-    ticks.push(upd); upd(); return h("div", { cls: "endp" }, msg, finisher("quran", "تم"));
-  }
-  async function show(n, restore) {
-    cur = n; const my = ++seq; local.set("lp", n); QP.currentPage = n;
-    clearTimeout(saveT); saveT = setTimeout(flushBookmark, 600); pgNum.textContent = "صفحة " + ar(n);
-    const t = T.tasks.quran;
-    if (task && t.state === "inProgress") patchTask("quran", { reached: Math.max(t.reached || 0, n), lastPage: n }).catch(() => toast(SAVE_ERR));
-    pg.replaceChildren(h("div", { cls: "msg" }, "جارٍ التحميل…"));
-    try {
-      const a = await pageCache(n); if (my !== seq) return;
-      ticks = []; pg.replaceChildren(draw(a, n, panel())); pg.scrollTop = restore || 0;
-      if (n < CFG.pages) pageCache(n + 1).catch(() => {});
-    } catch (e) {
-      if (my !== seq) return;
-      pg.replaceChildren(h("div", { cls: "msg" }, navigator.onLine ? "تعذر تحميل الصفحة." : "لا يوجد اتصال بالإنترنت.", h("br"), h("br"), h("button", { cls: "btn ghost", on: { click: () => show(n) } }, "إعادة المحاولة")));
+      tickInterval = setInterval(() => {
+        elapsedSeconds += 1;
+        if (state === "recording") timeEl.textContent = formatClock(elapsedSeconds);
+        if (elapsedSeconds >= MAX_RECORDING_SECONDS) {
+          stopRecording(); // إيقاف تلقائي عند الوصول للحد الأقصى، دون انتظار المستخدم
+        }
+      }, 1000);
+    } catch (err) {
+      starting = false;
+      state = "idle";
+      messageEl.textContent = (err && err.name === "NotAllowedError")
+        ? "يجب السماح باستخدام الميكروفون لتسجيل التلاوة."
+        : "تعذر بدء التسجيل.";
+      render();
     }
   }
-  let sx = 0, sy = 0;
-  pg.addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
-  pg.addEventListener("touchend", e => { const t2 = e.changedTouches[0], dx = t2.clientX - sx, dy = t2.clientY - sy; if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) go(dx < 0 ? 1 : -1); }, { passive: true });
-  pg.addEventListener("click", () => { if (settings.rm) rd.classList.toggle("show"); });
-  document.onkeydown = e => { if (e.key === "ArrowLeft") go(1); else if (e.key === "ArrowRight") go(-1); };
-  init();
+
+  function stopRecording() {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      try { mediaRecorder.stop(); } catch (err) { console.error("stopRecording failed", err); }
+    }
+  }
+
+  function startPlayback() {
+    if (!audioObjectUrl) return;
+    if (!audioElement) {
+      audioElement = new Audio(audioObjectUrl);
+      audioElement.onended = () => { state = "recorded"; render(); };
+    }
+    audioElement.play().catch(err => console.error("playback failed", err));
+    state = "playing";
+    render();
+  }
+
+  function pausePlayback() {
+    if (audioElement) audioElement.pause();
+    state = "recorded";
+    render();
+  }
+
+  function deleteRecording() {
+    revokeAudio();
+    recordedChunks = [];
+    elapsedSeconds = 0;
+    messageEl.textContent = "التسجيل اختياري، ولا يؤثر على إكمال مهمة الحفظ.";
+    state = "idle";
+    render();
+  }
+
+  function teardown() {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      try { mediaRecorder.stop(); } catch (err) {}
+    }
+    stopAllTracks();
+    revokeAudio();
+    if (tickInterval) { clearInterval(tickInterval); tickInterval = null; }
+  }
+
+  render();
+  const cardEl = h("div", { cls: "rec-card" }, titleEl, timeEl, messageEl, actionsEl);
+  return { element: cardEl, teardown };
 }
-async function flushBookmark() {
-  clearTimeout(saveT); if (!UID || !QP) return;
-  try { await update(ref(db, "quranProgress/" + UID), { currentPage: QP.currentPage, lastReadAt: now() }); } catch (e) {}
+
+/* ======================================================================
+   ADHKAR UI
+   (قائمة بطاقات، كل ذكر بعدّاده الخاص، وزر "تم" العام يظهر فقط بعد اكتمال الجميع)
+   ====================================================================== */
+async function viewAdhkar(kind) {
+  currentView = "task";
+  sessionStorage.setItem("openView", kind);
+  try { await startTask(kind); } catch (err) { toast(SAVE_ERROR_MSG); }
+
+  const list = ADHKAR_BY_KIND[kind];
+  const task = T.tasks[kind];
+  const counts = task.counts || (task.counts = {});
+  const isDone = task.state === "completed";
+
+  const listEl = h("div", { cls: "dk-list" });
+  const finishSlot = h("div", { style: "width:100%" });
+
+  function increment(index) {
+    if (isDone) return;
+    const item = list[index];
+    const current = counts[index] || 0;
+    if (current >= item.repeat) return;
+    const nextValue = current + 1;
+    counts[index] = nextValue;
+    redraw();
+    patchTask(kind, { ["counts/" + index]: nextValue }).catch(() => {
+      counts[index] = current;
+      toast(SAVE_ERROR_MSG);
+      redraw();
+    });
+  }
+
+  function redraw() {
+    const cards = list.map((item, index) => {
+      const current = Math.min(item.repeat, counts[index] || 0);
+      const complete = current >= item.repeat;
+      const plusBtn = h("button", { cls: "dk-plus", "aria-label": "زيادة", on: { click: () => increment(index) } }, "+");
+      plusBtn.disabled = isDone || complete;
+      return h("div", { cls: "dk-card" + (complete ? " complete" : "") },
+        h("div", { cls: "dk-title" }, item.title),
+        h("div", { cls: "dk-text qf" }, item.text),
+        h("div", { cls: "dk-src" }, item.source),
+        h("div", { cls: "dk-foot" },
+          h("span", { cls: "dk-count" }, ar(current) + " / " + ar(item.repeat)),
+          complete ? h("span", { cls: "dk-check" }, "✓") : plusBtn
+        )
+      );
+    });
+    put(listEl, ...cards);
+    put(finishSlot, !isDone && contentOk(kind) ? finishButton(kind, "تم") : null);
+  }
+
+  redraw();
+
+  mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
+    h("div", { cls: "mute" }, kind === "morning" ? "☀️ أذكار الصباح" : "🌙 أذكار المساء"),
+    listEl,
+    finishSlot,
+    h("button", { cls: "link", on: { click: () => viewHome() } }, "رجوع")
+  ));
 }
-function draw(a, n, panelEl) {
-  const m = h("div", { cls: "mushaf qf" }); let q = null;
-  m.append(h("div", { cls: "juz" }, "الجزء " + ar(a[0][4])));
-  a.forEach(([s, name, i, txt]) => {
-    if (i === 1) { m.append(h("div", { cls: "sn" }, name)); if (s !== 1 && s !== 9) { txt = noBasmala(txt); m.append(h("div", { cls: "bsm" }, "﷽")); } q = null; }
-    if (!q) { q = h("p", { cls: "ay" }); m.append(q); }
-    q.append(txt + " ﴿" + ar(i) + "﴾ ");
+
+/* ======================================================================
+   MEMORIZATION
+   ====================================================================== */
+async function viewMemorize() {
+  currentView = "memorize";
+  sessionStorage.setItem("openView", "memorize");
+  try { await startTask("memorize"); } catch (err) { toast(SAVE_ERROR_MSG); }
+
+  const surahNumber = T.plan.surahNumber;
+  const surahName = T.plan.surahName;
+  const surahData = SHORT_SURAHS.find(s => s.number === surahNumber);
+  const task = T.tasks.memorize;
+  const isDone = task.state === "completed";
+
+  const ayahsEl = h("div", { cls: "ays qf" },
+    surahData ? surahData.ayahs.join(" ") : "تعذر تحميل نص السورة."
+  );
+
+  const recorder = createRecorderCard();
+  activeRecorderTeardown = recorder.teardown;
+
+  const countBtn = h("button", { cls: "btn big" }, "");
+  const resetBtn = h("button", { cls: "btn ghost" }, "إعادة العدّ");
+  const finishSlot = h("div", { style: "width:100%" });
+
+  function redraw() {
+    const current = task.recitedCount || 0;
+    countBtn.textContent = "تم · " + ar(current) + "/" + ar(CFG.memorizeRepeats);
+    countBtn.disabled = isDone || current >= CFG.memorizeRepeats;
+    resetBtn.disabled = isDone || current === 0;
+    put(finishSlot, !isDone && current >= CFG.memorizeRepeats ? finishButton("memorize", "إنهاء الحفظ") : null);
+  }
+
+  async function setRecitedCount(value) {
+    try {
+      await patchTask("memorize", { recitedCount: value });
+    } catch (err) {
+      toast(SAVE_ERROR_MSG);
+    }
+    redraw();
+  }
+
+  countBtn.onclick = () => { if (!isDone) setRecitedCount(Math.min(CFG.memorizeRepeats, (task.recitedCount || 0) + 1)); };
+  resetBtn.onclick = () => { if (!isDone) setRecitedCount(0); };
+
+  function leaveMemorize() {
+    recorder.teardown();
+    activeRecorderTeardown = null;
+    viewHome();
+  }
+
+  mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
+    h("div", { cls: "mute" }, "📚 ورد الحفظ اليومي"),
+    h("div", { cls: "mem" }, h("div", { cls: "sn2" }, "سورة " + surahName), ayahsEl),
+    recorder.element,
+    h("div", { cls: "mute" }, "اقرأ السورة ٣ مرات ثم اضغط «تم» بعد كل مرة"),
+    h("div", { cls: "seg" }, countBtn, resetBtn),
+    finishSlot,
+    h("button", { cls: "link", on: { click: leaveMemorize } }, "رجوع")
+  ));
+  redraw();
+}
+
+/* ======================================================================
+   QURAN READER
+   ====================================================================== */
+let readerRequestId = 0; // منع Race Condition: طلب صفحة قديم لا يمكن أن يستبدل صفحة أحدث منه
+let bookmarkSaveTimer = 0;
+
+function viewReader(mode) {
+  currentView = "reader";
+  sessionStorage.setItem("openView", mode === "task" ? "quran" : "free");
+
+  const isTask = mode === "task";
+  const plan = T.plan;
+  let currentPage;
+
+  const pageContainerEl = h("div", { id: "pg" });
+
+  const jumpInput = h("input", { type: "number", min: 1, max: CFG.totalPages, inputmode: "numeric", placeholder: "رقم الصفحة" });
+  const goToTypedPage = () => {
+    const n = parseInt(jumpInput.value, 10);
+    jumpOverlay.hidden = true;
+    if (n >= 1 && n <= CFG.totalPages) showPage(n);
+  };
+  jumpInput.addEventListener("keydown", e => { if (e.key === "Enter") goToTypedPage(); });
+  const jumpOverlay = h("div", { cls: "jump", hidden: "" },
+    h("div", {}, "الانتقال إلى صفحة"),
+    jumpInput,
+    h("button", { cls: "btn big", on: { click: goToTypedPage } }, "انتقال"),
+    h("button", { cls: "link", on: { click: () => { jumpOverlay.hidden = true; } } }, "إلغاء")
+  );
+
+  const pageNumberBtn = h("button", { cls: "tb", on: { click: () => {
+    if (isTask) return; // القفز لصفحة معينة متاح فقط في القراءة الحرة، حتى لا يتجاوز المستخدم ورد اليوم
+    jumpInput.value = "";
+    jumpOverlay.hidden = false;
+    jumpInput.focus();
+  } } });
+
+  const themeBtn = h("button", { cls: "tb", "aria-label": "الوضع الليلي", on: { click: () => {
+    settings.theme = settings.theme === "night" ? "day" : "night";
+    saveSettings();
+    syncBars();
+  } } });
+  const readingModeBtn = h("button", { cls: "tb", on: { click: () => {
+    settings.readingMode = !settings.readingMode;
+    saveSettings();
+    syncBars();
+  } } });
+  const adjustFontSize = delta => {
+    settings.fontScale = Math.min(2.8, Math.max(1.1, +(settings.fontScale + delta).toFixed(1)));
+    saveSettings();
+  };
+
+  const readerRootEl = h("div", { id: "rd" },
+    h("div", { cls: "bar top" },
+      h("button", { cls: "tb", on: { click: async () => {
+        document.onkeydown = null;
+        await flushBookmark();
+        viewHome();
+      } } }, "رجوع"),
+      h("span", {},
+        h("button", { cls: "tb", "aria-label": "تصغير الخط", on: { click: () => adjustFontSize(-0.1) } }, "A-"),
+        h("button", { cls: "tb", "aria-label": "تكبير الخط", on: { click: () => adjustFontSize(0.1) } }, "A+"),
+        themeBtn,
+        readingModeBtn
+      )
+    ),
+    pageContainerEl,
+    h("div", { cls: "bar bot" },
+      h("button", { cls: "tb", on: { click: () => navigate(-1) } }, "→ السابقة"),
+      pageNumberBtn,
+      h("button", { cls: "tb", on: { click: () => navigate(1) } }, "التالية ←")
+    ),
+    jumpOverlay
+  );
+
+  function syncBars() {
+    readerRootEl.classList.toggle("rm", settings.readingMode);
+    if (!settings.readingMode) readerRootEl.classList.remove("show");
+    themeBtn.textContent = settings.theme === "night" ? "☀" : "🌙";
+    readingModeBtn.textContent = settings.readingMode ? "خروج من وضع القراءة" : "وضع القراءة";
+  }
+
+  // في وضع "ورد اليوم" لا يمكن تجاوز آخر صفحة مطلوبة ولا الرجوع قبل أول صفحة فيه.
+  function navigate(delta) {
+    const target = currentPage + delta;
+    if (target < 1 || target > CFG.totalPages) return;
+    if (isTask && target > plan.end) { toast("انتهى وردك لهذا اليوم"); return; }
+    if (isTask && target < plan.start) return;
+    showPage(target);
+  }
+
+  function endOfTaskPanel() {
+    if (!isTask || currentPage !== plan.end || T.tasks.quran.state === "completed") return null;
+    const messageEl = h("div", {});
+    const update = () => {
+      messageEl.textContent = contentOk("quran")
+        ? "أتممت ورد القرآن لليوم — اضغط «تم»."
+        : "اقرأ هذه الصفحة حتى النهاية.";
+    };
+    activeTicks.push(update);
+    update();
+    return h("div", { cls: "endp" }, messageEl, finishButton("quran", "تم"));
+  }
+
+  async function showPage(pageNumber, restoreScrollTop) {
+    currentPage = pageNumber;
+    const myRequestId = ++readerRequestId;
+    localStore.set("lastFreePage", pageNumber);
+    QP.currentPage = pageNumber;
+
+    clearTimeout(bookmarkSaveTimer);
+    bookmarkSaveTimer = setTimeout(flushBookmark, 600);
+    pageNumberBtn.textContent = "صفحة " + ar(pageNumber);
+
+    const quranTask = T.tasks.quran;
+    if (isTask && quranTask.state === "inProgress") {
+      patchTask("quran", { reached: Math.max(quranTask.reached || 0, pageNumber), lastPage: pageNumber })
+        .catch(() => toast(SAVE_ERROR_MSG));
+    }
+
+    put(pageContainerEl, h("div", { cls: "msg" }, "جارٍ التحميل…"));
+    try {
+      const ayahs = await getMushafPage(pageNumber);
+      if (myRequestId !== readerRequestId) return; // وصل بعد طلب أحدث — يُتجاهل
+      activeTicks = [];
+      put(pageContainerEl, renderMushafPage(ayahs, pageNumber, endOfTaskPanel()));
+      pageContainerEl.scrollTop = restoreScrollTop || 0;
+    } catch (err) {
+      if (myRequestId !== readerRequestId) return;
+      put(pageContainerEl, h("div", { cls: "msg" },
+        navigator.onLine ? "تعذر تحميل الصفحة." : "لا يوجد اتصال بالإنترنت.",
+        h("br"), h("br"),
+        h("button", { cls: "btn ghost", on: { click: () => showPage(pageNumber) } }, "إعادة المحاولة")
+      ));
+    }
+  }
+
+  let touchStartX = 0, touchStartY = 0;
+  pageContainerEl.addEventListener("touchstart", e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  pageContainerEl.addEventListener("touchend", e => {
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - touchStartX;
+    const dy = touch.clientY - touchStartY;
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) navigate(dx < 0 ? 1 : -1);
+  }, { passive: true });
+  pageContainerEl.addEventListener("click", () => {
+    if (settings.readingMode) readerRootEl.classList.toggle("show");
   });
-  m.append(h("div", { cls: "juz" }, ar(n))); if (panelEl) m.append(panelEl); return m;
+  document.onkeydown = e => {
+    if (e.key === "ArrowLeft") navigate(1);
+    else if (e.key === "ArrowRight") navigate(-1);
+  };
+
+  (async function init() {
+    if (isTask) {
+      try { await startTask("quran"); } catch (err) { toast(SAVE_ERROR_MSG); }
+      const quranTask = T.tasks.quran;
+      const reached = quranTask.reached || (plan.start - 1);
+      currentPage = (quranTask.lastPage && quranTask.lastPage >= plan.start && quranTask.lastPage <= plan.end)
+        ? quranTask.lastPage
+        : Math.min(plan.end, Math.max(plan.start, reached + 1));
+    } else {
+      currentPage = QP.currentPage || localStore.get("lastFreePage", 1);
+    }
+    mount(readerRootEl);
+    syncBars();
+    showPage(currentPage, 0);
+  })();
 }
 
-// ===== VIEWS: PICKER / LOADING / ERROR =====
-function viewPicker() {
-  view = "picker";
-  mount(h("div", { cls: "screen" }, h("h1", {}, "وردي"), h("div", { cls: "mute" }, "اختر حسابك"),
-    h("div", { cls: "pick" }, h("button", { cls: "btn btn-omar", on: { click: () => pickUser("user_omar") } }, "عمر"), h("button", { cls: "btn btn-maryam", on: { click: () => pickUser("user_maryam") } }, "مريم"))));
-}
-function pickUser(id) { UID = id; local.set("uid", id); start(); }
-const switchAccount = () => { local.del("uid"); UID = null; T = QP = S = MEM = null; sessionStorage.removeItem("open"); viewPicker(); };
-async function resetMyData() {      // resets only this account's own Quran/memorize/today's tasks; the shared streak and past days are untouched
-  if (busy) return;
-  if (!confirm("سيُمسح تقدمك في القرآن والحفظ ومهام اليوم، وتبدأ من جديد كأول مرة. هذا لا يؤثر على حساب الطرف الآخر ولا على الستريك المشترك. متابعة؟")) return;
-  busy = true;
+async function flushBookmark() {
+  clearTimeout(bookmarkSaveTimer);
+  if (!UID || !QP) return;
   try {
-    await set(ref(db, "quranProgress/" + UID), { currentPage: 1, khatmah: 1, frontier: 1, pagesRead: 0, lastReadAt: 0 });
-    await set(ref(db, "memorize/" + UID), { completed: {}, count: 0 });
-    await set(ref(db, `dailyTasks/${UID}/${T.date}`), null);
-    await set(ref(db, `days/${CFG.pair}/${T.date}/${UID}`), null);   // remove today's own contribution only; past evaluated days stay as they are
-    local.del("lp"); sessionStorage.removeItem("open");
-    busy = false; await load(); viewHome();
-  } catch (e) { busy = false; toast(SAVE_ERR); }
+    await update(ref(db, "quranProgress/" + UID), { currentPage: QP.currentPage, lastReadAt: serverNow() });
+  } catch (err) {
+    console.error("flushBookmark failed", err);
+  }
 }
-const loadingView = () => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "جارٍ التحميل…")));
-const errorView = msg => mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "تعذر الاتصال بالخادم. حاول مرة أخرى."), msg ? h("div", { cls: "err" }, msg) : null,
-  h("button", { cls: "btn", on: { click: () => start() } }, "إعادة المحاولة"), h("button", { cls: "link", on: { click: switchAccount } }, "تبديل الحساب")));
 
-// ===== VIEW: HOME =====
+function renderMushafPage(ayahs, pageNumber, endPanelEl) {
+  const pageEl = h("div", { cls: "mushaf qf" });
+  let paragraphEl = null;
+  pageEl.append(h("div", { cls: "juz" }, "الجزء " + ar(ayahs[0].juz)));
+
+  ayahs.forEach(a => {
+    if (a.numberInSurah === 1) {
+      pageEl.append(h("div", { cls: "sn" }, a.surahName));
+      if (a.surah !== 1 && a.surah !== 9) {
+        const stripped = stripLeadingBasmala(a.text);
+        pageEl.append(h("div", { cls: "bsm" }, "﷽"));
+        if (stripped !== null) a = Object.assign({}, a, { text: stripped });
+      }
+      paragraphEl = null;
+    }
+    if (!paragraphEl) {
+      paragraphEl = h("p", { cls: "ay" });
+      pageEl.append(paragraphEl);
+    }
+    paragraphEl.append(a.text + " ﴿" + ar(a.numberInSurah) + "﴾ ");
+  });
+
+  pageEl.append(h("div", { cls: "juz" }, ar(pageNumber)));
+  if (endPanelEl) pageEl.append(endPanelEl);
+  return pageEl;
+}
+
+/* ======================================================================
+   PRAYER TIMES (اختياري — Aladhan API؛ فشل الطلب لا يكسر الصفحة الرئيسية)
+   ====================================================================== */
+const prayerTimesCache = {};
+async function getPrayerTimes(date) {
+  if (prayerTimesCache[date]) return prayerTimesCache[date];
+  try {
+    const [year, month, day] = date.split("-");
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+    const url = `https://api.aladhan.com/v1/timings/${day}-${month}-${year}?latitude=30.0444&longitude=31.2357&method=5`;
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
+    const body = await response.json();
+    if (body.code !== 200) throw new Error("bad-response");
+    const t = body.data.timings;
+    return (prayerTimesCache[date] = { fajr: t.Fajr, dhuhr: t.Dhuhr, asr: t.Asr, maghrib: t.Maghrib, isha: t.Isha });
+  } catch (err) {
+    return null;
+  }
+}
+function parseHHMMToSeconds(value) {
+  const match = /(\d{1,2}):(\d{2})/.exec(value || "");
+  return match ? (Number(match[1]) * 3600 + Number(match[2]) * 60) : null;
+}
+// يُعيد الوقت المتبقي للصلاة القادمة بالثواني (وليس بالدقائق فقط)، حتى يُعرض العدّاد ساعات:دقائق:ثوانٍ ويتحدث كل ثانية.
+function nextPrayer(times) {
+  if (!times) return null;
+  const nowSeconds = cairoSecondsOfDay();
+  const list = [["الفجر", times.fajr], ["الظهر", times.dhuhr], ["العصر", times.asr], ["المغرب", times.maghrib], ["العشاء", times.isha]]
+    .map(([name, t]) => ({ name, seconds: parseHHMMToSeconds(t) }))
+    .filter(p => p.seconds !== null);
+  if (!list.length) return null;
+  for (const prayer of list) {
+    if (prayer.seconds > nowSeconds) return { name: prayer.name, remaining: prayer.seconds - nowSeconds };
+  }
+  return { name: list[0].name, remaining: 86400 - nowSeconds + list[0].seconds, tomorrow: true };
+}
+
+/* ======================================================================
+   HOME
+   ====================================================================== */
 async function viewHome() {
-  view = "home"; sessionStorage.removeItem("open");
-  if (T.date !== dateKey()) { loadingView(); try { await load(); await evaluate(); } catch (e) { return errorView(); } view = "home"; }
+  currentView = "home";
+  sessionStorage.removeItem("openView");
+  if (T.date !== dateKey()) {
+    loadingView();
+    try {
+      await withTimeout(loadAccountData(), CFG.bootTimeoutMs, "load");
+      await withTimeout(evaluateStreak(), CFG.bootTimeoutMs, "evaluate");
+    } catch (err) {
+      errorView(() => viewHome());
+      return;
+    }
+    currentView = "home";
+  }
   renderHome();
 }
+
 function renderHome() {
-  if (view !== "home") return;
-  const p = T.plan, s = S || INIT_STREAK, st = k => stateOf(k), pct = Math.floor(QP.pagesRead / CFG.pages * 100), allDone = KINDS.every(k => st(k) === "completed");
-  const label = { available: "لم تبدأ بعد", inProgress: "قيد التنفيذ", completed: "✓ تم", locked: "مغلقة" };
+  if (currentView !== "home") return;
+
+  const plan = T.plan;
+  const streak = S || INITIAL_STREAK;
+  const percentRead = Math.floor((QP.pagesRead / CFG.totalPages) * 100);
+  const allDone = KINDS.every(k => stateOf(k) === "completed");
+  const stateLabel = { available: "لم تبدأ بعد", inProgress: "قيد التنفيذ", completed: "✓ تم", locked: "مغلقة" };
+
   document.body.classList.toggle("friday-mode", isFriday());
+
+  function actionButton(kind, onClick) {
+    const state = stateOf(kind);
+    const button = h("button", {
+      cls: "btn" + (state === "completed" ? " done-btn" : " ghost"),
+      on: { click: onClick }
+    }, state === "completed" ? "تم ✓" : state === "inProgress" ? "متابعة" : "ابدأ");
+    button.disabled = state === "locked";
+    return button;
+  }
+
+  function subtitleFor(kind) {
+    const state = stateOf(kind);
+    if (kind === "quran") {
+      return state === "completed" ? "✓ تم" : pagesLabel(plan.pages) + " · ص " + ar(plan.start) + " — ص " + ar(plan.end);
+    }
+    if (kind === "memorize") {
+      if (state === "completed") return "✓ تم حفظ سورة " + plan.surahName;
+      const progressSuffix = state === "inProgress" ? " — " + ar(T.tasks.memorize.recitedCount || 0) + "/" + ar(CFG.memorizeRepeats) : "";
+      return "سورة " + plan.surahName + progressSuffix;
+    }
+    if (state === "completed") return "✓ تم";
+    if (state === "inProgress") {
+      const { done, need } = adhkarProgress(kind);
+      return "قيد التنفيذ " + ar(done) + "/" + ar(need);
+    }
+    return stateLabel[state];
+  }
+
+  function taskRow(icon, title, kind, onClick) {
+    const state = stateOf(kind);
+    return h("div", { cls: "row" + (state === "completed" ? " done" : "") },
+      h("div", {}, h("b", {}, icon + " " + title), h("span", { cls: "mute" }, subtitleFor(kind))),
+      actionButton(kind, onClick)
+    );
+  }
+
+  const prayerBarSlot = h("div", { style: "width:100%" });
+
   const fridayItems = [
-    ["📖", "اقرأ سورة الكهف — «من قرأها يوم الجمعة أضاء له من النور ما بين الجمعتين»"], ["ﷺ", "أكثِر من الصلاة على النبي ﷺ — «فأكثروا عليّ من الصلاة فيه»"],
-    ["🕌", "تحرّى ساعة الإجابة — آخر ساعة قبل المغرب"], ["🛁", "اغتسل وتطيّب والبس أحسن ثيابك"], ["🤲", "بكّر إلى المسجد وأنصت للخطبة"], ["📿", "«سبحان الله وبحمده» مائة مرة — غُفرت ذنوبه"]];
-  const btn = (k, fn) => { const x = st(k), b = h("button", { cls: "btn" + (x === "completed" ? " done-btn" : " ghost"), on: { click: fn } }, x === "completed" ? "تم ✓" : x === "inProgress" ? "متابعة" : "ابدأ"); b.disabled = x === "locked"; return b; };
-  const sub = k => {
-    if (k === "quran") return st(k) === "completed" ? "✓ تم" : pagesTxt(p.pages) + " · ص " + ar(p.start) + " — ص " + ar(p.end);
-    if (k === "memorize") return st(k) === "completed" ? "✓ تم حفظ سورة " + p.surahName : "سورة " + p.surahName + (st(k) === "inProgress" ? " — " + ar(T.tasks.memorize.recitedCount || 0) + "/٣" : "");
-    const c = T.tasks[k].counts || {}, total = ADHKAR[k].reduce((a, x, i) => a + Math.min(c[i] || 0, x.times), 0), need = ADHKAR[k].reduce((a, x) => a + x.times, 0);
-    return st(k) === "completed" ? "✓ تم" : st(k) === "inProgress" ? "قيد التنفيذ " + ar(total) + "/" + ar(need) : label[st(k)];
-  };
-  const row = (icon, title, k, fn) => h("div", { cls: "row" + (st(k) === "completed" ? " done" : "") }, h("div", {}, h("b", {}, icon + " " + title), h("span", { cls: "mute" }, sub(k))), btn(k, fn));
-  const extras = h("div", { style: "width:100%" });
-  const fridayBanner = isFriday() ? h("div", { cls: "friday-banner" }, h("div", { cls: "fb-title" }, "﷽ يوم الجمعة"), ...fridayItems.map(([i, t]) => h("div", { cls: "fb-item" }, i + " " + t)),
-    h("div", { cls: "fb-hadith" }, "«إن من أفضل أيامكم يوم الجمعة، فأكثروا عليّ من الصلاة فيه»")) : null;
-  const ticksBox = h("div", { cls: "mute" }, ""), updCountdown = () => { ticksBox.textContent = "اليوم الجديد بعد: " + fmt(secToMidnight()); };
-  mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "أهلًا بك"), h("h1", {}, "وردك اليوم"), extras, fridayBanner,
-    h("div", { style: "width:100%" }, row("☀️", "أذكار الصباح", "morning", () => viewAdhkar("morning")), row("📖", "ورد القرآن", "quran", () => viewReader("task")), row("📚", "الحفظ", "memorize", () => viewMemorize()), row("🌙", "أذكار المساء", "evening", () => viewAdhkar("evening"))),
-    h("div", { cls: "prog" }, h("div", { cls: "bar0" }, h("i", { style: "width:" + pct + "%" })), h("div", { cls: "mute" }, "ختمة " + ar(QP.khatmah) + " · " + ar(QP.pagesRead) + " / " + ar(CFG.pages) + " · " + ar(pct) + "٪")),
+    ["📖", "اقرأ سورة الكهف — «من قرأها يوم الجمعة أضاء له من النور ما بين الجمعتين»"],
+    ["ﷺ", "أكثِر من الصلاة على النبي ﷺ — «فأكثروا عليّ من الصلاة فيه»"],
+    ["🕌", "تحرّى ساعة الإجابة — آخر ساعة قبل المغرب"],
+    ["🛁", "اغتسل وتطيّب والبس أحسن ثيابك"],
+    ["🤲", "بكّر إلى المسجد وأنصت للخطبة"],
+    ["📿", "«سبحان الله وبحمده» مائة مرة — غُفرت ذنوبه"]
+  ];
+  const fridayBannerEl = isFriday() ? h("div", { cls: "friday-banner" },
+    h("div", { cls: "fb-title" }, "﷽ يوم الجمعة"),
+    ...fridayItems.map(([icon, text]) => h("div", { cls: "fb-item" }, icon + " " + text)),
+    h("div", { cls: "fb-hadith" }, "«إن من أفضل أيامكم يوم الجمعة، فأكثروا عليّ من الصلاة فيه»")
+  ) : null;
+
+  const countdownEl = h("div", { cls: "mute" }, "");
+  const updateCountdown = () => { countdownEl.textContent = "اليوم الجديد بعد: " + formatClock(secondsToMidnight()); };
+
+  const nodes = [
+    h("div", { cls: "mute" }, "أهلًا " + USERS[UID]),
+    h("h1", {}, "وردك اليوم"),
+    prayerBarSlot,
+    fridayBannerEl,
+    h("div", { style: "width:100%" },
+      taskRow("☀️", "أذكار الصباح", "morning", () => viewAdhkar("morning")),
+      taskRow("📖", "ورد القرآن", "quran", () => viewReader("task")),
+      taskRow("📚", "الحفظ", "memorize", () => viewMemorize()),
+      taskRow("🌙", "أذكار المساء", "evening", () => viewAdhkar("evening"))
+    ),
+    h("div", { cls: "prog" },
+      h("div", { cls: "bar0" }, h("i", { style: "width:" + percentRead + "%" })),
+      h("div", { cls: "mute" }, "ختمة " + ar(QP.khatmah) + " · " + ar(QP.pagesRead) + " / " + ar(CFG.totalPages) + " · " + ar(percentRead) + "٪")
+    ),
     h("div", { cls: "mute" }, "حفظت " + ar((MEM && MEM.count) || 0) + " سورة حتى الآن"),
     h("button", { cls: "link", on: { click: () => viewReader("free") } }, "قراءة حرة"),
-    h("div", { style: "font-size:1.1rem", "aria-label": "الستريك المشترك" }, h("span", { cls: "fl" + (s.status === "red" ? " red" : "") }, "🔥"), " " + ar(s.count)),
-    allDone ? h("div", { cls: "day-complete" }, "✓ تم ورد اليوم بحمد الله") : null, allDone ? ticksBox : null,
-    h("button", { cls: "link", on: { click: switchAccount } }, "تبديل الحساب"),
-    h("button", { cls: "link", on: { click: resetMyData } }, "بدء من جديد")));
-  if (allDone) { ticks.push(updCountdown); updCountdown(); }          // after mount(), which clears ticks
-  getPrayerTimes(dateKey()).then(times => { const np = nextPrayer(times); if (np && view === "home") put(extras, h("div", { cls: "prayer-bar" }, h("span", {}, "🕌 " + np.name + (np.tomorrow ? " (غدًا)" : "")), h("b", {}, fmtMin(np.remaining)))); });
+    h("div", { style: "font-size:1.1rem", "aria-label": "الستريك المشترك" },
+      h("span", { cls: "fl" + (streak.status === "red" ? " red" : "") }, "🔥"), " " + ar(streak.count)
+    ),
+    allDone ? h("div", { cls: "day-complete" }, "✓ تم ورد اليوم بحمد الله") : null,
+    allDone ? countdownEl : null
+  ];
+
+  if (UID === RESET_ALLOWED_UID) {
+    nodes.push(h("button", { cls: "btn danger", on: { click: resetEverything } }, "إعادة ضبط كل البيانات"));
+  }
+
+  mount(h("div", { cls: "screen" }, ...nodes));
+
+  if (allDone) { activeTicks.push(updateCountdown); updateCountdown(); }
+
+  getPrayerTimes(dateKey()).then(times => {
+    if (currentView !== "home") return; // المستخدم غادر الشاشة قبل وصول الرد
+    const updatePrayerBar = () => {
+      const next = nextPrayer(times);
+      if (next) {
+        put(prayerBarSlot, h("div", { cls: "prayer-bar" },
+          h("span", {}, "🕌 " + next.name + (next.tomorrow ? " (غدًا)" : "")),
+          h("b", {}, formatClock(next.remaining))
+        ));
+      }
+    };
+    activeTicks.push(updatePrayerBar);
+    updatePrayerBar();
+  });
 }
 
-// ===== START =====
+/* ======================================================================
+   AUTH
+   (لا يوجد Logout ولا Switch Account في أي مكان بعد أول اختيار للحساب.
+    الـ Picker يظهر فقط إذا لم يوجد UID محفوظ في localStorage.)
+   ====================================================================== */
+function viewPicker() {
+  currentView = "picker";
+  mount(h("div", { cls: "screen" },
+    h("h1", {}, "وردي"),
+    h("div", { cls: "mute" }, "اختر حسابك"),
+    h("div", { cls: "pick" },
+      h("button", { cls: "btn btn-omar", on: { click: () => beginLogin("user_omar") } }, "عمر"),
+      h("button", { cls: "btn btn-maryam", on: { click: () => beginLogin("user_maryam") } }, "مريم")
+    )
+  ));
+}
+
+function beginLogin(candidateUid) {
+  const passwordInput = h("input", { type: "password", placeholder: "كلمة المرور", autocomplete: "current-password" });
+  const errorEl = h("div", { cls: "err" });
+  const attempt = () => {
+    if (passwordInput.value.trim() === PASSWORDS[candidateUid]) {
+      UID = candidateUid;
+      localStore.set("uid", UID);
+      start();
+    } else {
+      errorEl.textContent = "كلمة المرور غير صحيحة";
+    }
+  };
+  passwordInput.addEventListener("keydown", e => { if (e.key === "Enter") attempt(); });
+  mount(h("div", { cls: "screen" },
+    h("h1", {}, "وردي"),
+    h("div", { cls: "mute" }, USERS[candidateUid]),
+    passwordInput,
+    errorEl,
+    h("button", { cls: "btn big", on: { click: attempt } }, "دخول"),
+    h("button", { cls: "link", on: { click: viewPicker } }, "رجوع")
+  ));
+}
+
+/* ======================================================================
+   BOOT / LOADING / ERROR VIEWS
+   ====================================================================== */
+function loadingView() {
+  mount(h("div", { cls: "screen" }, h("div", { cls: "mute" }, "جارٍ التحميل…")));
+}
+
+function errorView(onRetry) {
+  mount(h("div", { cls: "screen" },
+    h("div", { cls: "mute" }, CONNECT_ERROR_MSG),
+    h("button", { cls: "btn", on: { click: onRetry } }, "إعادة المحاولة")
+  ));
+}
+
 async function start() {
-  applySettings(); loadingView(); document.body.classList.toggle("friday-mode", isFriday());
+  applySettings();
+  loadingView();
+  document.body.classList.toggle("friday-mode", isFriday());
   try {
-    await waitOffset(); await load(); await evaluate();
-    const open = sessionStorage.getItem("open");     // a refresh returns to the same task / page
-    if (open === "quran" || open === "free") viewReader(open === "quran" ? "task" : "free");
-    else if (open === "memorize") viewMemorize();
-    else if (open === "morning" || open === "evening") viewAdhkar(open);
-    else viewHome();
-  } catch (e) { console.error(e); errorView(e && e.message); }
+    await withTimeout(waitForServerOffset(), CFG.bootTimeoutMs, "offset");
+    await withTimeout(loadAccountData(), CFG.bootTimeoutMs, "load");
+    await withTimeout(evaluateStreak(), CFG.bootTimeoutMs, "evaluate");
+    const openView = sessionStorage.getItem("openView"); // الرجوع لنفس الشاشة بعد Refresh
+    if (openView === "quran" || openView === "free") {
+      viewReader(openView === "quran" ? "task" : "free");
+    } else if (openView === "memorize") {
+      viewMemorize();
+    } else if (openView === "morning" || openView === "evening") {
+      viewAdhkar(openView);
+    } else {
+      viewHome();
+    }
+  } catch (err) {
+    console.error("start() failed", err);
+    errorView(() => start());
+  }
 }
-const savedUid = local.get("uid", null);
-if (savedUid && USERS[savedUid]) { UID = savedUid; start(); } else viewPicker();
 
+const savedUid = localStore.get("uid", null);
+if (savedUid && USERS[savedUid]) {
+  UID = savedUid;
+  start();
+} else {
+  viewPicker();
+}
+
+// إعادة تقييم دورية (كل ٣٠ ثانية) لضمان تحديث الستريك واليوم دون الحاجة لإعادة فتح الصفحة يدويًا.
 setInterval(async () => {
   if (!UID || !T) return;
-  try { if (T.date !== dateKey()) { await evaluate(); if (view === "home") viewHome(); } else if (view === "home") await evaluate(); } catch (e) {}
+  try {
+    if (T.date !== dateKey()) {
+      await evaluateStreak();
+      if (currentView === "home") viewHome();
+    } else if (currentView === "home") {
+      await evaluateStreak();
+    }
+  } catch (err) {
+    console.error("periodic refresh failed", err);
+  }
 }, 30000);
-document.addEventListener("visibilitychange", () => { if (document.hidden) flushBookmark(); });
-window.addEventListener("pagehide", flushBookmark);
+
+// عند إخفاء الصفحة أو إغلاقها: احفظ العلامة المرجعية، وأوقف أي تسجيل صوتي جارٍ بأمان (لا يبقى الميكروفون مفتوحًا).
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    flushBookmark();
+    if (activeRecorderTeardown) activeRecorderTeardown();
+  }
+});
+window.addEventListener("pagehide", () => {
+  flushBookmark();
+  if (activeRecorderTeardown) activeRecorderTeardown();
+});
 </script>
 </body>
 </html>
