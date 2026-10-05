@@ -120,112 +120,39 @@
   .fl.red { filter: drop-shadow(0 0 4px rgba(214,90,60,.55)); }
   .qf { font-family: "Amiri Quran", "Scheherazade New", "Traditional Arabic", serif; }
 
-  /* ===== Adhkar cards ===== */
   .dk-list { width: 100%; display: flex; flex-direction: column; gap: .1rem; }
-  .dk-card {
-    width: 100%;
-    text-align: right;
-    padding: .9rem 0;
-    border-bottom: 1px solid var(--line);
-  }
+  .dk-card { width: 100%; text-align: right; padding: .9rem 0; border-bottom: 1px solid var(--line); }
   .dk-card.complete { opacity: .6; }
   .dk-card .dk-title { font-size: .85rem; color: var(--acc); margin-bottom: .35rem; font-weight: 600; }
   .dk-card .dk-text { font-family: "Amiri Quran", serif; font-size: 1.3rem; line-height: 2.2; text-align: justify; text-align-last: center; }
   .dk-card .dk-src { color: var(--mute); font-size: .78rem; margin-top: .4rem; }
-  .dk-card .dk-foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .8rem;
-    margin-top: .6rem;
-  }
+  .dk-card .dk-foot { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-top: .6rem; }
   .dk-count { font-size: 1rem; font-weight: 600; color: var(--acc); min-width: 4.5rem; text-align: center; }
-  .dk-plus {
-    width: 2.8rem;
-    height: 2.8rem;
-    border-radius: 50%;
-    border: 0;
-    background: var(--acc);
-    color: var(--bg);
-    font-size: 1.3rem;
-    cursor: pointer;
-  }
+  .dk-plus { width: 2.8rem; height: 2.8rem; border-radius: 50%; border: 0; background: var(--acc); color: var(--bg); font-size: 1.3rem; cursor: pointer; }
   .dk-plus:disabled { background: var(--line); color: var(--mute); }
   .dk-check { font-size: 1.3rem; color: var(--acc); }
 
-  /* ===== Memorization ===== */
   .mem { width: 100%; text-align: center; padding: 1rem 0; }
   .mem .sn2 { font-family: "Amiri Quran", serif; font-size: 1.6rem; color: var(--acc); margin-bottom: .5rem; }
-  .mem .ays {
-    font-family: "Amiri Quran", serif;
-    font-size: 1.2rem;
-    line-height: 2.4;
-    max-height: 40vh;
-    overflow-y: auto;
-    padding: .7rem;
-    border: 1px solid var(--line);
-    border-radius: .6rem;
-    text-align: justify;
-    text-align-last: center;
-  }
+  .mem .ays { font-family: "Amiri Quran", serif; font-size: 1.2rem; line-height: 2.4; max-height: 40vh; overflow-y: auto; padding: .7rem; border: 1px solid var(--line); border-radius: .6rem; text-align: justify; text-align-last: center; }
 
-  /* ===== Recorder card (spec §31) ===== */
-  .rec-card {
-    width: 100%;
-    border: 1px dashed var(--line);
-    border-radius: .8rem;
-    padding: 1.1rem 1rem;
-    margin: .9rem 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: .7rem;
-  }
+  .rec-card { width: 100%; border: 1px dashed var(--line); border-radius: .8rem; padding: 1.1rem 1rem; margin: .9rem 0; display: flex; flex-direction: column; align-items: center; gap: .7rem; }
   .rec-title { font-weight: 600; font-size: .98rem; }
   .rec-time { font-size: 1.6rem; font-weight: 700; color: var(--acc); font-variant-numeric: tabular-nums; }
   .rec-msg { color: var(--mute); font-size: .85rem; text-align: center; }
-  .rec-btn {
-    min-width: 8rem;
-    min-height: 2.9rem;
-    border-radius: .7rem;
-    border: 0;
-    background: var(--acc);
-    color: var(--bg);
-    font: inherit;
-    font-size: 1rem;
-    cursor: pointer;
-    padding: .6rem 1.2rem;
-  }
+  .rec-btn { min-width: 8rem; min-height: 2.9rem; border-radius: .7rem; border: 0; background: var(--acc); color: var(--bg); font: inherit; font-size: 1rem; cursor: pointer; padding: .6rem 1.2rem; }
   .rec-btn.recording { background: var(--danger); animation: pulse 1.2s infinite; }
   .rec-actions { display: flex; gap: .6rem; width: 100%; justify-content: center; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
 
   .nav { display: flex; gap: .6rem; width: 100%; justify-content: space-between; }
   #rd { position: relative; display: flex; flex-direction: column; height: 100%; }
-  .bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: .3rem .5rem;
-    background: var(--bg);
-    color: var(--mute);
-    z-index: 2;
-    transition: opacity .2s;
-  }
+  .bar { display: flex; align-items: center; justify-content: space-between; padding: .3rem .5rem; background: var(--bg); color: var(--mute); z-index: 2; transition: opacity .2s; }
   .rm .bar { position: absolute; left: 0; right: 0; opacity: 0; pointer-events: none; }
   .rm .top { top: 0; }
   .rm .bot { bottom: 0; }
   .rm.show .bar { opacity: 1; pointer-events: auto; }
-  .tb {
-    font: inherit;
-    font-size: .92rem;
-    min-height: 2.75rem;
-    background: none;
-    border: 0;
-    color: var(--mute);
-    padding: .4rem .5rem;
-    cursor: pointer;
-  }
+  .tb { font: inherit; font-size: .92rem; min-height: 2.75rem; background: none; border: 0; color: var(--mute); padding: .4rem .5rem; cursor: pointer; }
   .top { border-bottom: 1px solid var(--line); }
   .bot { border-top: 1px solid var(--line); }
   #pg { flex: 1; overflow-y: auto; padding: .8rem 1.3rem 3rem; }
@@ -234,116 +161,38 @@
   .rm .mushaf { font-size: calc((var(--fs) + .25)*1rem); }
   .ay { margin: 0; text-align: justify; text-align-last: center; }
   .juz { text-align: center; color: var(--mute); font-size: .7em; line-height: 2; }
-  .sn {
-    text-align: center;
-    color: var(--acc);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    margin: 1rem 0 .5rem;
-    font-size: 1.05em;
-    line-height: 2.2;
-  }
+  .sn { text-align: center; color: var(--acc); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin: 1rem 0 .5rem; font-size: 1.05em; line-height: 2.2; }
   .rm .sn { color: var(--mute); border-color: transparent; }
   .bsm { text-align: center; }
   .msg { text-align: center; color: var(--mute); margin-top: 28vh; }
   .endp { text-align: center; margin: 1.5rem 0; font-family: Tajawal, sans-serif; font-size: 1rem; line-height: 1.9; }
-  .jump {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    background: var(--bg);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: .9rem;
-    padding: 2rem;
-  }
+  .jump { position: absolute; inset: 0; z-index: 5; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .9rem; padding: 2rem; }
   .jump input { max-width: 16rem; }
 
-  .prayer-bar {
-    width: 100%;
-    padding: .6rem .8rem;
-    background: var(--line);
-    border-radius: .6rem;
-    font-size: .9rem;
-    color: var(--fg);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background .4s;
-  }
+  .prayer-bar { width: 100%; padding: .6rem .8rem; background: var(--line); border-radius: .6rem; font-size: .9rem; color: var(--fg); display: flex; justify-content: space-between; align-items: center; transition: background .4s; }
   body.friday-mode .prayer-bar { background: rgba(201,169,97,.18); }
   .prayer-bar b { color: var(--acc); }
   .pick { width: 100%; padding: 1.5rem 0; text-align: center; display: flex; flex-direction: column; gap: .9rem; }
   .day-complete { width: 100%; text-align: center; padding: .5rem 0; color: var(--done); font-size: .88rem; font-weight: 500; }
-  .friday-banner {
-    width: 100%;
-    background: linear-gradient(135deg, rgba(201,169,97,.15), rgba(201,169,97,.05));
-    border: 1px solid rgba(201,169,97,.4);
-    border-radius: .8rem;
-    padding: .9rem 1rem;
-    margin: .3rem 0;
-    text-align: right;
-  }
+  .friday-banner { width: 100%; background: linear-gradient(135deg, rgba(201,169,97,.15), rgba(201,169,97,.05)); border: 1px solid rgba(201,169,97,.4); border-radius: .8rem; padding: .9rem 1rem; margin: .3rem 0; text-align: right; }
   .friday-banner .fb-title { color: var(--friday); font-weight: 700; font-size: .95rem; margin-bottom: .5rem; text-align: center; font-family: "Amiri Quran", serif; }
   .friday-banner .fb-item { font-size: .85rem; line-height: 1.8; color: var(--fg); padding: .3rem 0; }
-  .friday-banner .fb-hadith {
-    font-family: "Amiri Quran", serif;
-    font-size: .95rem;
-    line-height: 2;
-    text-align: justify;
-    text-align-last: center;
-    color: var(--mute);
-    border-top: 1px dashed rgba(201,169,97,.3);
-    padding-top: .6rem;
-    margin-top: .5rem;
-  }
+  .friday-banner .fb-hadith { font-family: "Amiri Quran", serif; font-size: .95rem; line-height: 2; text-align: justify; text-align-last: center; color: var(--mute); border-top: 1px dashed rgba(201,169,97,.3); padding-top: .6rem; margin-top: .5rem; }
 
-  /* ===== Header + hamburger + side drawer (RTL: يفتح من اليمين) ===== */
   .home-head { width: 100%; display: flex; align-items: flex-start; justify-content: space-between; }
-  .hamburger-btn {
-    font-size: 1.4rem;
-    line-height: 1;
-    background: none;
-    border: 1px solid var(--line);
-    border-radius: .6rem;
-    color: var(--fg);
-    width: 2.75rem;
-    height: 2.75rem;
-    cursor: pointer;
-  }
-  .drawer-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 20;
-    opacity: 0; pointer-events: none; transition: opacity .25s;
-  }
+  .hamburger-btn { font-size: 1.4rem; line-height: 1; background: none; border: 1px solid var(--line); border-radius: .6rem; color: var(--fg); width: 2.75rem; height: 2.75rem; cursor: pointer; }
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 20; opacity: 0; pointer-events: none; transition: opacity .25s; }
   .drawer-overlay.open { opacity: 1; pointer-events: auto; }
-  .drawer-panel {
-    position: fixed; top: 0; bottom: 0; right: 0; width: 80%; max-width: 20rem;
-    background: var(--bg); border-left: 1px solid var(--line); z-index: 21;
-    transform: translateX(100%); transition: transform .25s;
-    padding: calc(1.5rem + env(safe-area-inset-top)) 1.2rem 1.5rem;
-    display: flex; flex-direction: column; gap: .3rem; overflow-y: auto;
-  }
+  .drawer-panel { position: fixed; top: 0; bottom: 0; right: 0; width: 80%; max-width: 20rem; background: var(--bg); border-left: 1px solid var(--line); z-index: 21; transform: translateX(100%); transition: transform .25s; padding: calc(1.5rem + env(safe-area-inset-top)) 1.2rem 1.5rem; display: flex; flex-direction: column; gap: .3rem; overflow-y: auto; }
   .drawer-panel.open { transform: translateX(0); }
   .drawer-title { font-weight: 700; font-size: 1.1rem; margin-bottom: .6rem; }
-  .drawer-item {
-    display: flex; align-items: center; gap: .7rem; width: 100%; text-align: right;
-    font: inherit; font-size: 1.02rem; background: none; border: 0; border-bottom: 1px solid var(--line);
-    color: var(--fg); padding: .9rem .2rem; cursor: pointer; min-height: 2.75rem;
-  }
+  .drawer-item { display: flex; align-items: center; gap: .7rem; width: 100%; text-align: right; font: inherit; font-size: 1.02rem; background: none; border: 0; border-bottom: 1px solid var(--line); color: var(--fg); padding: .9rem .2rem; cursor: pointer; min-height: 2.75rem; }
 
-  /* ===== بطاقة "دعاء اليوم" ===== */
-  .dua-card {
-    width: 100%; border-radius: .9rem; border: 1px solid var(--line);
-    background: color-mix(in srgb, var(--acc) 6%, transparent);
-    padding: 1rem 1.1rem; text-align: center; display: flex; flex-direction: column; gap: .4rem;
-  }
+  .dua-card { width: 100%; border-radius: .9rem; border: 1px solid var(--line); background: color-mix(in srgb, var(--acc) 6%, transparent); padding: 1rem 1.1rem; text-align: center; display: flex; flex-direction: column; gap: .4rem; }
   .dua-title { font-size: .85rem; color: var(--acc); font-weight: 600; }
   .dua-text { font-family: "Amiri Quran", serif; font-size: 1.25rem; line-height: 2; transition: opacity .3s ease; min-height: 2.6em; }
   .dua-text.fade-out { opacity: 0; }
 
-  /* ===== شاشات مرجعية بسيطة (الصلاة، أذكار النوم، أدعية القرآن) ===== */
   .ref-list { width: 100%; display: flex; flex-direction: column; }
   .ref-item { width: 100%; padding: .9rem 0; border-bottom: 1px solid var(--line); text-align: right; }
   .ref-item .ri-text { font-family: "Amiri Quran", serif; font-size: 1.2rem; line-height: 2.1; }
@@ -354,12 +203,36 @@
   .qibla-arrow { position: absolute; left: 50%; top: 50%; width: 2px; height: 42%; background: var(--acc); transform-origin: bottom center; }
   .qibla-arrow::before { content: "🕋"; position: absolute; top: -1.1rem; left: 50%; transform: translateX(-50%); font-size: 1.3rem; }
 
-  /* ===== نوافذ التوعية الأولى بعد المصادقة ===== */
   .onboarding-body { white-space: pre-line; line-height: 2; text-align: center; color: var(--fg); font-size: 1.02rem; }
 </style>
 </head>
 <body>
 <div id="app"></div>
+
+<!-- ===== تشخيص مؤقت: يعرض أي خطأ فعلي على الشاشة نفسها، بدون الحاجة لأدوات المطور ===== -->
+<div id="diag" style="display:none;position:fixed;inset:0;background:#fff;color:#900;z-index:99999;padding:1rem;font:13px/1.6 monospace;direction:ltr;text-align:left;overflow:auto;white-space:pre-wrap"></div>
+<script>
+(function () {
+  var box = document.getElementById("diag");
+  function show(title, detail) {
+    box.style.display = "block";
+    box.textContent += "=== " + title + " ===\n" + detail + "\n\n";
+  }
+  window.addEventListener("error", function (e) {
+    show("JS Error", (e.message || "") + "\n" + (e.filename || "") + ":" + (e.lineno || "") + ":" + (e.colno || "") + "\n" + (e.error && e.error.stack || ""));
+  });
+  window.addEventListener("unhandledrejection", function (e) {
+    var r = e.reason;
+    show("Unhandled Promise Rejection", (r && (r.stack || r.message)) || String(r));
+  });
+  setTimeout(function () {
+    if (document.getElementById("app").children.length === 0 && box.textContent === "") {
+      show("No error captured, but #app is still empty after 4s", "Possible cause: the module script tag itself never ran (e.g. opened via file:// or an in-app browser that blocks ES modules). Try opening this exact page in Chrome or Safari directly from the home screen.");
+    }
+  }, 4000);
+})();
+</script>
+<!-- ===== نهاية كود التشخيص المؤقت ===== -->
 
 <!-- بيانات السور القصيرة لمهمة الحفظ. سكريبت عادي (وليس module) حتى يصبح SHORT_SURAHS متاحًا في الوحدة أدناه. -->
 <script src="./surahs.js"></script>
@@ -397,23 +270,21 @@ const firebaseConfig = {
 const CFG = {
   tz: "Africa/Cairo",
   totalPages: 604,
-  quranPagePlan: [4, 6, 8, 10, 12],      // الأهداف اليومية المسموحة لصفحات القرآن (Deterministic، تدور حسب رقم اليوم)
-  memorizeRepeats: 3,                    // عدد مرات "تم" المطلوبة لإكمال مهمة الحفظ
-  rescuesTotal: 3,                       // عدد محاولات الاسترجاع المتاحة قبل تصفير الـ streak
+  quranPagePlan: [4, 6, 8, 10, 12],
+  memorizeRepeats: 3,
+  rescuesTotal: 3,
   quranApiBase: "https://api.alquran.cloud/v1/",
-  editionPrimary: "quran-uthmani-quran-academy",   // edition رسمي من Al Quran Cloud لعرض صفحات المصحف
-  editionFallback: "quran-uthmani",                 // احتياطي فقط إذا فشل الأول تمامًا، لتفادي "جارٍ التحميل" الدائم
-  pageCacheLimit: 20,                    // أقصى عدد صفحات محفوظة في ذاكرة المتصفح (Map، وليس localStorage)
+  editionPrimary: "quran-uthmani-quran-academy",
+  editionFallback: "quran-uthmani",
+  pageCacheLimit: 20,
   fetchTimeoutMs: 12000,
-  fetchRetriesPerEdition: 1,             // محاولة إضافية واحدة لكل edition قبل الانتقال للتالي
-  bootTimeoutMs: 15000,                  // حد أقصى لأي شاشة "جارٍ التحميل" عند بدء التشغيل
-
-  // ===== نظام المصادقة المفتوح (Pairing) =====
+  fetchRetriesPerEdition: 1,
+  bootTimeoutMs: 15000,
   displayNameMax: 30,
-  pairingAlphabet: "23456789ABCDEFGHJKMNPQRSTUVWXYZ", // بدون 0/O/1/I/L تفاديًا للالتباس عند النسخ يدويًا
+  pairingAlphabet: "23456789ABCDEFGHJKMNPQRSTUVWXYZ",
   pairingGroupLen: 4,
-  pairingGroups: 2,                      // الشكل النهائي: XXXX-XXXX
-  pairingClaimTtlMs: 20000               // مدة صلاحية "حجز" مؤقت أثناء إنشاء مصادقة قبل اعتباره متروكًا ويمكن الاستيلاء عليه
+  pairingGroups: 2,
+  pairingClaimTtlMs: 20000
 };
 
 const KINDS = ["morning", "quran", "memorize", "evening"];
@@ -426,7 +297,6 @@ const db = getDatabase(firebaseApp);
 
 /* ======================================================================
    DATE / TIME
-   (ساعة خادم Firebase + توقيت القاهرة؛ لا تُستخدم ساعة الجهاز أبدًا لتحديد اليوم)
    ====================================================================== */
 let serverOffsetMs = 0;
 onValue(ref(db, ".info/serverTimeOffset"), snap => {
@@ -437,8 +307,14 @@ function serverNow() {
   return Date.now() + serverOffsetMs;
 }
 
+let cachedDateKeyValue = null;
+let cachedDateKeyAtMs = 0;
 function dateKey() {
-  return new Intl.DateTimeFormat("en-CA", { timeZone: CFG.tz }).format(new Date(serverNow()));
+  const now = serverNow();
+  if (cachedDateKeyValue && now - cachedDateKeyAtMs < 1000) return cachedDateKeyValue;
+  cachedDateKeyAtMs = now;
+  cachedDateKeyValue = new Intl.DateTimeFormat("en-CA", { timeZone: CFG.tz }).format(new Date(now));
+  return cachedDateKeyValue;
 }
 
 function addDays(dateStr, n) {
@@ -448,7 +324,6 @@ function addDays(dateStr, n) {
 }
 
 function dayIndexOf(dateStr) {
-  // رقم يوم ثابت منذ ١٩٧٠-٠١-٠١ UTC، يُستخدم فقط لاختيار الهدف اليومي (deterministic)، وليس عدّاد "اليوم الأول/الثاني".
   return Math.floor(new Date(dateStr + "T00:00:00Z").getTime() / 86400000);
 }
 
@@ -472,7 +347,7 @@ function cairoClockParts() {
   const parts = new Intl.DateTimeFormat("en-GB", {
     timeZone: CFG.tz, hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
   }).format(new Date(serverNow())).split(":").map(Number);
-  return parts; // [hh, mm, ss]
+  return parts;
 }
 
 function cairoMinutesOfDay() {
@@ -489,7 +364,6 @@ function secondsToMidnight() {
   return Math.max(0, 86400 - (hh * 3600 + mm * 60 + ss));
 }
 
-// يمنع أي شاشة "جارٍ التحميل" من الاستمرار للأبد: يرفض الـ Promise بعد مهلة محددة إن لم يكتمل.
 function withTimeout(promise, ms, label) {
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => reject(new Error("timeout:" + (label || ""))), ms);
@@ -502,7 +376,6 @@ function withTimeout(promise, ms, label) {
 
 /* ======================================================================
    SETTINGS
-   (تفضيلات الواجهة فقط: حجم الخط، الوضع الليلي، وضع القراءة — محلية بالكامل)
    ====================================================================== */
 const localStore = {
   get(key, fallback) {
@@ -512,7 +385,7 @@ const localStore = {
     } catch (e) { return fallback; }
   },
   set(key, value) {
-    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* التخزين قد يكون ممتلئًا أو معطلاً؛ ليس خطأً فادحًا */ }
+    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) {}
   },
   remove(key) {
     try { localStorage.removeItem(key); } catch (e) {}
@@ -541,7 +414,6 @@ function pagesLabel(n) {
   if (n === 2) return "صفحتان";
   return ar(n) + " صفحات";
 }
-// كل وقت يظهر في الواجهة (عدّاد اليوم الجديد، تسجيل الصوت، الوقت المتبقي للصلاة) يُعرض بنفس الشكل: ساعات:دقائق:ثوانٍ.
 function formatClock(totalSeconds) {
   totalSeconds = Math.max(0, Math.floor(totalSeconds));
   const hh = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
@@ -569,16 +441,15 @@ function h(tag, attrs, ...children) {
   return el;
 }
 
-// يستبدل أبناء عنصر موجود، ويتجاهل null/false بدل إدراجها كنص "null".
 function put(el, ...children) {
   el.replaceChildren(...children.flat().filter(c => c != null && c !== false));
 }
 
-let activeTicks = [];        // دوال تُستدعى كل ثانية لتحديث عناصر حيّة على الشاشة الحالية (عداد وقت، إلخ)
-let duaRotatorInterval = null; // المؤقت الوحيد المسؤول عن تبديل "دعاء اليوم" كل ٣ ثوانٍ؛ يُنظَّف دائمًا داخل mount()
-let homeDuaIndex = 0;          // فهرس تسلسلي ١←٣٠←١ (بدون Math.random إطلاقًا)، يُعاد من الصفر كل مرة تُفتح الرئيسية
+let activeTicks = [];
+let duaRotatorInterval = null;
+let homeDuaIndex = 0;
 let currentView = "";
-let uiBusy = false;          // يمنع الضغط المزدوج أثناء عملية كتابة جارية إلى Firebase
+let uiBusy = false;
 
 function mount(node) {
   activeTicks = [];
@@ -601,12 +472,6 @@ setInterval(() => activeTicks.forEach(fn => fn()), 1000);
 
 /* ======================================================================
    STATE
-   UID          — معرف الحساب الحالي (مفتاح فريد يُولَّد عند إنشاء الحساب، وليس اسمًا ثابتًا)
-   ACCOUNT      — سجل الحساب نفسه: { displayName, pairingId, pairId } من users/UID
-   QP           — تقدم القرآن لهذا الحساب (quranProgress/UID)، مستقل تمامًا عن حالة المصادقة
-   T            — حالة اليوم الحالي (dailyTasks/UID/date)، مستقلة أيضًا عن المصادقة
-   S            — حالة الـ Shared Streak (streak/{pairId})، تبقى null حتى تتم المصادقة
-   MEM          — حالة الحفظ لهذا الحساب (memorize/UID)
    ====================================================================== */
 let UID = null;
 let ACCOUNT = null;
@@ -614,7 +479,7 @@ let QP = null;
 let T = null;
 let S = null;
 let MEM = null;
-let streakListenerBoundFor = null; // الـ pairId المربوط به مستمع الستريك حاليًا (لمنع ربط نفس المسار مرتين)
+let streakListenerBoundFor = null;
 
 const INITIAL_STREAK = {
   count: 0,
@@ -624,7 +489,6 @@ const INITIAL_STREAK = {
   lastEvaluated: null
 };
 
-// يترجم أخطاء Firebase الخام (أو أي استثناء غير متوقع) إلى رسالة عربية مفهومة؛ لا تُعرض تفاصيل تقنية أبدًا للمستخدم.
 function friendlyError(err) {
   const raw = String((err && err.message) || err || "");
   if (/timeout/i.test(raw)) return CONNECT_ERROR_MSG;
@@ -636,16 +500,10 @@ function friendlyError(err) {
 
 /* ======================================================================
    QURAN API
-   (تُستخدم فقط لعرض صفحات المصحف في القارئ. مهمة الحفظ تستخدم surahs.js المحلي بالكامل.)
    ====================================================================== */
-
-// يحذف تشكيل الآية (حركات/تنوين/شدة/سكون) فقط لغرض المقارنة الحرفية، دون التأثير على النص المعروض فعليًا.
 const ARABIC_DIACRITICS_RE = /[\u064B-\u065F\u0670\u06D6-\u06ED\u08F0-\u08FF]/;
 const BARE_BASMALA = "بسم الله الرحمن الرحيم".replace(/\s+/g, "");
 
-// يحذف البسملة من بداية نص الآية الأولى في السورة (إن وُجدت) بالاعتماد على تطابق الحروف الفعلية حرفًا حرفًا،
-// وليس على عدّ الكلمات — تفاديًا لأي حذف خاطئ من نص الآية نفسها.
-// يُعيد null إن لم يبدأ النص بالبسملة أصلًا (فتُعرض الآية كما هي، مع سطر البسملة المنفصل الثابت فوقها).
 function stripLeadingBasmala(ayahText) {
   let bareIdx = 0;
   let i = 0;
@@ -709,7 +567,6 @@ async function fetchMushafPage(pageNumber) {
 
 /* ======================================================================
    QURAN CACHE
-   (Map محدود بآخر CFG.pageCacheLimit صفحة — وليس localStorage — لمنع تضخم التخزين)
    ====================================================================== */
 const quranPageCache = new Map();
 
@@ -718,7 +575,7 @@ function cacheGetPage(pageNumber) {
   if (!quranPageCache.has(key)) return null;
   const value = quranPageCache.get(key);
   quranPageCache.delete(key);
-  quranPageCache.set(key, value); // إعادة الإدخال في النهاية = "استُخدم مؤخرًا" لسياسة LRU بسيطة
+  quranPageCache.set(key, value);
   return value;
 }
 function cacheSetPage(pageNumber, ayahs) {
@@ -742,7 +599,6 @@ async function getMushafPage(pageNumber) {
 
 /* ======================================================================
    ADHKAR DATA
-   (نصوص ثابتة محليًا من "حصن المسلم" وأحاديث صحيحة مشهورة — لا اختراع ولا API)
    ====================================================================== */
 const AYAT_AL_KURSI =
   "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ " +
@@ -916,7 +772,6 @@ const EVENING_ADHKAR = [
 
 const ADHKAR_BY_KIND = { morning: MORNING_ADHKAR, evening: EVENING_ADHKAR };
 
-// ===== أذكار النوم (شاشة مرجعية من القائمة الجانبية — ليست مهمة يومية ولا تؤثر على الستريك) =====
 const SURAH_BAQARAH_LAST_TWO =
   "آمَنَ الرَّسُولُ بِمَا أُنزِلَ إِلَيْهِ مِن رَّبِّهِ وَالْمُؤْمِنُونَ ۚ كُلٌّ آمَنَ بِاللَّهِ وَمَلَائِكَتِهِ وَكُتُبِهِ وَرُسُلِهِ لَا نُفَرِّقُ بَيْنَ أَحَدٍ مِّن رُّسُلِهِ ۚ " +
   "وَقَالُوا سَمِعْنَا وَأَطَعْنَا ۖ غُفْرَانَكَ رَبَّنَا وَإِلَيْكَ الْمَصِيرُ ﴿٢٨٥﴾ لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا ۚ لَهَا مَا كَسَبَتْ وَعَلَيْهَا مَا اكْتَسَبَتْ ۗ " +
@@ -952,7 +807,6 @@ const SLEEP_ADHKAR = [
   }
 ];
 
-// ===== أدعية القرآن (شاشة مرجعية — قائمة أدعية وردت نصًا في القرآن الكريم) =====
 const QURANIC_DUAS = [
   { text: "رَبِّ زِدْنِي عِلْمًا", source: "طه ١١٤" },
   { text: "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", source: "البقرة ٢٠١" },
@@ -972,7 +826,6 @@ const QURANIC_DUAS = [
   { text: "رَبِّ لَا تَذَرْنِي فَرْدًا وَأَنتَ خَيْرُ الْوَارِثِينَ", source: "الأنبياء ٨٩" }
 ];
 
-// ===== الثلاثون دعاءً المتناوبة في بطاقة "دعاء اليوم" بالصفحة الرئيسية (مزيج من القرآن وأحاديث صحيحة ثابتة) =====
 const DAILY_DUAS = [
   "رَبِّ زِدْنِي عِلْمًا",
   "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
@@ -1006,7 +859,6 @@ const DAILY_DUAS = [
   "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا"
 ];
 
-// ===== نوافذ التوعية الثلاث — تظهر مرة واحدة فقط بعد أول مصادقة ناجحة لكل حساب =====
 const ONBOARDING_SCREENS = [
   {
     title: "الربط مش وسيلة للتواصل",
@@ -1027,7 +879,6 @@ const ONBOARDING_SCREENS = [
 
 /* ======================================================================
    DAILY TASKS
-   (اختيار الهدف اليومي deterministic بالكامل: يعتمد على رقم اليوم + تقدّم المستخدم، وليس Math.random)
    ====================================================================== */
 function planForDate(quranProgress, date) {
   const idx = dayIndexOf(date);
@@ -1047,7 +898,6 @@ function taskPath(kind) {
   return `dailyTasks/${UID}/${T.date}/tasks/${kind}`;
 }
 
-// تحديث محلي متفائل (Optimistic) + كتابة فعلية على Firebase، مع تراجع محلي إذا فشلت الكتابة.
 async function patchTask(kind, changes) {
   const taskObj = T.tasks[kind];
   const flatChanges = Object.entries(changes).filter(([key]) => !key.includes("/"));
@@ -1063,14 +913,13 @@ async function patchTask(kind, changes) {
 }
 
 function stateOf(kind) {
-  if (T.date !== dateKey()) return "locked"; // يوم قديم انتهى ولم يُحدَّث بعد
+  if (T.date !== dateKey()) return "locked";
   return T.tasks[kind].state;
 }
 
 async function loadAccountData() {
   const accountSnap = await get(ref(db, "users/" + UID));
   if (!accountSnap.exists()) {
-    // الحساب المحفوظ محليًا لم يعد موجودًا على Firebase (نادر جدًا) — لا نكسر التطبيق، بل نُعيد تسجيل الدخول.
     throw new Error("account-not-found");
   }
   ACCOUNT = accountSnap.val();
@@ -1093,8 +942,6 @@ async function loadAccountData() {
   const dayRef = ref(db, `dailyTasks/${UID}/${date}`);
   const freshPlan = planForDate(QP, date);
 
-  // يُثبَّت هدف اليوم عند أول إنشاء فقط، ولا يُعاد توليده أبدًا (Refresh، تغيير جهاز، تسجيل خروج/دخول، تغيير ساعة الجهاز — كله بلا تأثير).
-  // هذا الجزء مستقل تمامًا عن حالة المصادقة: يعمل سواء كان الحساب مرتبطًا بأحد أم لا.
   await runTransaction(dayRef, current => {
     if (current && current.plan) return current;
     return {
@@ -1118,12 +965,11 @@ async function loadAccountData() {
     bindStreakListener(ACCOUNT.pairId);
     bindResetRequestListener(ACCOUNT.pairId);
   } else {
-    S = null; // لا يوجد Shared Streak قبل إتمام المصادقة مع شخص آخر
+    S = null;
     RESET_REQUEST = null;
   }
 }
 
-// يربط مستمعًا حيًا بمسار streak/{pairId} مرة واحدة فقط لكل pairId (يُعاد الربط تلقائيًا إذا تغيّر الـ pairId، كما يحدث فور نجاح مصادقة جديدة).
 function bindStreakListener(pairId) {
   if (streakListenerBoundFor === pairId) return;
   streakListenerBoundFor = pairId;
@@ -1135,15 +981,14 @@ function bindStreakListener(pairId) {
 
 /* ======================================================================
    STREAK
-   (تقييم الأيام المنتهية فقط، بترانزاكشن يمنع تكرار احتساب نفس اليوم من أكثر من جهاز)
    ====================================================================== */
 async function evaluateStreak() {
-  if (!ACCOUNT || !ACCOUNT.pairId) return; // لا يوجد Shared Streak قبل إتمام المصادقة
+  if (!ACCOUNT || !ACCOUNT.pairId) return;
   const pairId = ACCOUNT.pairId;
 
   const pairingSnap = await get(ref(db, "pairings/" + pairId));
   const pairing = pairingSnap.val();
-  if (!pairing || !pairing.userA || !pairing.userB) return; // بيانات مصادقة غير مكتملة (لا يُفترض حدوثه) — لا تُقيَّم بأمان
+  if (!pairing || !pairing.userA || !pairing.userB) return;
   const bothUids = [pairing.userA, pairing.userB];
 
   const today = dateKey();
@@ -1151,17 +996,17 @@ async function evaluateStreak() {
   const currentSnapshot = Object.assign({}, INITIAL_STREAK, (await get(streakRef)).val());
   const lastEvaluatedBefore = currentSnapshot.lastEvaluated || addDays(today, -1);
 
-  // اجلب حالة الأيام غير المقيَّمة بعد (كل يوم: هل أكمل الطرفان كل مهامهما؟) قبل الدخول في الترانزاكشن.
+  const allDaysForPair = (await get(ref(db, "days/" + pairId))).val() || {};
   const fetchedDays = {};
   for (let d = addDays(lastEvaluatedBefore, 1), guard = 0; d < today && guard < 400; d = addDays(d, 1), guard++) {
-    fetchedDays[d] = (await get(ref(db, `days/${pairId}/${d}`))).val() || {};
+    fetchedDays[d] = allDaysForPair[d] || {};
   }
 
   await runTransaction(streakRef, current => {
     current = Object.assign({}, INITIAL_STREAK, current);
     let lastEvaluated = current.lastEvaluated || addDays(today, -1);
     for (let d = addDays(lastEvaluated, 1); d < today; d = addDays(d, 1)) {
-      if (!fetchedDays[d]) break; // لم نجلب بيانات هذا اليوم (نادر) — نكمل في المرة القادمة
+      if (!fetchedDays[d]) break;
       const bothCompleted = bothUids.every(member => fetchedDays[d][member] === true);
       if (bothCompleted) {
         current.count += 1;
@@ -1170,7 +1015,7 @@ async function evaluateStreak() {
       } else {
         current.status = "gray";
         current.fails += 1;
-        if (current.fails >= 2) { // مرّت ٤٨ ساعة دون يوم ناجح
+        if (current.fails >= 2) {
           if (current.rescues > 0) {
             current.rescues -= 1;
             current.fails = 0;
@@ -1189,7 +1034,6 @@ async function evaluateStreak() {
 
 /* ======================================================================
    TASK COMPLETION RULES
-   (بدون Timer وبدون Confirmation: "تم" تُنهي المهمة فورًا بمجرد استيفاء المحتوى فقط)
    ====================================================================== */
 function adhkarProgress(kind) {
   const list = ADHKAR_BY_KIND[kind];
@@ -1228,7 +1072,7 @@ async function completeTask(kind) {
     if (kind === "quran") {
       await runTransaction(ref(db, "quranProgress/" + UID), progress => {
         progress = progress || QP;
-        if (progress.frontier !== T.plan.start) return; // سبق احتسابها (منع الاحتساب المزدوج)
+        if (progress.frontier !== T.plan.start) return;
         progress.lastReadAt = serverNow();
         if (T.plan.end >= CFG.totalPages) {
           progress.khatmah += 1;
@@ -1267,7 +1111,6 @@ async function completeTask(kind) {
   }
 }
 
-// زر "تم" العام: مُعطَّل حتى يكتمل المحتوى فقط، بلا أي عدّاد وقت وبلا نافذة تأكيد.
 function finishButton(kind, label) {
   const button = h("button", { cls: "btn big" }, label);
   const update = () => { button.disabled = uiBusy || !contentOk(kind); };
@@ -1279,12 +1122,9 @@ function finishButton(kind, label) {
 
 /* ======================================================================
    RESET
-   قبل المصادقة: "بدء من جديد" يعمل فورًا بلا أي موافقة (resetMyProgress) — لا يوجد طرف آخر يُستأذن أصلًا.
-   بعد المصادقة: لا يحدث أي تصفير بضغطة واحدة من طرف واحد. الزر يرسل طلبًا، ولا يُنفَّذ أي شيء
-   إلا بعد موافقة الطرفين، وعندها يُصفَّر تقدم الاثنين معًا (قرآن، حفظ، مهام) والستريك المشترك إلى الصفر.
    ====================================================================== */
-let resetRequestListenerBoundFor = null; // الـ pairId المربوط به مستمع طلبات إعادة الضبط حاليًا
-let RESET_REQUEST = null;                // { [uid]: true, ... } لمن وافق حتى الآن، أو null إن لم يوجد طلب قائم
+let resetRequestListenerBoundFor = null;
+let RESET_REQUEST = null;
 
 function bindResetRequestListener(pairId) {
   if (resetRequestListenerBoundFor === pairId) return;
@@ -1295,7 +1135,6 @@ function bindResetRequestListener(pairId) {
   });
 }
 
-// إعادة ضبط فورية بلا موافقة أحد — متاحة فقط قبل إتمام المصادقة مع أي شخص.
 async function resetMyProgress() {
   if (uiBusy) return;
   const confirmed = confirm(
@@ -1312,7 +1151,7 @@ async function resetMyProgress() {
     multiPathUpdate["memorize/" + UID] = freshMemorize;
     multiPathUpdate["dailyTasks/" + UID] = null;
 
-    await update(ref(db), multiPathUpdate); // تحديث ذرّي عبر عدة مسارات دفعة واحدة
+    await update(ref(db), multiPathUpdate);
 
     clearQuranPageCache();
     localStore.remove("lastFreePage");
@@ -1328,9 +1167,6 @@ async function resetMyProgress() {
   }
 }
 
-// التصفير الفعلي بعد موافقة الطرفين: يعيد تقدم الاثنين معًا والستريك المشترك إلى الصفر دفعة واحدة.
-// العملية Idempotent بالكامل (تكتب دائمًا نفس القيم الثابتة الصفرية)، لذا لا ضرر إن نُفِّذت أكثر من مرة
-// بسبب تزامن عابر بين الطرفين عند لحظة الموافقة الثانية — النتيجة النهائية واحدة على أي حال.
 async function applyMutualReset(pairId, pairing) {
   const freshQuran = { currentPage: 1, khatmah: 1, frontier: 1, pagesRead: 0, lastReadAt: 0 };
   const freshMemorize = { completed: {}, count: 0 };
@@ -1349,15 +1185,13 @@ async function applyMutualReset(pairId, pairing) {
   await update(ref(db), multiPathUpdate);
 }
 
-// يُستدعى سواء كنت صاحب الطلب الأصلي (أول موافقة) أو الطرف الذي يوافق على طلب الآخر (الموافقة الثانية).
-// الموافقة الثانية — من أي الطرفين جاءت — هي التي تُفعِّل التصفير فعليًا.
 async function setMyResetVote(agree) {
   if (!ACCOUNT.pairId || uiBusy) return;
   const pairId = ACCOUNT.pairId;
   uiBusy = true;
   try {
     if (!agree) {
-      await set(ref(db, "resetRequests/" + pairId), null); // رفض الطلب: يُلغى بالكامل لكلا الطرفين
+      await set(ref(db, "resetRequests/" + pairId), null);
       uiBusy = false;
       viewHome();
       return;
@@ -1401,7 +1235,6 @@ async function cancelMyResetRequest() {
   }
 }
 
-// يبني عنصر واجهة "بدء من جديد" المناسب للحالة الحالية: زر عادي (غير مرتبط)، طلب جديد، انتظار، أو طلب للموافقة.
 function resetBlock() {
   if (!ACCOUNT.pairId) {
     return h("button", { cls: "btn danger", on: { click: resetMyProgress } }, "بدء من جديد");
@@ -1437,17 +1270,15 @@ function resetBlock() {
       )
     );
   }
-  return null; // حالة عابرة جدًا: كلاهما وافق للتو وجارٍ تنفيذ التصفير
+  return null;
 }
 
 /* ======================================================================
    AUDIO RECORDING
-   (تسجيل محلي بالكامل، لا يُرفع إلى Firebase أبدًا، ولا علاقة له بإكمال مهمة الحفظ)
    ====================================================================== */
 const MIN_RECORDING_SECONDS = 3;
 const MAX_RECORDING_SECONDS = 300;
 
-// عنصر التسجيل النشط حاليًا (إن وُجد)، لإيقافه بأمان عند إغلاق الصفحة أو مغادرة الشاشة.
 let activeRecorderTeardown = null;
 
 function pickSupportedMimeType() {
@@ -1456,7 +1287,6 @@ function pickSupportedMimeType() {
   return candidates.find(type => MediaRecorder.isTypeSupported(type)) || "";
 }
 
-// يبني بطاقة التسجيل كاملة (عنصر DOM) + دالة تفكيك (teardown) تُستدعى عند مغادرة الشاشة.
 function createRecorderCard() {
   let mediaRecorder = null;
   let mediaStream = null;
@@ -1465,8 +1295,8 @@ function createRecorderCard() {
   let audioElement = null;
   let elapsedSeconds = 0;
   let tickInterval = null;
-  let state = "idle"; // idle | recording | recorded | playing
-  let starting = false; // يمنع ضغطتين سريعتين على "تسجيل" قبل استلام إذن الميكروفون
+  let state = "idle";
+  let starting = false;
 
   const titleEl = h("div", { cls: "rec-title" }, "🎙 تسجيل التلاوة");
   const timeEl = h("div", { cls: "rec-time" }, "");
@@ -1518,7 +1348,7 @@ function createRecorderCard() {
   }
 
   async function beginRecording() {
-    if (starting || state === "recording") return; // يمنع بدء تسجيل ثانٍ أثناء تسجيل جارٍ
+    if (starting || state === "recording") return;
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) {
       messageEl.textContent = "المتصفح لا يدعم تسجيل الصوت.";
       return;
@@ -1528,7 +1358,7 @@ function createRecorderCard() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       starting = false;
-      revokeAudio(); // أي تسجيل سابق يُحذف بمجرد بدء تسجيل جديد (لا يمكن الوصول لهذه الحالة أصلًا إلا من idle، لكن للأمان)
+      revokeAudio();
       mediaStream = stream;
       recordedChunks = [];
       elapsedSeconds = 0;
@@ -1565,7 +1395,7 @@ function createRecorderCard() {
         elapsedSeconds += 1;
         if (state === "recording") timeEl.textContent = formatClock(elapsedSeconds);
         if (elapsedSeconds >= MAX_RECORDING_SECONDS) {
-          stopRecording(); // إيقاف تلقائي عند الوصول للحد الأقصى، دون انتظار المستخدم
+          stopRecording();
         }
       }, 1000);
     } catch (err) {
@@ -1626,7 +1456,6 @@ function createRecorderCard() {
 
 /* ======================================================================
    ADHKAR UI
-   (قائمة بطاقات، كل ذكر بعدّاده الخاص، وزر "تم" العام يظهر فقط بعد اكتمال الجميع)
    ====================================================================== */
 async function viewAdhkar(kind) {
   currentView = "task";
@@ -1701,8 +1530,9 @@ async function viewMemorize() {
   const isDone = task.state === "completed";
 
   const ayahsEl = h("div", { cls: "ays qf" },
-    surahData ? surahData.ayahs.join(" ") : "تعذر تحميل نص السورة."
+    surahData ? surahData.ayahs.map((a, i) => a + " ﴿" + ar(i + 1) + "﴾").join(" ") : "تعذر تحميل نص السورة."
   );
+  const bismillahEl = surahData ? h("div", { cls: "bsm" }, "﷽") : null;
 
   const recorder = createRecorderCard();
   activeRecorderTeardown = recorder.teardown;
@@ -1739,7 +1569,7 @@ async function viewMemorize() {
 
   mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
     h("div", { cls: "mute" }, "📚 ورد الحفظ اليومي"),
-    h("div", { cls: "mem" }, h("div", { cls: "sn2" }, "سورة " + surahName), ayahsEl),
+    h("div", { cls: "mem" }, h("div", { cls: "sn2" }, "سورة " + surahName), bismillahEl, ayahsEl),
     recorder.element,
     h("div", { cls: "mute" }, "اقرأ السورة ٣ مرات ثم اضغط «تم» بعد كل مرة"),
     h("div", { cls: "seg" }, countBtn, resetBtn),
@@ -1752,7 +1582,7 @@ async function viewMemorize() {
 /* ======================================================================
    QURAN READER
    ====================================================================== */
-let readerRequestId = 0; // منع Race Condition: طلب صفحة قديم لا يمكن أن يستبدل صفحة أحدث منه
+let readerRequestId = 0;
 let bookmarkSaveTimer = 0;
 
 function viewReader(mode) {
@@ -1780,7 +1610,7 @@ function viewReader(mode) {
   );
 
   const pageNumberBtn = h("button", { cls: "tb", on: { click: () => {
-    if (isTask) return; // القفز لصفحة معينة متاح فقط في القراءة الحرة، حتى لا يتجاوز المستخدم ورد اليوم
+    if (isTask) return;
     jumpInput.value = "";
     jumpOverlay.hidden = false;
     jumpInput.focus();
@@ -1831,7 +1661,6 @@ function viewReader(mode) {
     readingModeBtn.textContent = settings.readingMode ? "خروج من وضع القراءة" : "وضع القراءة";
   }
 
-  // في وضع "ورد اليوم" لا يمكن تجاوز آخر صفحة مطلوبة ولا الرجوع قبل أول صفحة فيه.
   function navigate(delta) {
     const target = currentPage + delta;
     if (target < 1 || target > CFG.totalPages) return;
@@ -1872,7 +1701,7 @@ function viewReader(mode) {
     put(pageContainerEl, h("div", { cls: "msg" }, "جارٍ التحميل…"));
     try {
       const ayahs = await getMushafPage(pageNumber);
-      if (myRequestId !== readerRequestId) return; // وصل بعد طلب أحدث — يُتجاهل
+      if (myRequestId !== readerRequestId) return;
       activeTicks = [];
       put(pageContainerEl, renderMushafPage(ayahs, pageNumber, endOfTaskPanel()));
       pageContainerEl.scrollTop = restoreScrollTop || 0;
@@ -1960,7 +1789,7 @@ function renderMushafPage(ayahs, pageNumber, endPanelEl) {
 }
 
 /* ======================================================================
-   PRAYER TIMES (اختياري — Aladhan API؛ فشل الطلب لا يكسر الصفحة الرئيسية)
+   PRAYER TIMES
    ====================================================================== */
 const prayerTimesCache = {};
 async function getPrayerTimes(date) {
@@ -1984,7 +1813,6 @@ function parseHHMMToSeconds(value) {
   const match = /(\d{1,2}):(\d{2})/.exec(value || "");
   return match ? (Number(match[1]) * 3600 + Number(match[2]) * 60) : null;
 }
-// يُعيد الوقت المتبقي للصلاة القادمة بالثواني (وليس بالدقائق فقط)، حتى يُعرض العدّاد ساعات:دقائق:ثوانٍ ويتحدث كل ثانية.
 function nextPrayer(times) {
   if (!times) return null;
   const nowSeconds = cairoSecondsOfDay();
@@ -1999,8 +1827,7 @@ function nextPrayer(times) {
 }
 
 /* ======================================================================
-   SIDE DRAWER + القائمة الجانبية الخمسة
-   (مراجع ثابتة فقط: الصلاة، أذكار النوم، أدعية القرآن، القبلة، التاريخ الهجري — لا إحصائيات ولا تواصل)
+   SIDE DRAWER + REFERENCE SCREENS
    ====================================================================== */
 let drawerOpen = false;
 
@@ -2038,7 +1865,6 @@ function openDrawer() {
   document.body.append(...drawerElements());
 }
 
-// ===== 🕌 الصلاة: قائمة الصلوات الخمس اليوم، مع تمييز القادمة =====
 async function viewPrayerTimesScreen() {
   currentView = "prayer-times";
   const listEl = h("div", { cls: "ref-list" }, h("div", { cls: "mute" }, "جارٍ التحميل…"));
@@ -2049,7 +1875,6 @@ async function viewPrayerTimesScreen() {
   ));
   const times = await getPrayerTimes(dateKey());
   if (!times) { put(listEl, h("div", { cls: "mute" }, "تعذر تحميل مواقيت الصلاة. تحقق من الاتصال.")); return; }
-  const nowSeconds = cairoSecondsOfDay();
   const rows = [["الفجر", times.fajr], ["الظهر", times.dhuhr], ["العصر", times.asr], ["المغرب", times.maghrib], ["العشاء", times.isha]]
     .map(([name, t]) => ({ name, t, seconds: parseHHMMToSeconds(t) }));
   const next = nextPrayer(times);
@@ -2057,7 +1882,6 @@ async function viewPrayerTimesScreen() {
     h("span", {}, r.name), h("b", {}, ar((r.t || "").replace(/:\d{2}$/, ""))))));
 }
 
-// ===== شاشة أذكار عامة (تُستخدم لأذكار النوم بنفس أسلوب عدّادات أذكار الصباح/المساء، كمرجع فقط وليست مهمة) =====
 function viewReferenceAdhkar(titleText, list) {
   currentView = "reference-adhkar";
   const counts = {};
@@ -2090,7 +1914,6 @@ function viewReferenceAdhkar(titleText, list) {
   ));
 }
 
-// ===== 🤲 أدعية القرآن: قائمة مرجعية ثابتة =====
 function viewQuranicDuasScreen() {
   currentView = "quranic-duas";
   mount(h("div", { cls: "screen", style: "justify-content:flex-start" },
@@ -2101,7 +1924,6 @@ function viewQuranicDuasScreen() {
   ));
 }
 
-// ===== 🧭 القبلة =====
 const KAABA_LAT = 21.4225, KAABA_LON = 39.8262;
 function qiblaBearing(lat, lon) {
   const toRad = d => d * Math.PI / 180;
@@ -2134,13 +1956,12 @@ function viewQiblaScreen() {
   );
 }
 
-// ===== 📅 التاريخ الهجري (عبر Intl المدمج في المتصفح، بلا أي API خارجي) =====
 function hijriDateString() {
   const when = new Date(serverNow());
   for (const locale of ["ar-SA-u-ca-islamic-umalqura", "ar-u-ca-islamic"]) {
     try {
       return new Intl.DateTimeFormat(locale, { day: "numeric", month: "long", year: "numeric", timeZone: CFG.tz }).format(when);
-    } catch (err) { /* جرّب الخيار التالي */ }
+    } catch (err) {}
   }
   return null;
 }
@@ -2156,9 +1977,8 @@ function viewHijriScreen() {
   ));
 }
 
-// بطاقة "دعاء اليوم": تتنقّل تسلسليًا (لا Math.random) بين الثلاثين دعاءً كل ٣ ثوانٍ بتأثير Fade بسيط.
-// المؤقت الوحيد لهذه الميزة يُدار بالكامل هنا ويُنظَّف تلقائيًا من mount() عند مغادرة الصفحة الرئيسية.
 function duaCard() {
+  if (duaRotatorInterval) { clearInterval(duaRotatorInterval); duaRotatorInterval = null; }
   homeDuaIndex = 0;
   const textEl = h("div", { cls: "dua-text qf" }, DAILY_DUAS[homeDuaIndex]);
   duaRotatorInterval = setInterval(() => {
@@ -2258,7 +2078,6 @@ function renderHome() {
   const countdownEl = h("div", { cls: "mute" }, "");
   const updateCountdown = () => { countdownEl.textContent = "اليوم الجديد بعد: " + formatClock(secondsToMidnight()); };
 
-  // قبل إتمام المصادقة: زر لبدء المصادقة بدل شارة الستريك. بعدها: الشارة فقط، ولا يظهر زر المصادقة مطلقًا مرة أخرى.
   const pairingBlock = ACCOUNT.pairId
     ? h("div", { style: "font-size:1.1rem", "aria-label": "الستريك المشترك" },
         h("span", { cls: "fl" + (streak.status === "red" ? " red" : "") }, "🔥"), " " + ar(streak.count))
@@ -2284,6 +2103,7 @@ function renderHome() {
     h("div", { cls: "mute" }, "حفظت " + ar((MEM && MEM.count) || 0) + " سورة حتى الآن"),
     h("button", { cls: "link", on: { click: () => viewReader("free") } }, "قراءة حرة"),
     pairingBlock,
+    !ACCOUNT.pairId ? h("button", { cls: "link", on: { click: showMyPairingId } }, "اعرض كودك الخاص") : null,
     allDone ? h("div", { cls: "day-complete" }, "✓ تم ورد اليوم بحمد الله") : null,
     allDone ? countdownEl : null,
     duaCard(),
@@ -2295,7 +2115,7 @@ function renderHome() {
   if (allDone) { activeTicks.push(updateCountdown); updateCountdown(); }
 
   getPrayerTimes(dateKey()).then(times => {
-    if (currentView !== "home") return; // المستخدم غادر الشاشة قبل وصول الرد
+    if (currentView !== "home") return;
     const updatePrayerBar = () => {
       const next = nextPrayer(times);
       if (next) {
@@ -2310,8 +2130,6 @@ function renderHome() {
   });
 }
 
-// النوافذ الثلاث التوعوية — تظهر مرة واحدة فقط بعد أول مصادقة ناجحة، ولا تظهر ثانية بعدها إطلاقًا
-// (الحالة محفوظة في Firebase وليس محليًا فقط، فلا تتكرر حتى لو فُتح التطبيق من جهاز آخر الذي يحمل نفس الحساب).
 function viewOnboarding(step) {
   currentView = "onboarding";
   const screen = ONBOARDING_SCREENS[step];
@@ -2321,7 +2139,7 @@ function viewOnboarding(step) {
     h("div", { cls: "onboarding-body" }, screen.body),
     h("button", { cls: "btn big", on: { click: async () => {
       if (!isLast) { viewOnboarding(step + 1); return; }
-      try { await set(ref(db, "users/" + UID + "/pairingGuidanceSeen"), true); } catch (err) { /* غير حرِج: متابعة محليًا على أي حال */ }
+      try { await set(ref(db, "users/" + UID + "/pairingGuidanceSeen"), true); } catch (err) {}
       ACCOUNT.pairingGuidanceSeen = true;
       viewHome();
     } } }, screen.button)
@@ -2330,9 +2148,6 @@ function viewOnboarding(step) {
 
 /* ======================================================================
    PAIRING
-   (نظام مصادقة مفتوح بين حسابين: كل حساب له Pairing ID عام سهل النسخ وصعب التخمين.
-    لا Firebase Authentication هنا؛ الهوية = مفتاح فريد يُولَّد محليًا (push key) ويُحفظ في localStorage،
-    والـ Pairing ID نفسه يُستخدم أيضًا كوسيلة استرجاع الحساب من جهاز آخر.)
    ====================================================================== */
 
 function normalizePairingInput(value) {
@@ -2368,19 +2183,17 @@ function copyToClipboard(text) {
   }
 }
 
-// إنشاء حساب جديد بالكامل: مفتاح فريد + Pairing ID فريد (بإعادة المحاولة عند أي تصادم نادر جدًا) + سجل في users/.
-// يُعيد {error} لأي حالة متوقعة (اسم فارغ، تعذّر توليد كود)، ويترك الاستثناءات غير المتوقعة (أعطال الشبكة) لتصعد للمستدعي.
 async function createAccount(rawName) {
   const displayName = String(rawName || "").trim().slice(0, CFG.displayNameMax);
   if (!displayName) return { error: "اكتب اسمك أولًا." };
 
-  const newUid = push(ref(db, "users")).key; // معرف فريد يُولَّد محليًا دون الحاجة لجولة Round-trip مع الخادم
+  const newUid = push(ref(db, "users")).key;
 
   let pairingId = null;
   for (let attempt = 0; attempt < 8 && !pairingId; attempt++) {
     const candidate = generateRandomPairingCode();
     const claim = await runTransaction(ref(db, "pairingIndex/" + candidate), current => {
-      return current === null ? newUid : undefined; // undefined = إجهاض الترانزاكشن إن كان الكود مُستخدَمًا بالفعل
+      return current === null ? newUid : undefined;
     });
     if (claim.committed) pairingId = candidate;
   }
@@ -2396,7 +2209,6 @@ async function createAccount(rawName) {
   return { success: true, uid: newUid };
 }
 
-// استرجاع حساب موجود مسبقًا على جهاز جديد، باستخدام Pairing ID الخاص بصاحب الحساب نفسه (وليس كود شخص آخر).
 async function recoverAccount(rawCode) {
   const normalized = normalizePairingInput(rawCode);
   if (!normalized) return { error: "اكتب الكود الخاص بك." };
@@ -2412,25 +2224,269 @@ async function recoverAccount(rawCode) {
   return { success: true, uid };
 }
 
-// الدالة الحساسة في المشروع: تربط الحساب الحالي بشخص آخر عبر Pairing ID، بحماية كاملة من Race Conditions
-// وبدون أي بيانات ناقصة في حال فشل أي خطوة (إما نجاح كامل أو عدم تغيير أي شيء).
-//
-// آلية الحماية (RTDB لا تملك ترانزاكشن متعدد المسارات حقيقيًا، فنبنيها يدويًا من خطوتين):
-//   ١) "حجز" مؤقت (PENDING) على عقدة users/{الطرف الآخر}/pairId عبر ترانزاكشن — وهذه هي نقطة التنازع الحقيقية
-//      عندما يحاول شخصان مختلفان مصادقة نفس الطرف الثالث في نفس اللحظة: واحد فقط تنجح ترانزاكشنه.
-//   ٢) حجز مماثل على عقدة حسابي أنا، كحماية إضافية (نادرًا ما تفشل، لكنها تحمي من نافذتين/تبويبين لنفس المستخدم).
-//   ٣) بعد نجاح الحجزين فقط: تحديث واحد متعدد المسارات (update) يُثبّت pairId للطرفين وسجل pairings/{pairId}.
-//   ٤) أي فشل في أي خطوة يُرجع الحجوزات السابقة إلى null (Rollback)، ولا يُترك أي طرف "نصف مرتبط".
-//   ٥) حجز متروك دون إكمال (مثلًا انقطع الإنترنت بين الخطوة ١ و٣) تنتهي صلاحيته تلقائيًا بعد CFG.pairingClaimTtlMs،
-//      فيمكن لصاحبه (أو لطرف جديد) إعادة المحاولة دون أن يبقى عالقًا إلى الأبد.
 async function pairWithCode(rawCode) {
   const normalized = normalizePairingInput(rawCode);
   if (!normalized) return { error: "اكتب كود الطرف الآخر." };
   const code = formatPairingCode(normalized);
 
-  // حالة: المستخدم الحالي مرتبط بالفعل — لا تنشئ مصادقة جديدة إطلاقًا.
+  // حالة: أنا مرتبط بالفعل — لا تنشئ مصادقة جديدة إطلاقًا.
   if (ACCOUNT.pairId) {
     const indexSnap = await get(ref(db, "pairingIndex/" + code));
-    const otherUidIfAlreadyPaired = indexSnap.val();
-    if (otherUidIfAlreadyPaired) {
-      const existingPairingSnap = await get(ref(db, "pairings/" + ACCOU
+    const otherUid = indexSnap.val();
+    if (!otherUid) return { error: "❌ الـID غير موجود، تأكد من كتابته بشكل صحيح." };
+
+    const pairingSnap = await get(ref(db, "pairings/" + ACCOUNT.pairId));
+    const pairing = pairingSnap.val();
+    if (!pairing) return { error: "بيانات المصادقة الحالية غير مكتملة." };
+
+    const myPartnerUid = pairing.userA === UID ? pairing.userB : pairing.userA;
+    if (myPartnerUid === otherUid) {
+      return { error: "أنت مرتبط بهذا الشخص بالفعل." };
+    }
+    return { error: "أنت مرتبط بشخص آخر بالفعل. لا يمكن الربط بأكثر من شخص واحد." };
+  }
+
+  const indexSnap = await get(ref(db, "pairingIndex/" + code));
+  const otherUid = indexSnap.val();
+  if (!otherUid) return { error: "❌ الـID غير موجود، تأكد من كتابته بشكل صحيح." };
+  if (otherUid === UID) return { error: "لا يمكنك الربط مع نفسك." };
+
+  const otherUserSnap = await get(ref(db, "users/" + otherUid));
+  if (!otherUserSnap.exists()) return { error: "تعذر العثور على حساب الطرف الآخر." };
+  const otherUser = otherUserSnap.val();
+
+  if (otherUser.pairId) {
+    const existingPairingSnap = await get(ref(db, "pairings/" + otherUser.pairId));
+    const existingPairing = existingPairingSnap.val();
+    if (existingPairing) {
+      const isMeAlreadyPartner = existingPairing.userA === UID || existingPairing.userB === UID;
+      if (isMeAlreadyPartner) {
+        return { error: "أنت مرتبط بهذا الشخص بالفعل." };
+      }
+      return { error: "هذا الشخص مرتبط بشخص آخر بالفعل." };
+    }
+  }
+
+  const now = serverNow();
+  const pairId = [UID, otherUid].sort().join("_");
+
+  // الحجز الأول: users/{otherUid}/pairId
+  const otherClaim = await runTransaction(ref(db, "users/" + otherUid + "/pairId"), current => {
+    if (current === null) return "PENDING:" + pairId + ":" + now;
+    if (typeof current === "string" && current.startsWith("PENDING:")) {
+      const parts = current.split(":");
+      const claimTime = Number(parts[2] || 0);
+      if (now - claimTime > CFG.pairingClaimTtlMs) {
+        return "PENDING:" + pairId + ":" + now;
+      }
+    }
+    return undefined;
+  });
+  if (!otherClaim.committed) {
+    return { error: "هذا الشخص مرتبط بشخص آخر بالفعل." };
+  }
+
+  // الحجز الثاني: users/{UID}/pairId
+  const myClaim = await runTransaction(ref(db, "users/" + UID + "/pairId"), current => {
+    if (current === null) return "PENDING:" + pairId + ":" + now;
+    if (typeof current === "string" && current.startsWith("PENDING:")) {
+      const parts = current.split(":");
+      const claimTime = Number(parts[2] || 0);
+      if (now - claimTime > CFG.pairingClaimTtlMs) {
+        return "PENDING:" + pairId + ":" + now;
+      }
+    }
+    return undefined;
+  });
+  if (!myClaim.committed) {
+    // فشل حجزي — رجّع حجز الطرف الآخر فورًا
+    await runTransaction(ref(db, "users/" + otherUid + "/pairId"), current => {
+      if (typeof current === "string" && current.startsWith("PENDING:" + pairId + ":")) return null;
+      return undefined;
+    });
+    return { error: "تعذر إتمام المصادقة، حاول مرة أخرى." };
+  }
+
+  // تثبيت الربط للطرفين وسجل pairings/{pairId}
+  try {
+    const multiPathUpdate = {};
+    multiPathUpdate["users/" + UID + "/pairId"] = pairId;
+    multiPathUpdate["users/" + otherUid + "/pairId"] = pairId;
+    multiPathUpdate["pairings/" + pairId + "/userA"] = UID;
+    multiPathUpdate["pairings/" + pairId + "/userB"] = otherUid;
+    multiPathUpdate["pairings/" + pairId + "/createdAt"] = now;
+    multiPathUpdate["streak/" + pairId] = INITIAL_STREAK;
+    await update(ref(db), multiPathUpdate);
+
+    ACCOUNT.pairId = pairId;
+    return { success: true, pairId, partnerName: otherUser.displayName };
+  } catch (err) {
+    // فشل التثبيت — تراجع كامل
+    await runTransaction(ref(db, "users/" + UID + "/pairId"), current => {
+      if (typeof current === "string" && current.startsWith("PENDING:" + pairId + ":")) return null;
+      return undefined;
+    });
+    await runTransaction(ref(db, "users/" + otherUid + "/pairId"), current => {
+      if (typeof current === "string" && current.startsWith("PENDING:" + pairId + ":")) return null;
+      return undefined;
+    });
+    throw err;
+  }
+}
+
+/* ======================================================================
+   PAIRING UI
+   ====================================================================== */
+function viewPairing() {
+  currentView = "pairing";
+  const inputEl = h("input", { type: "text", placeholder: "XXXX-XXXX", maxlength: 12, autocomplete: "off", autocapitalize: "characters" });
+  const errorEl = h("div", { cls: "err" });
+  const submitBtn = h("button", { cls: "btn big" }, "مصادقة");
+
+  async function submit() {
+    const code = inputEl.value.trim();
+    if (!code) { errorEl.textContent = "اكتب كود الطرف الآخر."; return; }
+    errorEl.textContent = "";
+    submitBtn.disabled = true;
+    submitBtn.textContent = "جارٍ الربط…";
+    try {
+      const result = await withTimeout(pairWithCode(code), CFG.bootTimeoutMs, "pair");
+      if (result.error) {
+        errorEl.textContent = result.error;
+        submitBtn.disabled = false;
+        submitBtn.textContent = "مصادقة";
+        return;
+      }
+      toast("تم الربط مع " + result.partnerName);
+      await loadAccountData();
+      await evaluateStreak();
+      if (!ACCOUNT.pairingGuidanceSeen) {
+        viewOnboarding(0);
+      } else {
+        viewHome();
+      }
+    } catch (err) {
+      errorEl.textContent = friendlyError(err);
+      submitBtn.disabled = false;
+      submitBtn.textContent = "مصادقة";
+    }
+  }
+
+  inputEl.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+  submitBtn.onclick = submit;
+
+  mount(h("div", { cls: "screen" },
+    h("h1", {}, "🔗 مصادقة مع شخص"),
+    h("div", { cls: "mute" },
+      "اطلب من الطرف الآخر كود الـID الخاص به (من الشاشة الرئيسية عنده: زر المصادقة يعرضه). " +
+      "هذا الربط لتبادل الستريك فقط، وليس وسيلة تواصل."
+    ),
+    inputEl,
+    errorEl,
+    submitBtn,
+    h("button", { cls: "link", on: { click: () => viewHome() } }, "رجوع")
+  ));
+}
+
+/* ======================================================================
+   BOOT VIEWS
+   ====================================================================== */
+function loadingView() {
+  currentView = "loading";
+  mount(h("div", { cls: "screen" },
+    h("div", { cls: "msg" }, "جارٍ التحميل…")
+  ));
+}
+
+function errorView(retry) {
+  currentView = "error";
+  mount(h("div", { cls: "screen" },
+    h("h1", {}, "تعذر الاتصال"),
+    h("div", { cls: "mute" }, "تحقق من اتصالك بالإنترنت وحاول مرة أخرى."),
+    h("button", { cls: "btn big", on: { click: retry } }, "إعادة المحاولة")
+  ));
+}
+
+function viewPick() {
+  currentView = "pick";
+  const errorEl = h("div", { cls: "err" });
+  const nameInput = h("input", { type: "text", placeholder: "اسمك", maxlength: CFG.displayNameMax, autocomplete: "off" });
+  const createBtn = h("button", { cls: "btn big" }, "إنشاء حساب جديد");
+  const codeInput = h("input", { type: "text", placeholder: "XXXX-XXXX", maxlength: 12, autocomplete: "off", autocapitalize: "characters" });
+  const recoverBtn = h("button", { cls: "btn ghost" }, "استرجاع حسابي");
+
+  async function create() {
+    errorEl.textContent = "";
+    createBtn.disabled = true;
+    createBtn.textContent = "جارٍ الإنشاء…";
+    try {
+      const result = await withTimeout(createAccount(nameInput.value), CFG.bootTimeoutMs, "create");
+      if (result.error) {
+        errorEl.textContent = result.error;
+        createBtn.disabled = false;
+        createBtn.textContent = "إنشاء حساب جديد";
+        return;
+      }
+      UID = result.uid;
+      localStore.set("uid", UID);
+      loadingView();
+      await loadAccountData();
+      await evaluateStreak();
+      viewHome();
+    } catch (err) {
+      errorEl.textContent = friendlyError(err);
+      createBtn.disabled = false;
+      createBtn.textContent = "إنشاء حساب جديد";
+    }
+  }
+
+  async function recover() {
+    errorEl.textContent = "";
+    recoverBtn.disabled = true;
+    recoverBtn.textContent = "جارٍ الاسترجاع…";
+    try {
+      const result = await withTimeout(recoverAccount(codeInput.value), CFG.bootTimeoutMs, "recover");
+      if (result.error) {
+        errorEl.textContent = result.error;
+        recoverBtn.disabled = false;
+        recoverBtn.textContent = "استرجاع حسابي";
+        return;
+      }
+      UID = result.uid;
+      localStore.set("uid", UID);
+      loadingView();
+      await loadAccountData();
+      await evaluateStreak();
+      viewHome();
+    } catch (err) {
+      errorEl.textContent = friendlyError(err);
+      recoverBtn.disabled = false;
+      recoverBtn.textContent = "استرجاع حسابي";
+    }
+  }
+
+  createBtn.onclick = create;
+  recoverBtn.onclick = recover;
+
+  mount(h("div", { cls: "screen" },
+    h("h1", {}, "أهلًا بك في وردي 🤍"),
+    h("div", { cls: "mute" }, "أنشئ حسابًا جديدًا، أو استرجع حسابك بكود الـID الخاص بك."),
+    h("div", { cls: "pick" },
+      h("div", { cls: "mute" }, "إنشاء حساب جديد"),
+      nameInput,
+      createBtn,
+      h("hr", { style: "width:100%; border:0; border-top:1px solid var(--line); margin:1rem 0" }),
+      h("div", { cls: "mute" }, "استرجاع حسابي على هذا الجهاز"),
+      codeInput,
+      recoverBtn
+    ),
+    errorEl
+  ));
+}
+
+function showMyPairingId() {
+  if (!ACCOUNT || !ACCOUNT.pairingId) {
+    toast("لا يوجد كود خاص بك بعد.");
+    return;
+  }
+  const code = ACCOUNT.pairingId;
