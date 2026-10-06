@@ -227,17 +227,20 @@
   });
   setTimeout(function () {
     if (document.getElementById("app").children.length === 0 && box.textContent === "") {
-      show("No error captured, but #app is still empty after 4s", "Possible cause: the module script tag itself never ran (e.g. opened via file:// or an in-app browser that blocks ES modules). Try opening this exact page in Chrome or Safari directly from the home screen.");
+      show("لم يبدأ التطبيق", "افتح الصفحة عبر رابط HTTPS من GitHub Pages أو Manus في Chrome أو Safari. لا تفتح ملف HTML مباشرة من file:// ولا تستخدم معاينة ملفات GitHub؛ بعض العوارض تمنع تشغيل JavaScript.");
     }
   }, 4000);
 })();
 </script>
 <!-- ===== نهاية كود التشخيص المؤقت ===== -->
 
-<!-- بيانات السور القصيرة لمهمة الحفظ. سكريبت عادي (وليس module) حتى يصبح SHORT_SURAHS متاحًا في الوحدة أدناه. -->
+<!-- Firebase Compat لتشغيل التطبيق كسكريبت عادي في GitHub Pages والمتصفحات التي تتعثر مع ES modules. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<!-- بيانات السور القصيرة لمهمة الحفظ. يجب أن يكون الملف في المجلد نفسه. -->
 <script src="./surahs.js"></script>
 
-<script type="module">
+<script>
 /*
   Realtime Database rules لهذا الإصدار (لا يوجد Firebase Authentication؛ الحساب يُختار من شاشة الاختيار
   ويُحمى بكلمة مرور ثابتة داخل الكود فقط):
@@ -248,10 +251,20 @@
   هذا مقبول فقط لاستخدام خاص جدًا بين شخصين، وليس مناسبًا لو أصبح المشروع عامًا.
 */
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getDatabase, ref, get, set, update, runTransaction, onValue, push
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+// طبقة توافق تحافظ على واجهة modular المستعملة في بقية الكود، لكن عبر Firebase Compat.
+const initializeApp = config => firebase.initializeApp(config);
+const getDatabase = app => firebase.database(app);
+const ref = (database, path) => path === undefined ? database.ref() : database.ref(path);
+const get = reference => reference.once("value");
+const set = (reference, value) => reference.set(value);
+const update = (reference, value) => reference.update(value);
+const runTransaction = (reference, updater, options) =>
+  reference.transaction(updater, null, !options || options.applyLocally !== false);
+const onValue = (reference, callback, cancelCallback) => {
+  reference.on("value", callback, cancelCallback);
+  return () => reference.off("value", callback);
+};
+const push = (reference, value) => value === undefined ? reference.push() : reference.push(value);
 
 /* ======================================================================
    CONFIG
