@@ -2490,3 +2490,87 @@ function showMyPairingId() {
     return;
   }
   const code = ACCOUNT.pairingId;
+  const overlay = h("div", {
+    role: "presentation",
+    style: "position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:1rem",
+    on: { click: event => { if (event.target === overlay) overlay.remove(); } }
+  });
+  const closeDialog = () => overlay.remove();
+  const dialog = h("div", {
+    role: "dialog",
+    "aria-modal": "true",
+    "aria-labelledby": "pairing-dialog-title",
+    style: "width:100%;max-width:22rem;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:1rem;padding:1.3rem;display:flex;flex-direction:column;align-items:center;gap:.9rem;text-align:center"
+  },
+    h("h2", { id: "pairing-dialog-title", style: "margin:0;font-size:1.2rem" }, "كودك الخاص"),
+    h("div", { cls: "mute" }, "احتفظ بهذا الكود لاسترجاع حسابك أو لمشاركته مع الشخص الذي تريد الربط معه."),
+    h("div", { dir: "ltr", style: "font-size:1.5rem;font-weight:700;letter-spacing:.12em;color:var(--acc);padding:.5rem 0" }, code),
+    h("div", { cls: "seg" },
+      h("button", { cls: "btn", on: { click: () => copyToClipboard(code) } }, "نسخ الكود"),
+      h("button", { cls: "btn ghost", on: { click: closeDialog } }, "إغلاق")
+    )
+  );
+  overlay.append(dialog);
+  document.body.append(overlay);
+}
+
+/* ======================================================================
+   APP STARTUP
+   ====================================================================== */
+async function boot() {
+  applySettings();
+  loadingView();
+
+  try {
+    await waitForServerOffset();
+    const savedUid = localStore.get("uid", null);
+    if (typeof savedUid !== "string" || !savedUid.trim()) {
+      localStore.remove("uid");
+      viewPick();
+      return;
+    }
+
+    UID = savedUid;
+    await withTimeout(loadAccountData(), CFG.bootTimeoutMs, "load-account");
+    await withTimeout(evaluateStreak(), CFG.bootTimeoutMs, "evaluate-streak");
+
+    const requestedView = sessionStorage.getItem("openView");
+    switch (requestedView) {
+      case "morning":
+      case "evening":
+        viewAdhkar(requestedView);
+        break;
+      case "memorize":
+        viewMemorize();
+        break;
+      case "quran":
+        viewReader("task");
+        break;
+      case "free":
+        viewReader("free");
+        break;
+      default:
+        viewHome();
+    }
+  } catch (err) {
+    console.error("Application startup failed:", err);
+    if (err && err.message === "account-not-found") {
+      UID = null;
+      ACCOUNT = null;
+      QP = null;
+      T = null;
+      S = null;
+      MEM = null;
+      localStore.remove("uid");
+      sessionStorage.removeItem("openView");
+      viewPick();
+      return;
+    }
+    errorView(() => boot());
+  }
+}
+
+boot();
+</script>
+</body>
+</html>
