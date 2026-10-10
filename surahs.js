@@ -296,3 +296,5 @@ const SHORT_SURAHS = [
     ]
   }
 ];
+
+window.WARDI_SHORT_SURAHS = SHORT_SURAHS;
